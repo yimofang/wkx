@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+    <title>调研问卷</title>
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/survey.css">
+    <script src="js/jquery-2.1.4.min.js"></script>
+    <script src="js/rem.js"></script>
+    <script src="jscript/addSurvey.js"></script>
+</head>
+<body>
+	<!--添加单选-->
+	<div class="addSurQue">
+		<!--single-->
+		<div class="singleTitle deleteHeader">
+			<div>
+				<span>题目</span>
+				<input type="text" id="singleTitle" placeholder="请输入题目标题">
+			</div>
+		</div>
+		<div class="singleOption addSinOpt">
+			<div class="singleOptList">
+				<span>选项<span class="num">1</span></span>
+				<input class="sOptionVal" type="text" placeholder="请填写选项">
+				<button class="singDel"></button>
+			</div>
+		</div>
+		<div class="addOption" id="addOption"><p id="addOptionList" onclick="addSingleList()">+添加选项</p></div>
+		<!--submit-->
+		<div class="btn singleBtn" id="singleBtn" onclick="singleBtn()">递交</div>	
+	</div>
+	<!--修改单选-->
+	<div class="editSurQue" style="display: none">
+		<!--single-->
+		<div class="singleTitle deleteHeader">
+			<div>
+				<span>标题</span>
+				<input type="text" id="editSingleTitle" placeholder="输入题目标题">
+			</div>
+		</div>
+		<div class="singleOption editSinOption">
+			<!-- <div class="singleOptList">
+				<span>选项<span class="num">1</span></span>
+				<input class="sOptionVal" type="text" placeholder="选项名称">
+				<button class="singDel"></button>
+			</div> -->
+		</div>
+		<div class="addOption" id="editAddOpt"><p id="editaddOptList" onclick="editAddSinList()">+添加选项</p></div>
+		<!--submit-->
+		<div class="btn singleBtn" id="editSingleBtn" onclick="saveEditSing()">保存修改</div>
+	</div> 
+
+	<div id="reqtoken" class="reqtoken"></div>
+</body>
+</html>

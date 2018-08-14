@@ -1,0 +1,102 @@
+var Urlstr =  'http://192.168.2.220:88/conf/',
+	State = 0,	//状态
+	Page = 1,	//页码
+	Pagetotal = 0, //总页码
+    Token =sessionStorage.getItem('token'),         //用户token
+	Select = '',//模糊查询
+    timers = null;//加载更多定时器
+
+$(function(){
+    if(Token == undefined || Token == null){
+        location.href = 'login.html';
+    }
+    Getliust(State,Page,Token,Select);
+	//Tab切换
+	$('.NavList li').click(function(){
+		$(this).children('span').addClass('active');
+		$(this).siblings().children('span').removeClass('active');
+		State = $(this).attr('data-state');
+		Page = 1;
+		$('.MeetingList').html('');
+        Getliust(State,Page,Token,Select);
+	});
+	//上拉加载更多
+    $('.Content').scroll(function() {
+        //当时滚动条离底部60px时开始加载下一页的内容
+        if (($(this)[0].scrollTop + $(this).height() + 260) >= $(this)[0].scrollHeight) {
+            clearTimeout(timers);
+            //这里还可以用 [ 延时执行 ] 来控制是否加载 （这样就解决了 当上页的条件满足时，一下子加载多次的问题啦）
+            timers = setTimeout(function() {
+                if(Page>=Pagetotal){
+                    return
+                }else{
+                    Page++;
+                    console.log("第" + Page + "页");
+
+                }
+            }, 0);
+        }
+    });
+});
+//获取会议列表
+function Getliust(a,b,c,d) {//a:状态  b:页数  c：token  d:模糊查询
+	$.ajax({
+		type : 'POST',
+		url : Urlstr+'confs_web/listpage.do',
+		data : {
+            display:'10',
+            page:b,
+            state:a,
+    		token:c,
+            select:d
+		},
+		dataType : 'json',
+		success : function (res) {
+			if(res.error == 0){
+			    var meetlist = res.row;
+			    if(meetlist.length == 0){
+
+                }else{
+                    Pagetotal = res.totalPage;
+			        var htmlstr = '';
+			        for(var i = 0;i<meetlist.length;i++){
+			            htmlstr += `<li>
+                                        <a href="MeetManage.html?id=${meetlist[i].id}">
+                                            <img src="img/${meetlist[i].cimg}" alt="">
+                                            <div class="MeetingAddress">
+                                                <h2>${meetlist[i].cname}</h2>
+                                                <p class="Address">${meetlist[i].addr}</p>
+                                                <p class="Time">${meetlist[i].bhstart}</p>
+                                            </div>
+                                        </a>
+                                    </li>`;
+                    }
+                    $('.MeetingList').html(htmlstr);
+                }
+            }else{
+			    alert('数据加载失败，请重新登陆');
+                location.href = 'login.html';
+            }
+        }
+	})
+}
+//添加会议 获取会议id
+function GetMeetid() {
+    $.ajax({
+        type : 'POST',
+        url : Urlstr+'confs_web/createConf.do',
+        data : {
+
+        },
+        dataType : 'json',
+        success : function (res) {
+            console.log(res);
+            if(res.error == 0){
+            	location.href ='';
+			}else {
+            	alert(res.msg);
+			}
+        }
+    })
+}
+// 上拉加载更多

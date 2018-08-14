@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>会议预览</title>
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/meet_preview.css">
+    <script src="js/jquery-2.1.4.min.js"></script>
+    <script src="js/rem.js"></script>
+    <script src="jscript/meet_preview.js"></script>
+    <script src="js/removeHeader.js"></script>
+    <!--地图选址-->
+    <link rel="stylesheet" href="http://cache.amap.com/lbs/static/main.css?v=1.0?v=1.0" />
+    <script type="text/javascript" src="http://webapi.amap.com/maps?v=1.4.3&key=9b7bdc963a3b447ef43283bef0b6f1c5"></script>
+    <!--ui组件库-->
+    <script src="//webapi.amap.com/ui/1.0/main.js"></script>
+</head>
+<body style="margin: 0; height: 100%; width: 100%; position: absolute; overflow: hidden; ">
+<!--header-->
+<div class="Header">
+    <a href="javascript:history.go(-1)" class="Goback"></a>
+    <!-- <a class="HShare" href="meetShare.html"></a> -->
+    <p>会议预览</p>
+</div>
+<!--会议预览-->
+<div class="meetPreview">
+   
+    <!--container-->
+    <div class="Container deleteHeader">
+        <!--banner-->
+        <div class="BannerImg">
+            <img src="" alt="" id="meetbanner">
+        </div>
+        <!--title-->
+        <div class="PreviewTitle">
+            <!--<h2>2017中国(河北)国际环境保护产业论坛会</h2>-->
+            <!--<p><i class="Icon Icon1"></i><span>北京中关村A3楼3层报告厅</span></p>-->
+            <!--<p><i class="Icon Icon2"></i><span>2017-08-25  10:00 AM</span></p>-->
+            <!--<p><i class="Icon Icon3"></i><span>环委会</span></p>-->
+        </div>
+        <!--preview-->
+        <div class="PreviewContainer">
+            <ul class="PreConTitle" id="PreConTitle">
+                <li class="active"><span>会议描述</span></li>
+                <li><span>会议资料</span></li>
+                <li><span>问卷调查</span></li>
+                <li><span>下期预告</span></li>
+            </ul>
+            <div class="PreContainerALL">
+                <!--描述-->
+                <div class="PreConListAll block PreDescribe">
+                    <div id="Meetms">
+                        <p class="miaoshu"></p>
+                        <div id="imgAll">
+                            <!--<img class="miaoshuImg" src="img/new1.jpg" alt="">-->
+                            <!--<img class="miaoshuImg" src="img/new2.png" alt="">-->
+                        </div>
+                    </div>
+                    <div class="GuestList">
+                        <p class="GuestListTitle">会议嘉宾</p>
+                        <ul>
+
+                        </ul>
+                    </div>
+                    <div>
+                        <p class="GuestListTitle">会议流程</p>
+                        <div class="PreProcess"></div>
+                    </div>
+                </div>
+                <!--资料-->
+                <div class="PreConListAll PreData">
+                    <ul>
+                        <!--<a href="dataDetail.html"><li>-->
+                        <!--<img src="img/ppt.jpg" alt="">-->
+                        <!--<div class="DataInfo">-->
+                        <!--<p class="DataTitle Ove" >中国环境保护的方针、政策和制度</p>-->
+                        <!--<p class="DataNum Ove">-->
+                        <!--<span class="DataLook"></span>-->
+                        <!--<span>129</span>-->
+                        <!--<span class="DataShare"></span>-->
+                        <!--<span>47</span>-->
+                        <!--</p>-->
+                        <!--</div>-->
+                        <!--</li></a>-->
+                        <!--<li>-->
+                        <!--<img src="img/word.jpg" alt="">-->
+                        <!--<div class="DataInfo">-->
+                        <!--<p class="DataTitle Ove" >会议安排</p>-->
+                        <!--<p class="DataNum Ove">-->
+                        <!--<span class="DataLook"></span>-->
+                        <!--<span>214</span>-->
+                        <!--<span class="DataShare"></span>-->
+                        <!--<span>42</span>-->
+                        <!--</p>-->
+                        <!--</div>-->
+                        <!--</li>-->
+                        <!--<li>-->
+                        <!--<img src="img/pdf.jpg" alt="">-->
+                        <!--<div class="DataInfo">-->
+                        <!--<p class="DataTitle Ove" >2017版环境保护法新旧对照表</p>-->
+                        <!--<p class="DataNum Ove">-->
+                        <!--<span class="DataLook"></span>-->
+                        <!--<span>186</span>-->
+                        <!--<span class="DataShare"></span>-->
+                        <!--<span>76</span>-->
+                        <!--</p>-->
+                        <!--</div>-->
+                        <!--</li>-->
+                    </ul>
+                </div>
+                <!--调查-->
+                <div class="PreConListAll previewContent" data-surId="" style="    overflow-y: scroll;">
+                    <div class="surMessage">
+                        <p class="surTit"></p>
+                        <p class="surMsg"></p>
+                    </div>
+                    <ul>
+                        <!--<li>-->
+                            <!--<p>1.您的公司名称</p>-->
+                            <!--&lt;!&ndash; <p class="comName">易魔方科技有限公司</p> &ndash;&gt;-->
+                            <!--<input type="text" class="comName" placeholder="请输入公司名称">-->
+                        <!--</li>-->
+                        <!--<li>-->
+                            <!--<p>2.您是否参加过类似会议</p>-->
+                            <!--<p><input type="radio" name="que">是</p>-->
+                            <!--<p><input type="radio" name="que">否</p>-->
+                        <!--</li>-->
+                        <!--<li>-->
+                            <!--<p>3.您参加会议的目的有哪些<span style="color:#bd0f10">[多选题]</span></p>-->
+                            <!--<p><input type="checkbox">认识更多同行朋友</p>-->
+                            <!--<p><input type="checkbox">寻找机会，拓展业务</p>-->
+                            <!--<p><input type="checkbox">关注当前行业发展趋势</p>-->
+                        <!--</li>-->
+                        <!--<li>-->
+                            <!--<p>4.您是通过哪种渠道获取到会议信息的</p>-->
+                            <!--<p><input type="radio" name="get">网络推广</p>-->
+                            <!--<p><input type="radio" name="get">朋友推荐</p>-->
+                            <!--<p><input type="radio" name="get">收到邀请函</p>-->
+                            <!--<p><input type="radio" name="get">公司派遣</p>-->
+                        <!--</li>-->
+                        <!--<li style="border:none">-->
+                            <!--<p>5.您觉得会议的哪种因素比较重要<span style="color:#bd0f10">[多选题]</span></p>-->
+                            <!--<p><input type="checkbox">分享行业动态</p>-->
+                            <!--<p><input type="checkbox">讨论行业前景</p>-->
+                            <!--<p><input type="checkbox">行业大佬讲解经验</p>-->
+                            <!--<p><input type="checkbox">会场整洁干净</p>-->
+                        <!--</li>-->
+                    </ul>
+                    <div class="btn" id="pShow">提交</div>
+
+                    <!--输入手机号弹框-->
+                    <div class="phoneBg" style="display: none">
+                        <div class="phoneInfo">
+                            <p class="item">温馨提示</p>
+                            <p class="pNum">
+                                <span>手机号：</span>
+                                <input id="mobileNum" type="phone" placeholder="请输入手机号"></p>
+                            <p class="pInfo">
+                                <span class="pClose" id="pClose">取消</span>
+                                <span class="pSure" onclick="surSubmit()">确定</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <!--下期预告-->
+                <div class="PreConListAll nextmeet">
+                    <div>
+                        <p class="nextmeetinfo"></p>
+                        <div class="nextmeetimg"></div>
+                    </div>
+                </div>
+                <div style="height: 1rem"></div>
+            </div>
+        </div>
+        <!--button-->
+
+    </div>
+</div>
+<!--主办方-->
+<div class="hostBg" style="display: none">
+    <div class="hostInfo">
+        <p>温馨提示</p>
+        <p><a href="tel:83118888">83118888</a></p>
+        <p>您确定拨打主办方电话吗？</p>
+        <p class="hostSure">
+            <span id="close_phone">取消</span>
+            <span id="sure_phoe">
+                    <a href="tel:83118888">确定</a>
+                </span>
+        </p>
+    </div>
+</div>
+<!--报名-->
+<div id="addName" style="display: none">
+    <!--header-->
+    <div class="Header header_name">
+        <a href="javascript:void(0)" id="addNameHeader" onclick="goback()"></a>在线报名
+    </div>
+    <!--addName_content-->
+    <div class="addName_content deleteHeader">
+        <div id="AddNameList">
+            <div class="name">
+                <span>姓名<b>*</b></span>
+                <input type="text" id="name" placeholder="请填写参会者姓名">
+            </div>
+            <div class="mobile">
+                <span>手机号码<b>*</b></span>
+                <input type="text" id="phone" placeholder="请填写参会者手机号码">
+            </div>
+            <div class="email">
+                <span>邮箱<b>*</b></span>
+                <input type="text" id="mail" placeholder="请填写参会者邮箱">
+            </div>
+            <div class="company">
+                <span>公司<b>*</b></span>
+                <input type="text" id="company" placeholder="请填写参会者公司">
+            </div>
+            <div class="job">
+                <span>职位<b>*</b></span>
+                <input type="text" id="job" placeholder="请填写参会者职位">
+            </div>
+        </div>
+    </div>
+    <div class="nameBtn">
+        <div class="back_btn" onclick="goback()">取消</div>
+        <div class="succ_btn">完成</div>
+    </div>
+</div>
+<div class="PhoneAndName">
+    <p class="Phone">联系主办方</p>
+    <p class="Name" onclick="baoming()">报名</p>
+</div>
+
+<!--地图-->
+<!-- <div id="container" style="display: none"></div>
+<div class="position" style="display: none">
+    <input type="text" id="mapSearch" placeholder="请输入您需要定位的地址">
+    <p>返回</p>
+</div> -->
+<iframe id="map" style="display: none;border:0;" data-name="" data-loca=""  src="https://m.amap.com/picker/?center=116.3972,39.9696&key=9b7bdc963a3b447ef43283bef0b6f1c5"></iframe>
+
+
+
+<div id="reqtoken" class="reqtoken"></div>
+
+
+
+
+<script type="text/javascript">
+    pushHistory();
+    window.addEventListener("popstate", function(e) {
+        // alert('mmmm.html?confsid='+NumAll.confsid);
+        // alert("我监听到了浏览器的返回按钮事件啦");//根据自己的需求实现自己的功能
+        window.location.href = 'mmmm.html?confsid='+NumAll.confsid;
+    }, false);
+    function pushHistory() {
+        var state = {
+            title: "title",
+            url: "#"
+        };
+        window.history.pushState(state, "title", "#");
+    }
+
+        (function(){
+        // $("#map").show();
+        var iframe = document.getElementById('map').contentWindow;
+        document.getElementById('map').onload = function(){
+          iframe.postMessage('hello','https://m.amap.com/picker/');
+        };
+        window.addEventListener("message", function(e){
+          // alert('您选择了:' + e.data.name + ',' + e.data.location);
+          $("iframe").attr('data-name',e.data.name);
+          $("iframe").attr('data-loca',e.data.location);
+          $("#mapShow").css('background-image','none');
+          $("#mapShow").val(e.data.name);
+          $("iframe").hide();
+          $('.Header').show();
+          $(".meetPreview").show();
+          $(".addName").show();
+          $(".PhoneAndName").show();
+          $(".ditu").html(e.data.name);
+        }, false);
+   }());
+</script>
+
+<script type="text/javascript">
+    /***************************************
+     由于Chrome、IOS10等已不再支持非安全域的浏览器定位请求，为保证定位成功率和精度，请尽快升级您的站点到HTTPS。
+     ***************************************/
+    var map, geolocation;
+    //加载地图，调用浏览器定位服务
+    map = new AMap.Map('container', {
+        resizeEnable: true
+    });
+    map.plugin('AMap.Geolocation', function() {
+        geolocation = new AMap.Geolocation({
+            enableHighAccuracy: true,//是否使用高精度定位，默认:true
+            timeout: 10000,          //超过10秒后停止定位，默认：无穷大
+            buttonOffset: new AMap.Pixel(10, 20),//定位按钮与设置的停靠位置的偏移量，默认：Pixel(10, 20)
+            zoomToAccuracy: true,      //定位成功后调整地图视野范围使定位位置及精度范围视野内可见，默认：false
+            buttonPosition:'RB'
+        });
+        map.addControl(geolocation);
+        geolocation.getCurrentPosition();
+        AMap.event.addListener(geolocation, 'complete', onComplete);//返回定位信息
+        AMap.event.addListener(geolocation, 'error', onError);      //返回定位出错信息
+    });
+    //解析定位结果
+    function onComplete(data) {
+        var str=['定位成功'];
+        //alert(111);
+        str.push('经度：' + data.position.getLng());
+        str.push('纬度：' + data.position.getLat());
+        if(data.accuracy){
+            str.push('精度：' + data.accuracy + ' 米');
+        }//如为IP精确定位结果则没有精度信息
+        str.push('是否经过偏移：' + (data.isConverted ? '是' : '否'));
+        document.getElementById('tip').innerHTML = str.join('<br>');
+        $('#map').attr('src','https://m.amap.com/picker/?center='+data.position.getLng()+','+data.position.getLat()+'&key=9b7bdc963a3b447ef43283bef0b6f1c5')
+    }
+    //解析定位错误信息
+    function onError(data) {
+        document.getElementById('tip').innerHTML = '定位失败';
+        $('#map').attr('src','https://m.amap.com/picker/?center=116.398024,39.909207&key=9b7bdc963a3b447ef43283bef0b6f1c5');
+    }
+</script>
+</body>
+</html>

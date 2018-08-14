@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+    <title>微会议</title>
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="css/my.css">
+    <script src="js/jquery-2.1.4.min.js"></script>
+    <script src="js/rem.js"></script>
+    <script src="js/removeHeader.js"></script>
+    <!-- <script src="jscript/my.js"></script> -->
+</head>
+<body>
+	<!--modifyCon-->
+	<div class="modifyCon">
+		<ul>
+			<li>
+				<span class="oldPW PW">旧密码</span>
+				<input class="oldPWPut PWPut" type="password" placeholder="请输入旧密码">
+				<span class="del" id="delOldPW"></span>
+			</li>
+			<li class="modNew">
+				<span class="newPW PW">新密码</span>
+				<input class="newPWPut PWPut" type="password" placeholder="请输入新密码">
+				<span class="del" id="delNewPW"></span>
+			</li>
+			<li>
+				<span class="sureNewPW PW">确认新密码</span>
+				<input class="sureNewPWPut PWPut" type="password" placeholder="请再次输入新密码">
+				<span class="del" id="delSureNP"></span>
+			</li>
+		</ul>
+	</div>
+	<!--btn-->
+	<div class="btn" onclick="savePW()">确认修改</div>
+	
+	<div id="reqtoken" class="reqtoken"></div>
+
+	<script>
+	$(function(){
+		$(".del").click(function(){
+			$(this).siblings('input').val('');
+		});
+	});
+	//保存修改密码
+	function savePW(){
+		var oldPW = $(".oldPWPut").val();//旧密码
+	    var newPW = $(".newPWPut").val();//新密码
+	    var newPW2 = $(".sureNewPWPut").val();//确认新密码
+
+	    if((oldPW && newPW && newPW2) == ''){
+	    	alert("密码不能为空！");
+	    }else if(newPW != newPW2){
+	    	alert("两次输入密码不一致！");
+	    }else{
+	        $.ajax({
+	            type:'post',
+	            url:Urlstr + 'updata_pass.do',
+	            data:{
+	                newpass:newPW,
+	                token:Token
+	            },
+	            dataType:'json',
+	            success:function(res){
+	                if(res.error == 0){
+	                    alert(res.msg);
+	                }else if (res.error == 5) {
+	                    alert(res.msg);
+	                    ReqToken();
+	                    Token = sessionStorage.getItem('token');
+	                }else{
+	                    alert(res.msg);
+	                }
+	            }
+	        });
+	    }
+	}
+	</script>
+</body>
+</html>

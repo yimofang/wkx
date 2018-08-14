@@ -1,0 +1,225 @@
+$(function(){
+    getNamed();
+    // 报名填写
+    $('.defind').on('click', 'button', function () {
+        $('.infoContent ul').append($(this).parent('li'));
+    });
+    $('.infoContent').on('click', 'button', function () {
+        $('.defind ul').append($(this).parent('li'));
+    });
+});
+
+//保存
+function BMsave() {
+    if ($('#nameStartTime').html() == '请选择' && $('#nameEndTime').html() == '请选择'){
+        if (NumAll.states == 1) {
+            window.location.href = 'meetChoice.html?confsid=' + NumAll.confsid;
+        } else {
+            window.location.href = 'meetChoice2.html?confsid=' + NumAll.confsid;
+        }
+    }else if ($('#nameStartTime').html() == '请选择' || $('#nameEndTime').html() == '请选择') {
+        alert('时间填写有误，请确认');
+    } else {
+        var BMSTime = GetMeetTime(nameStartTime);
+        var BMETime = GetMeetTime(nameEndTime);
+        //console.log(BMSTime,BMSTime);
+        if (TimeScor(BMSTime, BMETime)) {
+            var list = $('.infoContent li');
+            for (var i = 0, enlist = ''; i < list.length; i++) {
+                enlist += $('.infoContent ul li:eq(' + i + ') span').attr('data-id') + ',';
+            }
+            $.ajax({
+                type: 'post',
+                url: Urlstr + 'confs_web/confsSystem.do',
+                data: {
+                    enlist: enlist.slice(0, -1),
+                    id: NumAll.confsid,
+                    shend: BMETime,
+                    shstart: BMSTime
+                },
+                dataType: 'json',
+                success: function (res) {
+                    if (res.error == 0) {
+                        alert('已保存');
+                        if (NumAll.states == 1) {
+                            window.location.href = 'meetChoice.html?confsid=' + NumAll.confsid;
+                        } else {
+                            window.location.href = 'meetChoice2.html?confsid=' + NumAll.confsid;
+                        }
+                    } else if (res.error == 5) {
+                        console.log(res.msg);
+                        ReqToken();
+                        Token = sessionStorage.getItem('token');
+                    } else {
+                        alert(res.msg);
+                    }
+                }
+            });
+        } else {
+            alert('时间填写有误，请确认');
+        }
+    }
+}
+
+//获取报名内容
+function getNamed(){
+    $.ajax({
+            type: 'post',
+            url: Urlstr + 'confs_web/getEnlist.do',
+            data: {
+                id: NumAll.confsid,
+                token: Token
+            },
+            dataType: 'json',
+            success: function (res) {
+                if (res.error == 0) {
+                    console.log(res);
+                    if(res.row.shstart!=''&&res.row.shend!=''){
+                        var Stime = ZHDate2(new Date(res.row.shstart));
+                        var Etime = ZHDate2(new Date(res.row.shend));
+                        $('#nameStartTime').html(Stime.time).attr('data-year', Stime.year).attr('data-month', Stime.month).attr('data-date', Stime.date).attr('data-hour', Stime.hour).attr('data-minute', Stime.minute);
+                        $('#nameEndTime').html(Etime.time).attr('data-year', Etime.year).attr('data-month', Etime.month).attr('data-date', Etime.date).attr('data-hour', Etime.hour).attr('data-minute', Etime.minute);
+                        // $('#nStartTime').css('pointer-events','none');
+                    } 
+                     var enlist = '1,2,';
+                    if (res.row.enlists.length > 2) {
+                        var htmlstr = '';
+                        for (var i = 0; i < res.row.enlists.length; i++) {
+                            htmlstr += `<li>
+                                            <span data-id="${res.row.enlists[i].id}">${res.row.enlists[i].ename}</span>
+                                            <button></button>
+                                        </li>`;
+                            enlist += `${res.row.enlists[i].id},`;
+                        }
+                        $('.infoContent ul').html(htmlstr);
+                        $('.infoContent ul li:eq(0) button').hide();
+                        $('.infoContent ul li:eq(1) button').hide();
+                        enlists(enlist);
+                    } else {
+                        enlists(enlist);
+                    }
+
+                } else if (res.error == 5) {
+                    alert(res.msg);
+                    ReqToken();
+                    Token = sessionStorage.getItem('token');
+                } else {
+                    alert(res.msg);
+                }
+            }
+        });
+}
+
+function enlists(str) {
+    $.ajax({
+        type: 'post',
+        url: Urlstr + 'confs_web/selectEnlist.do',
+        data: {
+            enlist: str.slice(0, -1),
+            token: Token
+        },
+        dataType: 'json',
+        success: function (res) {
+            console.log(res);
+            var htmlstr = '';
+            for (var i = 0; i < res.row.length; i++) {
+                htmlstr += `<li>
+                             <span data-id="${res.row[i].id}">${res.row[i].ename}</span>
+                              <button></button>
+                           </li>`;
+            }
+            $('.defind ul').html(htmlstr);
+        }
+    });
+}
+
+function BMCancel(){
+    if (NumAll.states == 1) {
+        window.location.href = 'meetChoice.html?confsid=' + NumAll.confsid;
+    } else {
+        window.location.href = 'meetChoice2.html?confsid=' + NumAll.confsid;
+    }
+}
+
+
+/************************* 公共函数**********************/
+
+//获取时间
+function GetMeetTime(timeid) {
+    var time_y = $(timeid).attr('data-year'),
+        time_m = $(timeid).attr('data-month'),
+        time_d = $(timeid).attr('data-date') * 1 < 10 ? '0' + $(timeid).attr('data-date')*1 : $(timeid).attr('data-date'),
+        time_h = $(timeid).attr('data-hour') * 1 < 10 ? '0' + $(timeid).attr('data-hour')*1 : $(timeid).attr('data-hour'),
+        time_mi = $(timeid).attr('data-minute') * 1 < 10 ? '0' + $(timeid).attr('data-minute')*1 : $(timeid).attr('data-minute');
+    var time = time_y + '-' + time_m + '-' + time_d + ' ' + time_h + ':' + time_mi;
+    return time;
+}
+
+// 时间对比
+function TimeScor(Stime, Etime) {
+    // var time1 = Date.parse(Stime);
+    var time1 = new Date(Stime.replace(/-/g, '/')).getTime();
+    // var time2 = Date.parse(Etime);
+    var time2 = new Date(Etime.replace(/-/g, '/')).getTime();
+    if (time1 < time2) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+// 时间戳转时间
+function ZHDate2(now) {
+    var year = now.getYear();
+    var month = now.getMonth() + 1;
+    var date = now.getDate();
+    var hour = now.getHours();
+    var minute = now.getMinutes();
+    //var second = now.getSeconds();
+    return {
+        year: "20" + year.toString().slice(1, 3),
+        month: month,
+        date: date,
+        hour: hour,
+        minute: minute,
+        time: "20" + year.toString().slice(1, 3) + "年" + month + "月" + date + "日 " + hour + "时" + minute + "分"
+    };
+}
+
+//补0操作
+function getzf(num) {
+    if (parseInt(num) < 10) {
+        num = '0' + num;
+    }
+    return num;
+}
+function ZHyear(now) {
+    var year = now.getYear();
+    return "20" + year.toString().slice(1, 3);
+}
+function ZHmonth(now) {
+    var month = now.getMonth() + 1;
+    return month;
+}
+function ZHdate(now) {
+    var date = now.getDate();
+    return date;
+}
+// 获取小时
+function ZHhour(now) {
+    var hour = now.getHours();
+    return hour;
+}
+
+// 获取分钟
+function ZHminute(now) {
+    var minute = now.getMinutes();
+    return minute;
+}
+
+//Token 过期 重新请求
+function ReqToken() {
+    $('#reqtoken').load("login3.html", function () {
+        $('#reqtoken').show();
+    });
+}

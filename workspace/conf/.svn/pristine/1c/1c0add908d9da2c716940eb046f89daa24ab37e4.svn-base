@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!--<script src="../js/jquery.min.js"></script>-->
+<script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+<script>
+    var urls="http://192.168.2.209:8080";
+
+    function loadlook(){
+        var htmlstr="";
+        $.ajax({
+            type : "POST", //提交方式
+            url : urls + "/conf/testhtml/testlist.do",//路径
+            dataType : "json",
+            success : function(data) {//返回数据根据结果进行相应的处理
+                console.log(data);
+
+                $.each(data, function(index, value) {
+                    htmlstr+=value.realname+" ";
+                });
+                $("#looks").html(htmlstr);
+            }
+        });
+    }
+
+
+</script>
+<body>
+Hello, .欢迎阅读《 xxxxxxxxx》
+<button onclick="loadlook()">点我</button>
+
+<span id="looks">
+
+</span>
+
+ 
+<form action="http://192.168.2.209:8080/conf/imgupload.do" method="post" enctype="multipart/form-data">  
+<input type="text" name="token">
+
+<input type="file" name="myfiles" /> <input type="submit" value="Submit" /></form>  
+ 
+
+</body>
+</html>

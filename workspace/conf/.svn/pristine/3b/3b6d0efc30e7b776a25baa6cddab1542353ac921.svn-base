@@ -1,0 +1,8 @@
+$(function(){
+	$(".addOption>p").click(function(){
+		var num = $(".doubleOption > div").length;
+		$(this).parent().before("<div><span>选项"+num+"</span><input type='text' placeholder='选项名称'></div>");
+		$(".select").append("<option value="+num+">"+num+"</option>");
+		num++;
+	});	
+});

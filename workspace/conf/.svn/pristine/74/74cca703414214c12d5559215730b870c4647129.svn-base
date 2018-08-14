@@ -1,0 +1,53 @@
+package net.emof.building.dao;
+
+import java.util.List;
+import java.util.Map;
+
+import org.apache.ibatis.annotations.Select;
+import org.springframework.stereotype.Repository;
+
+/**
+ * 通用sql动态查询语句
+ * @author baikun
+ * @creation 2017年7月31日
+ */
+@Repository
+public interface SqlToolsMapper {
+	
+	   /**
+     * 查询sql语句
+     * @author baikun
+     * @creation 2017年7月31日
+     * @param sqlstr  数据库语句
+     * @return
+     */
+    @Select("${_parameter}")
+	List<Map<String,Object>>executeSql(String sqlstr);
+
+    
+	/**
+	 * 分页查询
+     * @author 白琨
+	 * @see 2013-1-15
+	 * @param 
+	 * @param map
+	 * myCount:总条数 , tableName: 表名,tableKey：表主键 ，
+	find：显示字段（默认*全部0），pageSize：显示条数，
+	page：当前页,where：条件（查询不需要写where）,
+	order 排序（默认以主键排序，查询需要加 order by xx asc,xxx desc）
+	    map.put("myCount", pageInfo.getCount());
+		map.put("tableName", "user");
+		map.put("tableKey", "id");
+		map.put("find", "*");
+		map.put("pageSize", 5);
+		map.put("page", 1);
+		map.put("where", "");
+		map.put("order", "");
+	 * @return  List<Map<String, Object>>
+	 */
+	List<Map<String, Object>> getPage_json(Map<String, Object> map);
+    
+    
+    
+    
+}

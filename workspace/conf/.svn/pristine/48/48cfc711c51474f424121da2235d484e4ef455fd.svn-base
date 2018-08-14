@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>微会议</title>
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/password.css">
+</head>
+
+<body>
+<div class="topLine"></div>
+<div class="header"></div>
+
+<div class="left_nav">
+    <ul class="nav_one">
+        <li class="nav_manage">
+            <a href="meetList.html">
+                <b ></b>
+                <span>会议管理</span>
+            </a>
+        </li>
+        <li class="nav_release">
+            <a href="meetPublish.html">
+                <b></b>
+                <span>发布会议</span>
+            </a>
+        </li>
+        <li class="nav_pwd  active">
+            <a href="password.html">
+                <b class="active"></b>
+                <span>修改密码</span>
+            </a>
+        </li>
+    </ul>
+</div>
+<div class="right_wrapper">
+    <!--top-->
+    <div class="top">
+        <span>修改密码</span>
+        <div class="submits">保存</div>
+    </div>
+    <div class="wrapper">
+        <div class="psdinfo">
+            <ul>
+                <li>
+                    <span class="pwd_tit">旧密码：</span>
+                    <div class="pwd_input" >
+                        <input type="password" placeholder="请输入旧密码" id="pedJiu">
+                        <i></i>
+                    </div>
+                </li>
+                <li>
+                    <span class="pwd_tit">新密码：</span>
+                    <div class="pwd_input" >
+                        <input type="password" placeholder="请输入新密码" id="pedNew">
+                        <i></i>
+                    </div>
+                </li>
+                <li>
+                    <span class="pwd_tit">确认密码：</span>
+                    <div class="pwd_input" >
+                        <input type="password" placeholder="请再次输入新密码" id="pedNews">
+                        <i></i>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="footer">
+    <span class="name">北京易魔方科技集团有限公司</span>
+    <span class="beian">Copyright © 2014-2018  京ICP备13046454号-4</span>
+</div>
+
+<script src="javascript/jquery-2.1.4.min.js"></script>
+<script src="javascript/common.js"></script>
+<script src="js/password.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,90 @@
+@charset "utf-8";
+/*遮罩层*/
+.zhezhao{
+    display: none;
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background: rgba(0,0,0,.2);
+}
+.zhezhao .tishi{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    width: 80%;
+    background: #fff;
+    border-radius: 0.1rem;
+}
+.zhezhao .tishi .tishitit{
+    background: #bd0f10;
+    line-height: 0.8rem;
+    color: #fff;
+    text-align: center;
+    border-top-left-radius: 0.1rem;
+    border-top-right-radius: 0.1rem;
+    font-size:0.32rem;
+}
+.zhezhao .tishi .tishiinfo{
+    line-height: 1.6rem;
+    text-align: center;
+    font-size:0.28rem;
+}
+.zhezhao .tishi div{
+    overflow: hidden;
+    padding-bottom: 0.5rem;
+}
+.zhezhao .tishi div span{
+    float: left;
+    width: 2.3rem;
+    height: 0.68rem;
+    line-height: 0.68rem;
+    border-radius: 0.1rem;
+    background: #bd0f10;
+    color: #fff;
+    text-align: center;
+    margin: 0 8% 0 2%;
+    font-size:0.3rem;
+}
+.zhezhao .tishi div span.none{
+    background: #1b1b1b;
+    margin: 0 2% 0 8%;
+}
+/*隐藏递交*/
+.footer_btn {
+    position: fixed;
+    width: 100%;
+    height: 0.9rem;
+    bottom: 0;
+    line-height: 0.9rem;
+    text-align: center;
+    background: #1b1b1b;
+    color: #fff;
+    font-size: 0.3rem;
+    margin-top: 0.66rem;
+}
+.footer_btn .upBack{
+    float: left;
+    width: 50%;
+    height: 0.9rem;
+    bottom: 0;
+    line-height: 0.9rem;
+    text-align: center;
+    background: #1b1b1b;
+    color: #fff;
+    font-size: 0.3rem;
+}
+.footer_btn .upBtn{
+    float: left;
+    width: 50%;
+    height: 0.9rem;
+    bottom: 0;
+    line-height: 0.9rem;
+    text-align: center;
+    background: #bd0f10;
+    color: #fff;
+    font-size: 0.3rem;
+}
+

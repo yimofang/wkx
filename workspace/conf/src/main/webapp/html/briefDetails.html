@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+	<title>简报详情</title>
+	<link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/brief.css">
+    <script src="js/jquery-2.1.4.min.js"></script>
+	<script src="js/rem.js"></script>
+	<script src="js/removeHeader.js"></script>
+</head>
+<body>
+	<!--brief-->
+	<div class="briefTitle deleteHeader">
+		<div>
+			<p>知诚会学习贯彻中发【2017】25号《意见》精神</p>
+			<p>2017-09-30</p>	
+		</div>
+	</div>
+	<div class="briefContent">
+		<div>
+			<p></p>
+			<div class="briefContentimg" style="width: 100%"></div>
+		</div>
+	</div>
+	<!--briefBtn-->
+	<!--<div class="briefBtn">分享</div>-->
+	<div id="reqtoken" class="reqtoken"></div>
+	<script>
+		$(function () {
+			$.ajax({
+				type:'post',
+				url:Urlstr + 'confsbrief_web/getinfo.do',
+				data:{
+				    id:NumAll.id,
+					token:Token
+				},
+				dataType:'json',
+				success:function (res) {
+					if(res.error == 0){
+                        var creTime=new Date(parseInt(res.row.createtime)).toLocaleDateString().replace(/\//g, "-");
+                        var html1 = `<p>${res.row.bname}</p><p>${creTime}</p>`;
+                        $('.briefTitle div').html(html1);
+                        $('.briefContent div p').html(res.row.introd);
+       //                  var imglist = res.row.imgs.split(",");
+       //                  var html2 = '';
+       //                  if(imglist.length>0){
+       //                      for(var i = 0; i<imglist.length;i++){
+       //                          html2+=`<img src="${Urlstr}upload/${imglist[i]}">`
+							// }
+							// $('.briefContentimg').html(html2);
+       //                  }
+					}else if(res.error == 5){
+					    alert(res.msg);
+					    ReqToken();
+					}else{
+					    alert(res.msg)
+					}
+                }
+			})
+        })
+        //token
+        function ReqToken() {
+            $('#reqtoken').load("login3.html",function() {
+                $('#reqtoken').show();
+            });
+        }
+	</script>
+</body>
+</html>

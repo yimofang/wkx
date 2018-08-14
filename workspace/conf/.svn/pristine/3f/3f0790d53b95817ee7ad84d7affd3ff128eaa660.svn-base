@@ -1,0 +1,555 @@
+input.requiredtype,select.requiredtype,img.requiredtype,textarea.requiredtype{
+    border:1px solid #da0e00 !important;
+}
+.flow_shade,.guest_shade{
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 9999;
+    background: rgba(0,0,0,.4);
+}
+.top{
+    position: fixed;
+    height: 47px;
+    line-height: 47px;
+    padding: 0 25px;
+    background: #fff;
+    border-bottom: 1px solid #eee;
+    margin-top: 10px;
+    z-index: 1000;
+    width: 83%;
+}
+.top .t_left{
+    font-size:16px;
+}
+.top .t_right{
+    float:right;
+    font-size: 14px;
+}
+.top .t_right span,.top .t_right a{
+    width: 80px;
+    height: 28px;
+    line-height: 28px;
+    text-align: center;
+    border-radius: 5px;
+    color: #fff;
+    display: inline-block;
+    cursor: pointer;
+}
+.top .t_right span.t_pre{
+    background:#1b1b1b ;
+    margin-right: 10px;
+}
+.top .t_right span.t_sava{
+    background:#da0e00 ;
+}
+.top .t_right a.p_cancel{
+   border:1px solid #da0e00;
+    color:#da0e00;
+    margin-right: 10px;
+}
+.top .t_right span.p_save{
+    background: #da0e00;
+}
+
+/*main*/
+.main{
+    padding:0 25px 25px;
+    background: #fff;
+
+}
+.main .title{
+
+border-bottom: 1px solid #eee;
+
+height:39px;
+
+line-height: 38px;
+
+cursor: pointer;
+
+background: #fff;
+}
+.main .title button{
+    display: inline-block;
+    font-size: 14px;
+    width:100px;
+    text-align: center;
+    margin-right: 35px;
+    cursor:pointer;
+    background:  none;
+    border: none;
+    outline: none;
+}
+.main .title button.active{
+    color:#da0e00;
+    border-bottom: 1px solid #da0e00;
+}
+
+
+/***************************************发布会议-----基本信息**************************/
+.cont1{
+    padding:0 100px 85px;
+}
+.cont1 b{
+    color:#da0e00;
+}
+.cont1 li{
+    margin-top:25px;
+    display: block;
+}
+.cont1 li.miaoshu{
+    position: relative;
+    overflow: hidden;
+}
+.cont1 li span{
+    width: 80px;
+    display:inline-block;
+    float: left;
+}
+.cont1 .meetImg{
+    min-height: 150px;
+}
+.cont1  .zhu{
+    padding: 5px 80px 0;
+    font-size: 12px;
+}
+.cont1 li img{
+    vertical-align: text-top;
+    width: auto;
+    height: 150px;
+}
+.cont1 li input,.cont1 li select{
+    width:88%;
+    padding:0 14px;
+    height:28px;
+    border:1px solid #d5d6de;
+    border-radius: 3px;
+    box-sizing: border-box;
+}
+.cont1 li textarea{
+    width:85%;
+    height:300px;
+    border: 1px solid #d5d6de;
+    border-radius: 5px;
+    padding:14px;
+    vertical-align: text-top;
+}
+.cont1 .ms_txt{
+    width: 88%;
+    height: 340px;
+    float: left;
+}
+/*地图*/
+#container{
+    width:97%;
+    height: 240px;
+    margin-top: 25px;
+}
+
+/*************************************发布会议---流程**************************/
+.cont2{
+    padding:0 100px 35px;
+    margin-top: 12px;
+    position:  relative;
+}
+.cont2 li{
+    position: relative;
+    height: 152px;
+    /*border-left: 1px solid #eee;*/
+    padding: 14px;
+    color:#999cab;
+    font-size:  14px;
+    box-sizing:  border-box;
+}
+.cont2 li.addLine{
+    border:1px solid #eee;
+    box-shadow:0px 0px  1px 1px #eee;
+}
+.cont2 li:before{
+    content:'';
+    width:1px;
+    height:  100%;
+    background:#eee;
+    position: absolute;
+    top: 16px;
+    left: -18px;
+}
+.cont2 li .circle{
+    position:absolute;
+    width:14px;
+    height: 14px;
+    border: 2px solid #EEE;
+    border-radius: 9px;
+    top: 16px;
+    left: -25px;
+    background: #fff;
+}
+.cont2 li div{
+    float:left;
+}
+.cont2 li .num{
+    width:20px;
+    line-height: 20px;
+}
+.cont{
+    margin-left: 14px;
+    width: 90%;
+}
+
+.add{
+    position: relative;
+    font-size:12px;
+    /* padding-left: 12px; */
+    color: #da0e00;
+    line-height: 20px;
+    cursor:pointer;
+}
+.circle{
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    border: 2px solid #eee;
+    border-radius: 9px;
+    top: 0;
+    left: -24px;
+    background: #fff;
+}
+.cont input{
+    width: 95%;
+    height: 28px;
+    line-height: 28px;
+    border: 1px solid #d5d6de;
+    border-radius: 3px;
+    padding: 0 14px;
+}
+.cont textarea{
+    margin-top:4px;
+    width: 95%;
+    height: 87px;
+    border: 1px solid #d5d6de;
+    padding: 3px 14px;
+    border-radius: 3px;
+    line-height: 22px;
+}
+.cont2 .del{
+    width: 28px;
+    height: 128px;
+    text-align: center;
+    cursor: pointer;
+    background:  #000;
+    color: #fff;
+    border-radius: 3px;
+    padding: 30px 2px;
+}
+.saveFlow{
+    width: 90px;
+    height:40px;
+    line-height:40px;
+    text-align: center;
+    background-color: #da0e00;
+    color:#fff;
+    font-size: 16px;
+    border-radius: 3px;
+    margin: 20px auto;
+    cursor: pointer;
+    /* outline: none; */
+    border: none;
+    position:  absolute;
+    left: 50%;
+    margin-left: -45px;
+}
+
+/****************发布会议---嘉宾************************************/
+.cont3{
+    padding:0 70px;
+    margin:25px auto;
+    font-size: 14px;
+    position:  relative;
+}
+.cont3 li{
+    position: relative;
+    height: 180px;
+    /*border-left: 1px solid #eee;*/
+    padding: 14px;
+    color:#999cab;
+    font-size:  14px;
+    box-sizing:  border-box;
+}
+.cont3 li>div{
+    float:left;
+}
+.cont3 li.addLine{
+    border:1px solid #eee;
+    box-shadow:0px 0px  1px 1px #eee;
+}
+.cont3 li:before{
+    content:'';
+    width:1px;
+    height:  100%;
+    background:#eee;
+    position: absolute;
+    top: 16px;
+    left: -18px;
+}
+.cont3 li .circle{
+    position:absolute;
+    width:14px;
+    height: 14px;
+    border: 2px solid #EEE;
+    border-radius: 9px;
+    top: 16px;
+    left: -25px;
+    background: #fff;
+}
+.cont3 li .g_num{
+    margin-right: 14px;
+    color:#999cab;
+}
+.cont3 li .g_img{
+    width:150px;
+    height: 152px;
+    border:1px solid #d5d6de;
+    margin-right:10px;
+    overflow:  hidden;
+}
+.cont3 li .g_img img{
+    width:100%;
+    height:100%;
+}
+.cont3 li .g_img input{
+    display: none;z-index:2000;    z-index: 2000;width: 100%;height: 100%;display: inline-block;position: absolute;top: 0;left: 0;opacity: 0;
+}
+.cont3 li .g_info{
+    width:65%;
+}
+.g_info input{
+    display: block;
+    width: 100%;
+    height:28px;
+    line-height: 28px;
+    border:1px solid #d5d6de;
+    border-radius: 3px;
+    padding:0 14px;
+    margin-bottom: 4px;
+}
+.g_info textarea{
+    display: block;
+    width: 100%;
+    height:88px;
+    padding:5px 14px;
+    border:1px solid #d5d6de;
+    border-radius: 3px;
+}
+.cont3 li .g_del{
+    float: right;
+    width: 28px;
+    height: 150px;
+    text-align: center;
+    cursor: pointer;
+    background:  #000;
+    color: #fff;
+    border-radius: 3px;
+    padding: 45px 2px;
+    margin-left: 15px;
+}
+.cont3 .g_add{
+    width:104px;
+    height:84px;
+    border:1px solid #D5D6DE;
+    background: url("../img/g_add.png") center center no-repeat;
+    background-size:cover;
+    margin-top: 30px;
+    margin-left: 68px;
+}
+.g_img>div{
+    width:100%;
+    height:100%;
+    position:  relative;
+}
+.guestBtn{
+    width:90px;
+    height:40px;
+    line-height: 40px;
+    text-align: center;
+    font-size: 16px;
+    color:#fff;
+    background: #da0e00;
+    border-radius: 3px;
+    margin: 20px auto;
+    border: none;
+    position:  absolute;
+    left: 50%;
+    margin-left: -45px;
+}
+
+
+
+/**************************下期预告*********************/
+.cont4{
+    margin-top:25px;
+}
+.report{
+    padding:0 70px;
+    text-align: center;
+}
+.report .reTxt{
+    float:left;
+    font-size:12px;
+}
+
+.report .reCont{
+    float:left;
+    width:93%;
+    height: 400px;
+}
+.reBtn{
+    width:90px;
+    height:40px;
+    line-height: 40px;
+    text-align: center;
+    font-size: 16px;
+    color:#fff;
+    background: #da0e00;
+    margin:0 auto;
+    border-radius:3px;
+    display: inline-block;
+    cursor: pointer;
+    border: none;
+}
+
+/***********************报名设置****************************/
+.cont5{
+    margin-top: 25px;
+}
+.postName{
+    padding-left:70px;
+    /* text-align:  center; */
+}
+.postName .n_txt{
+    float:left;
+    width:80px;
+}
+.postName .sTime{
+    float:left;
+    width: 50%;
+    padding: 0 14px;
+    height: 28px;
+    border: 1px solid #d5d6de;
+    border-radius: 3px;
+    box-sizing: border-box;
+}
+.postName>div{
+    display: block;
+    margin-bottom:24px;
+    /* height: 500px; */
+}
+.postName ul{
+    float:left;
+    width: 50%;
+}
+.item{
+    height: 260px;
+}
+.item li{
+    margin-bottom: 24px;
+}
+.inp{
+    position: relative;
+    /* width: 100%; */
+}
+.inp input{
+    width: 100%;
+    height:28px;
+    border:1px solid #d5d6de;
+    border-radius: 3px;
+    box-sizing: border-box;
+    padding-left:85px;
+    padding-right:85px;
+    background: #fff;
+}
+.inp .span1{
+    position: absolute;
+    left:15px;
+    top:5px;
+
+}
+.inp .span2{
+    position: absolute;
+    right:0;
+    top: 0px;
+    width:85px;
+    height: 28px;
+    line-height: 28px;
+    background: #d5d6de;
+    font-size:12px;
+    border-bottom-right-radius: 3px;
+    border-top-right-radius: 3px;
+    text-align:  center;
+}
+.bt{
+    margin-right: -40px;
+    float: right;
+    margin-top: -24px;
+    color: #da0e00;
+}
+.red{
+    color:#da0e00;
+}
+.itemDel{
+    width:12px;
+    height:12px;
+    background: url("../img/del.png") center center no-repeat;
+    background-size: cover;
+    margin-right: -32px;
+    float: right;
+    margin-top: -22px;
+    display:  inline-block;
+}
+.postName>div.choice{
+    margin-left: 80px;
+}
+.choice>span{
+    position: relative;
+   width:148px;
+    height:28px;
+    line-height: 28px;
+    border:1px solid #d5d6de;
+    text-align: center;
+    display: inline-block;
+    margin-right: 24px;
+    border-radius: 3px;
+}
+.choice button{
+    position: absolute;
+    width:12px;
+    height: 12px;
+    background: url("../img/add.png") center center no-repeat;
+    border: none;
+    border-radius:6px;
+    background-size:cover;
+    right: -7px;
+    top: -6px;
+}
+.nameBtn{
+    width:90px;
+    height:40px;
+    line-height:40px;
+    text-align: center;
+    font-size: 16px;
+    background: #da0e00;
+    border-radius: 3px;
+    margin: 20px 0 0 285px;
+    color:#fff;
+    display: inline-block;
+    cursor: pointer;
+    border: none;
+}
+
+
+
+
+

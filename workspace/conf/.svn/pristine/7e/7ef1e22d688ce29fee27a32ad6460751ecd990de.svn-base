@@ -1,0 +1,144 @@
+var page = 1;
+$(function(){
+    myself();
+
+    //清除旧密码input内容
+    $("#delOldPW").click(function(){
+        $(".oldPWPut").val('');
+    });
+    //清除新密码input内容
+    $("#delNewPW").click(function(){
+        $(".newPWPut").val('');
+    });
+    //清除确认新密码input内容
+    $("#delSureNP").click(function(){
+        $(".sureNewPWPut").val('');
+    });
+
+    //消息中心：上拉加载更多
+    $('.Content').scroll(function() {
+        //当滚动条离底部60px时开始加载下一页的内容
+        if (($(this)[0].scrollTop + $(this).height() + 260) >= $(this)[0].scrollHeight) {
+            clearTimeout(timers);
+            //这里还可以用 [ 延时执行 ] 来控制是否加载 （这样就解决了 当上页的条件满足时，一下子加载多次的问题啦）
+            timers = setTimeout(function() {
+                if(Page>=Pagetotal){
+                    return;
+                }else{
+                    Page++;
+                    console.log("第" + Page + "页");
+                }
+            }, 0);
+        }
+    });
+
+
+});
+
+
+//我的首页
+function myself(){
+    $.ajax({
+        type:'post',
+        url:Urlstr + 'userInfo.do',
+        data:{
+            token:Token
+        },
+        dataType:'json',
+        success:function(res){
+            if(res.error == 0){
+                console.log(res);
+                $("#showBank").html(res.row.organiz);
+                $("#headimg img").attr('src',Urlstr+'upload/'+res.row.headimg);
+                $(".myHead").attr("data-id",res.row.usersid);
+
+                var arr = res.row.organizlist;
+                var data = [];
+                if(arr.length != 0){
+                    for(var i=0;i<arr.length;i++){
+                        var obj = {
+                            id :arr[i].id,
+                            value : arr[i].name
+                        };
+                        data.push(obj);
+                    }
+
+                    console.log(data);
+                    $(".selName").append(data);
+
+                    var showBankDom = document.querySelector('#showBank');
+                    var bankIdDom = document.querySelector('#bankId');
+                    showBankDom.addEventListener('click', function () {
+                        var bankId = showBankDom.dataset['id'];
+                        var bankName = showBankDom.dataset['value'];
+
+                        var bankSelect = new IosSelect(1, 
+                            [data],
+                            {
+                                container: '.container',
+                                title: '请选择名称',
+                                itemHeight: 50,
+                                itemShowCount: 3,
+                                oneLevelId: bankId,
+                                callback: function (selectOneObj) {
+                                    bankIdDom.value = selectOneObj.id;
+                                    showBankDom.innerHTML = selectOneObj.value;
+                                    showBankDom.dataset['id'] = selectOneObj.id;
+                                    showBankDom.dataset['value'] = selectOneObj.value;
+                                }
+                        });
+
+                        // var id = $("#showBank").attr('data-id'); 
+                        // $.ajax({
+                        //         type:'post',
+                        //         url:Urlstr + 'adminUsers_web/update_info.do',
+                        //         data:{
+                        //             token:Token,
+                        //             usersid:id
+                        //         },
+                        //         dataType:'json',
+                        //         success:function(res){
+                        //             console.log(res);            
+                        //         }
+                        //     });
+
+
+
+                    });
+                }
+            }else if(res.error == 5){
+                ReqToken();
+                alert(res.msg);
+            }else{
+                alert(res.msg);
+            }
+        }
+    });
+}
+
+
+//修改名称
+// function selected(){
+//     var id = $("#showBank").attr("data-id"); 
+//     var name = $("#showBank").attr('data-value');
+//     console.log(id);
+//     $.ajax({
+//         type:'post',
+//         url:Urlstr + 'adminUsers_web/update_info.do',
+//         data:{
+//             token:Token,
+//             usersid:id
+//         },
+//         dataType:'json',
+//         success:function(res){
+//             console.log(res);            
+//         }
+//     });
+// }
+
+//Token 过期 重新请求
+function ReqToken() {
+    $('#reqtoken').load("login2.html",function() {
+        $('#reqtoken').show();
+    });
+}

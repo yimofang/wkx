@@ -1,0 +1,54 @@
+package net.emof.building.web.controller;
+
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import net.emof.building.web.service.BriefMedia_web_Service;
+
+/**
+ * 推广简报
+ * 
+ * @author baikun
+ * @creation 2017年12月20日
+ */
+@Controller
+@RequestMapping("briefmedia_web")
+public class BriefMedia_web_Controller {
+
+	@Autowired
+	private BriefMedia_web_Service srv;
+
+	/**
+	 * 添加
+	 * 
+	 * @author baikun
+	 * @creation 2017年12月20日
+	 * @param briefs
+	 * @param medias
+	 * @param name
+	 * @param phone
+	 * @return
+	 */
+	@RequestMapping("")
+	public Map<String, Object> add_info(@RequestParam(value = "briefs", required = false) String briefs,
+			@RequestParam(value = "medias", required = false) String medias,
+			@RequestParam(value = "name", required = false) String name,
+			@RequestParam(value = "phone", required = false) String phone) {
+
+		return srv.add_info(briefs, medias, name, phone);
+	}
+
+}
+
+
+
+
+
+
+
+
+

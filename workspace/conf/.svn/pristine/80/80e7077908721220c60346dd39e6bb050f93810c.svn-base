@@ -1,0 +1,18 @@
+$(function(){
+	$("#addOption>p").click(function(){
+		var num = $(".singleOption>div").length+1;
+		var txt = "<div class='singleOptList'><span>选项<span class='num'>"+num+"</span></span><input type='text' placeholder='选项名称'><button></button></div>";
+		$(".singleOption").append(txt);
+		num++;
+
+		$(".singleOption>.singleOptList>button").click(function(){
+			$(this).parent().remove();
+			var num2 = $(".singleOption>.singleOptList").length;
+			for(var i=0;i<num2;i++){
+				$(".singleOption>.singleOptList>span").eq(i).find($(".num")).html(i+1);
+			}	
+		});
+		
+
+	});
+});

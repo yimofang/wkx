@@ -1,0 +1,268 @@
+package net.emof.building.admin.service;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import net.emof.building.dao.PowerMenuMapper;
+import net.emof.building.model.PowerMenu;
+ 
+
+/**
+ * 权限操作
+ * 
+ * @author baikun
+ * @creation 2017年7月12日
+ */
+@Service
+public class PowerMenuService extends SqlToolseService {
+
+	@Autowired
+	private PowerMenuMapper pm;
+
+	/**
+	 * 逻辑删除
+	 * 
+	 * @author baikun
+	 * @creation 2017年2月21日
+	 * @param id
+	 * @param state
+	 * @return
+	 */
+	public int delete(Integer id) {
+		return pm.deleteByPrimaryKey(id);
+	}
+
+	/**
+	 * 修改用户实体
+	 * 
+	 * @author baikun
+	 * @creation 2017年2月21日
+	 * @param id
+	 * @param record
+	 * @return
+	 */
+	public int update_obj(PowerMenu record) {
+		return pm.updateByPrimaryKeySelective(record);
+	}
+
+	/**
+	 * 添加行为
+	 * 
+	 * @author baikun
+	 * @creation 2017年3月15日
+	 * @param powerid
+	 *            权限ID
+	 * @param menuid
+	 *            菜单 ID
+	 * @param ids
+	 *            行为集合
+	 * @return
+	 */
+	public int add_obj(Integer powerid, Integer menuid, Integer[] ids) {
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		// 当前权限包括的行为list
+		List<Map<String, Object>> opt_list = this.get_conduct(powerid, menuid);
+		// 当前需要添加的菜单 集合
+		List<Integer> ids_list_add = new ArrayList<Integer>();
+
+		List<Integer> ids_list_del = new ArrayList<Integer>();
+
+		if (ids != null) {
+
+			for (Integer t : ids) {
+				ids_list_add.add(t);
+				ids_list_del.add(t);
+			}
+			// 处理删除循环
+
+			for (int x = 0; x < opt_list.size(); x++) {
+				// 当前权限的实体
+				Map<String, Object> opt_list_info = opt_list.get(x);
+				for (int y = 0; y < ids_list_add.size(); y++) {
+					// 移除当前权限已经存在的菜单
+					if (Integer.parseInt(opt_list_info.get("conduct").toString()) == ids_list_add.get(y)) {
+						ids_list_add.remove(y);
+					}
+				}
+
+			}
+			// 循环添加
+			System.out.println(ids_list_add.toString());
+			for (int p = 0; p < ids_list_add.size(); p++) {
+				PowerMenu pminfo = new PowerMenu();
+				pminfo.setPowerid(powerid);
+				pminfo.setType(2);// 1.菜单 2.方法
+				pminfo.setMenuid(menuid);
+				pminfo.setConduct(ids_list_add.get(p));
+				pm.insertSelective(pminfo);
+			}
+
+			for (int i = 0; i < ids_list_del.size(); i++) {
+				// 移除 被选中的 菜单 ，剩余的就是删除的
+				for (int o = 0; o < opt_list.size(); o++) {
+					Map<String, Object> opt_list_info = opt_list.get(o);
+
+					if (Integer.parseInt(opt_list_info.get("conduct").toString()) == ids_list_del.get(i)) {
+						opt_list.remove(o);
+					}
+
+				}
+			}
+		}
+
+		// 循环删除
+		System.out.println(opt_list.toString());
+		for (int u = 0; u < opt_list.size(); u++) {
+			Map<String, Object> opt_list_info = opt_list.get(u);
+			pm.deleteByPrimaryKey(Integer.parseInt(opt_list_info.get("id").toString()));
+		}
+
+		return 0;
+	}
+
+	/**
+	 * 初始化表格
+	 * 
+	 * @author baikun
+	 * @creation 2017年3月2日
+	 * @param pageInfo
+	 * @param limit
+	 * @param offset
+	 * @param sort
+	 * @param sortOrder
+	 * @param powerid
+	 *            权限id
+	 * @return
+	 */
+	public Map<String, Object> bootstrap_table(Integer page, Integer display, String sort, String sortOrder,
+			Integer powerid) {
+
+		String tableName = " power_menu as pm  LEFT JOIN menus as m on pm.menuid=m.id"; // 表名
+		String find = "   pm.*"; // 显示字段
+		find += " ,m.name,m.grade ";
+		String where = " 1=1  and m.grade<>0 and pm.type=1 and m.isdelete=1 and  LENGTH(m.link)>2 "; // 条件
+		String order = null; // 排序
+
+		if (powerid != null) {
+			where += " and  pm.powerid=" + powerid;
+		}
+
+		// sort 排序 字段 sortOrder 排序规则 asc desc
+		if (sort != null && sortOrder != null) {
+			order = " order by " + sort + " " + sortOrder;
+		} else {
+			order = " order by pm.id desc";
+		}
+
+		Map<String, Object> map_res = this.selectAllPage(tableName, find, where, order, page, display);
+		List<Map<String, Object>> list = (List<Map<String, Object>>) map_res.get("row");
+		// 请求存留 过程 中返回的总条数
+		for (int i = 0; i < list.size(); i++) {
+			Map<String, Object> powermenu_info = list.get(i);
+			List<Map<String, Object>> conduct_list = get_conduct(
+					Integer.parseInt(powermenu_info.get("powerid").toString()),
+					Integer.parseInt(powermenu_info.get("menuid").toString()));
+			powermenu_info.put("conductlist", conduct_list);
+			list.remove(i);
+			list.add(i, powermenu_info);
+		}
+		map_res.remove("row");
+		map_res.put("row", list);
+		map_res.put("total", list.size());
+		return map_res;
+	}
+
+	/**
+	 * 根据id返回 map实体对象
+	 * 
+	 * @author baikun
+	 * @creation 2017年2月21日
+	 * @param id
+	 * @return
+	 */
+	public Map<String, Object> get_info(Integer id) {
+		String tableName = " power_menu as pm  LEFT JOIN menus as m on pm.menuid=m.id "; // 表名
+		String find = "  pm.*"; // 显示字段
+		find += " ,m.menuname,m.grade ";
+		String where = "m.grade<>0 and  pm.id=" + id;// 条件
+		return this.selectMap(tableName, find, where);
+	}
+
+	/**
+	 * 根据id查询实体
+	 * 
+	 * @author baikun
+	 * @creation 2017年8月1日
+	 * @param id
+	 * @param tableName 表名
+	 * @return
+	 */
+	public Map<String, Object> idByInfo(Integer id, String tableName) {
+		String find = null; // 显示字段
+		String where = "id=" + id;
+		List count_list = this.selectAll(tableName, find, where, null);
+		return (Map<String, Object>) ((count_list != null) && (count_list.size() > 0) ? count_list.get(0) : null);
+	}
+
+	/**
+	 * 返回操作行为list
+	 * 
+	 * @author baikun
+	 * @creation 2017年3月6日
+	 * @param powerid
+	 *            当前操作权限id
+	 * @return
+	 */
+	private List<Map<String, Object>> get_conduct(Integer powerid, Integer menuid) {
+		String tableName = " power_menu as pm LEFT JOIN  conduct as c on pm.conduct=c.id "; // 表名
+		String find = " *"; // 显示字段
+		String where = "pm.powerid=" + powerid + "  and pm.type=2 and  c.isdelete=1 and pm.menuid=" + menuid;// 条件
+		List<Map<String, Object>> list = this.selectAll(tableName, find, where, null);
+		return list;
+
+	}
+
+	/**
+	 * 返回当前权限 ，当前菜单 下的 行为复选框行为列表
+	 * 
+	 * @author baikun
+	 * @creation 2017年3月6日
+	 * @param powerid
+	 *            权限id
+	 * @param menuid
+	 *            菜单id
+	 * @return
+	 */
+	public List<Map<String, Object>> get_opt_get_conduct(Integer powerid, Integer menuid) {
+		String tableName = " power_menu as pm LEFT JOIN  conduct as c on pm.conduct=c.id "; // 表名
+		String find = " *"; // 显示字段
+		String where = " pm.powerid=" + powerid + "  and pm.type=2 and  c.isdelete=1 and pm.menuid=" + menuid;// 条件
+		// 已选行为列表
+		List<Map<String, Object>> list = this.selectAll(tableName, find, where, null);
+		// 所有行为列表
+		List<Map<String, Object>> conduct_list = this.selectAll("conduct", null, "isdelete=1", null);
+
+		for (int x = 0; x < list.size(); x++) {
+
+			Map<String, Object> list_info = list.get(x);
+			for (int y = 0; y < conduct_list.size(); y++) {
+				Map<String, Object> conduct_list_info = conduct_list.get(y);
+				if (Integer.parseInt(conduct_list_info.get("id").toString()) == Integer
+						.parseInt(list_info.get("conduct").toString())) {
+					conduct_list_info.put("checked", true);
+					conduct_list.remove(y);
+					conduct_list.add(y, conduct_list_info);
+				}
+			}
+		}
+
+		return conduct_list;
+	}
+
+}

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+    <title>会议修改</title>
+    <script src="js/jquery-2.1.4.min.js"></script>
+    <script src="js/rem.js"></script>
+    <script src="js/removeHeader.js"></script>   
+    <link rel="stylesheet" href="css/common.css"> 
+    <link rel="stylesheet" type="text/css" href="css/meetChoice.css">
+</head>
+<body>
+	<div class="Header">
+    	<a href="javascript:void(0);" onclick="choiceBack()"></a>
+    	会议修改
+	</div>
+    <!--会议非必填项-->
+    <div class="meetChoice deleteHeader">
+        <ul>
+            <li>会议描述</li>
+            <li>会议流程</li>
+            <li>会议嘉宾</li>
+            <li>下期预告</li>
+            <li>报名设置</li>
+        </ul>
+    </div>
+    <div class="choBtn" onclick="choiceBack()">返回会议管理</div>
+
+    <script>
+    	$(function(){
+    		//选择非必填项
+		    $(".meetChoice li").click(function(){
+		        var i = $(this).index() + 1;
+		        if(i == 1){
+		            window.location.href = 'meetDescribe.html?confsid=' + NumAll.confsid;
+		        }else if(i == 2){
+		            window.location.href = 'meetFlow.html?confsid=' + NumAll.confsid;
+		        }else if(i == 3){
+		            window.location.href = 'meetGuest.html?confsid=' + NumAll.confsid;
+		        }else if(i == 4){
+		            window.location.href = 'meetReport.html?confsid=' + NumAll.confsid;
+		        }else if(i == 5){
+		            window.location.href = 'meetNamed.html?confsid=' + NumAll.confsid;
+		        }
+		    });
+
+    	});
+        function choiceBack(){
+            window.location.href = 'mmmm.html?confsid=' + NumAll.confsid;
+        }
+    </script>
+    <!--监听事件返回-->
+    <script type="text/javascript">
+        pushHistory();
+        window.addEventListener("popstate", function(e) {
+            // alert('mmmm.html?confsid='+NumAll.confsid);
+            // alert("我监听到了浏览器的返回按钮事件啦");//根据自己的需求实现自己的功能
+            window.location.href = 'meetChoice.html?confsid='+NumAll.confsid;
+        }, false);
+        function pushHistory() {
+            var state = {
+                title: "title",
+                url: "#"
+            };
+            window.history.pushState(state, "title", "#");
+        }
+    </script>
+</body>
+</html>

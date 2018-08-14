@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+	<title>简报管理</title>
+	<link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/brief.css">
+    <script src="js/jquery-2.1.4.min.js"></script>
+	<script src="js/rem.js"></script>
+	<script src="jscript/brief.js"></script>
+	<!--图文混排-->
+	<script src="js/index.min.js"></script>
+	<script src="js/index.js"></script>
+
+</head>
+<body>
+	<div class="briefIndex">
+		<!--媒体推广-->
+		<div class="Header mediaSpread" style="display: none">
+	    	<a href="javascript:void(0);" onclick="back()"></a>媒体推广
+		</div>
+		<!--unArticle-->
+		<div class="unArticle unCre" style="display: none">
+			<div class="unhave">
+				<img src="img/survey.png">
+				<p class="imgTit">您还没有创建简报</p>
+			</div>
+			<p class="creBrief" id="creBrief" onclick="createBrief()">创建简报</p>
+		</div>
+		<div class="unArticle unTG" style="display: none">
+			<div class="unhave">
+				<img src="img/survey.png">
+				<p class="imgTit">您还没有推广简报</p>
+			</div>
+			<p class="creBrief" id="tgBrief" onclick="tgBrief()">推广简报</p>
+		</div>
+
+		<!--article-->
+		<div class="article deleteHeader">
+			<!--articleChoice-->
+			<div class="articleChoice" style="display: none">
+				<p>选择您需要推广的文章，可多选</p>
+			</div>
+			<div class="tuiguang deleteHeader" >
+				<div class="tgTop" style="display: block">
+					<span data-state='1' class="active">未推广</span>
+					<span data-state='2'>已推广</span>
+				</div>
+				<div class="artList artList1" >
+				</div>
+				<div class="artList artList2" style="display: none"></div>
+				<div class="artList artList3" style="display: none"></div>
+			</div>
+			
+			<!--submit-->
+			<div class="submit">
+				<div class="addBrief" onclick="createBrief()">创建简报</div>
+				<div class="mediaBro" onclick="mediaBro()">媒体推广</div>
+			</div>
+			<div class="articleNext" onclick="artChoice()" style="display: none">下一步</div>
+		</div>
+	</div>
+	
+
+	<!--编辑简报-->
+	<div class="editBrief" style="display: none">
+		<!--header-->
+	    <div class="Header">
+	        <a href="#" href="javascript:void(0);" onclick="bfBack()"></a>编辑简报
+	    </div>
+	    <!--briefContent-->
+	    <div class="brief deleteHeader">
+	        <ul class="editUl" data-id=''>
+	            <li class="briefT">简报标题<b>*</b></li>
+	            <li class="briefT_Content">
+	                <input id="surTitle" class="editBT" type="text" placeholder="请填写简报标题" onblur="" onfocus="">
+	            </li>
+	            <li class="briefD">简报描述<b>*</b></li>
+	            <li class="briefD_content">
+	                <!-- <textarea class="editDetail" id="detail" placeholder="请填写简报描述"></textarea> --> 
+	                <div style="width:100%;margin: 0 auto;margin-bottom: 50px;">
+	                    <div class="publish-article-content">
+	                        <div class="title-tips">正文:</div>
+	                        <input type="hidden" id="target">
+	                        <div class="article-content editContent" id="content5" contenteditable="true">
+	                            <div class="placeholader" style="pointer-events: none;">请输入文章正文内容</div>
+	                        </div>
+	                        <div class="footer-btn g-image-upload-box">
+	                            <div class="upload-button">
+	                                <span class="upload" style="display: block;line-height: 0.78rem;"><i class="upload-img"></i></span>
+	                                <input class="input-file" id="imageUpload5" type="file" name="fileInput" accept="image/*" style="position:absolute;left:0;top:0;opacity:0;width:100%;height: 0.78rem;">
+	                            </div>
+	                        </div>
+	                    </div>
+	                </div>
+
+	            </li>
+	        </ul>
+	    </div>
+
+	    <div class="creBtn" onclick="saveEdit()">保存修改</div>
+	</div>
+
+	<div id="reqtoken" class="reqtoken"></div>
+
+	<!--监听事件返回-->
+	<script type="text/javascript">
+	    pushHistory();
+	    window.addEventListener("popstate", function(e) {
+	        // alert('mmmm.html?confsid='+NumAll.confsid);
+	        // alert("我监听到了浏览器的返回按钮事件啦");//根据自己的需求实现自己的功能
+	        window.location.href = 'mmmm.html?confsid='+NumAll.confsid;
+	    }, false);
+	    function pushHistory() {
+	        var state = {
+	            title: "title",
+	            url: "#"
+	        };
+	        window.history.pushState(state, "title", "#");
+	    }
+	</script>
+</body>
+</html>

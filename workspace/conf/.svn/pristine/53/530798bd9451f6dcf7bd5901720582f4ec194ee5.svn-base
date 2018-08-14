@@ -1,0 +1,208 @@
+package net.emof.building.web.controller;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.log4j.Logger;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+
+import net.emof.building.admin.customEXC.EhCacheSessiconException;
+import net.emof.building.ehcache.EhSessicon;
+import net.emof.building.util.DataMap;
+import net.emof.building.util.DesEncryption;
+import net.emof.building.util.MatrixToImageWriter;
+import sun.misc.BASE64Decoder;
+
+/**
+ * 移动端通用上传
+ * 
+ * @author baikun
+ * @creation 2017年12月13日
+ */
+@Controller
+@RequestMapping("")
+public class ImgFileUpload_web_Controller {
+
+	// localhost:8080/conf/login_web.do?name=xilongfei&pass=123456
+	// 日志
+	private final Logger logger = Logger.getLogger(this.getClass());
+
+	/**
+	 * 通用 文件上传接口
+	 * 
+	 * @author baikun
+	 * @creation 2017年12月13日
+	 * @param myfiles
+	 *            文件流
+	 * @param token
+	 *            身份密钥
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "/imgupload")
+	@ResponseBody
+	public Map<String, Object> imgupload(@RequestParam(value = "myfiles") MultipartFile myfiles,
+			@RequestParam(value = "token") String token, HttpServletRequest request, HttpServletResponse response) {
+		DataMap dataMap = new DataMap();
+		try {
+			if (EhSessicon.getTokenInfo(token) == null) {
+				dataMap.addMsg_diy_obj(null, 5, "登陆超时，请重新登陆");
+				return dataMap.data;
+			}
+		} catch (EhCacheSessiconException e1) {
+			logger.error("【上传方法异常】信息位置" + this.getClass().getName() + " "
+					+ Thread.currentThread().getStackTrace()[1].getMethodName() + " nubmer:"
+					+ new Throwable().getStackTrace()[0].getLineNumber() + "/n" + "【异常信息】" + e1.getMessage());
+			dataMap.addMsg_diy_obj(null, 5, "登陆超时，请重新登陆");
+			return dataMap.data;
+		}
+
+		Map<String, Object> resMap = new HashMap<String, Object>();
+		if (myfiles.getSize() >= 1110475) {
+			dataMap.addMsg_diy_obj(null, 1, "文件过大，上传失败,文件请保证小于1MB");
+			return dataMap.data;
+		}
+		String path = request.getContextPath();
+		String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + path;
+		Date dt = new Date();
+		Long time = dt.getTime();
+		if (myfiles != null) {
+			// 获取保存的路径，
+			String realPath = request.getSession().getServletContext().getRealPath("/upload/");
+			if (myfiles.isEmpty()) {
+				dataMap.addMsg_diy_obj(null, 1, "文件上传失败");
+				return dataMap.data;
+			} else {
+				// 上传文件重命名
+				String originalFilename = time.toString().substring(time.toString().length() - 8,
+						time.toString().length());
+				originalFilename = originalFilename.concat(".");
+				originalFilename = originalFilename.concat(myfiles.getOriginalFilename().toString()
+						.substring(myfiles.getOriginalFilename().toString().indexOf(".") + 1));
+				try {
+					// 这里使用Apache的FileUtils方法来进行保存
+					FileUtils.copyInputStreamToFile(myfiles.getInputStream(), new File(realPath, originalFilename));
+					resMap.put("filename", originalFilename);
+					resMap.put("path", basePath + "/upload/");
+					dataMap.addMsg_diy_map(resMap, 0, "上传成功");
+
+				} catch (IOException e) {
+					dataMap.addMsg_diy_obj(null, 1, "文件上传失败");
+					e.printStackTrace();
+				}
+			}
+
+		}
+		System.out.println(dataMap.toString());
+		return dataMap.data;
+	}
+
+	/**
+	 * 通用 Base64 字符流上传方法
+	 * 
+	 * @author baikun
+	 * @creation 2017年12月13日
+	 * @param imgStr
+	 *            字符流
+	 * @param token
+	 *            身份密钥
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "/imgbase")
+	@ResponseBody
+	public Map<String, Object> imgBase64upload(@RequestParam(value = "imgStr") String imgStr,
+			@RequestParam(value = "token") String token, HttpServletRequest request, HttpServletResponse response) {
+		DataMap dataMap = new DataMap();
+		if (imgStr == null || imgStr.trim().length() <= 1) {
+			dataMap.addMsg_diy_obj(null, 5, "上传失败，请检查上传文件格式 jpg 或 png");
+			return dataMap.data;
+		}
+		try {
+			if (EhSessicon.getTokenInfo(token) == null) {
+				dataMap.addMsg_diy_obj(null, 5, "登陆超时，请重新登陆");
+				return dataMap.data;
+			}
+		} catch (EhCacheSessiconException e1) {
+			logger.error("【imgBase64upload上传方法异常】信息位置" + this.getClass().getName() + " "
+					+ Thread.currentThread().getStackTrace()[1].getMethodName() + " nubmer:"
+					+ new Throwable().getStackTrace()[0].getLineNumber() + "/n" + "【异常信息】" + e1.getMessage());
+			dataMap.addMsg_diy_obj(null, 5, "登陆超时，请重新登陆");
+			return dataMap.data;
+		}
+		Map<String, Object> resMap = new HashMap<String, Object>();
+
+		String imgBase64 = imgStr.substring(imgStr.indexOf(",") + 1, imgStr.length()); // tu
+		String extension = imgStr.substring(imgStr.indexOf("image/") + 6, imgStr.indexOf(";"));// 扩展名
+		// 保存路径
+		String path = request.getServletContext().getRealPath("/upload/");
+		// 生成jpeg图片
+		Long time = new Date().getTime();
+		String fileName = time.toString().substring(time.toString().length() - 8, time.toString().length()) + "."
+				+ extension;
+		try {
+			File localFile = new File(path + "/" + fileName);
+			if (!localFile.getParentFile().exists()) {
+				localFile.getParentFile().mkdirs();
+			}
+			byte[] bytes = new BASE64Decoder().decodeBuffer(imgBase64); // Base64解码
+			for (int i = 0; i < bytes.length; ++i) {
+				if (bytes[i] < 0) {// 调整异常数据
+					bytes[i] += 256;
+				}
+			}
+			OutputStream out = new FileOutputStream(localFile);
+			out.write(bytes);
+			out.flush();
+			out.close();
+			resMap.put("filename", fileName);
+			resMap.put("path", path);
+			dataMap.addMsg_diy_map(resMap, 0, "上传成功");
+		} catch (Exception e) {
+			logger.error("【imgBase64upload上传方法异常】信息位置" + this.getClass().getName() + " "
+					+ Thread.currentThread().getStackTrace()[1].getMethodName() + " nubmer:"
+					+ new Throwable().getStackTrace()[0].getLineNumber() + "/n" + "【异常信息】" + e.getMessage());
+			dataMap.addMsg_diy_obj(null, 5, "上传失败，请检查文件格式");
+			return dataMap.data;
+
+		}
+		return dataMap.data;
+	}
+
+	/**
+	 * 二维码
+	 * 
+	 * @author baikun
+	 * @creation 2017年12月14日
+	 * @param linkenc   链接使用 Ees加密 
+	 * @param response
+	 * @param width
+	 * @param height
+	 */
+	@RequestMapping("/qrcode")
+	public void qrcode(@RequestParam(value = "link", required = true) String linkenc, HttpServletResponse response) {
+		try {
+			DesEncryption des = new DesEncryption();// 使用默认密钥
+			String url = des.decrypt(linkenc);//解密失败
+			MatrixToImageWriter.createRqCode(url, response.getOutputStream());
+		} catch (Exception e) {
+			logger.error(String.format("生成二维码失败： url： %s", linkenc), e);
+		}
+	}
+
+}

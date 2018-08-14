@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>用户登录</title>
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/login.css">
+</head>
+
+<body>
+<div class="login">
+    <img src="img/login_logos.png" alt="" class="login_logo">
+    <div class="login_form">
+        <h2>用户登录</h2>
+        <ul>
+            <li class="item_login">
+                <p>账号：</p>
+                <input type="text" placeholder="请输入你的账号" id="userName">
+            </li>
+            <li class="item_login">
+                <p>密码：</p>
+                <input type="password" placeholder="请输入你的密码" id="userPwd">
+            </li>
+        </ul>
+        <button class="login_btn">登录</button>
+    </div>
+</div>
+<script src="javascript/jquery-2.1.4.min.js"></script>
+<script src="javascript/common.js"></script>
+<script>
+    $(function () {
+        $('.login_btn').click(function () {
+            $(this).attr('disabled', true);
+            login()
+        })
+        document.onkeydown = function (event) {
+            var e = event || window.event || arguments.callee.caller.arguments[0];
+            if (e && e.keyCode == 13) { // enter 键
+                $('.login_btn').attr('disabled', true);
+                login();
+            }
+        };
+    })
+
+    function login() {
+        var user_name = $('#userName').val(),
+            user_pwd = $('#userPwd').val();
+        $.ajax({
+            type: 'post',
+            url: urlstr + 'login_web.do',
+            data: {
+                name: user_name,
+                pass: user_pwd
+            },
+            dataType: 'json',
+            success: function (res) {
+                console.log(res);
+                if (res.error == 0) {
+                    sessionStorage.setItem('token', res.token);
+                    window.location.href = 'meetList.html';
+                } else {
+                    alert(res.msg);
+                    $('.login_btn').attr('disabled', false);
+                }
+            },
+            error:function (res) {
+                alert('网络异常，请检查');
+                $('.login_btn').attr('disabled', false);
+            }
+        })
+    }
+
+    $(function () {
+        //禁止后退
+        history.pushState(null, null, document.URL);
+        window.addEventListener('popstate', function () {
+            history.pushState(null, null, document.URL);
+
+        });
+    })
+</script>
+
+</body>
+
+</html>

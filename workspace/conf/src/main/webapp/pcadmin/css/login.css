@@ -1,0 +1,439 @@
+/*
+CSS Reset
+http://meyerweb.com/eric/tools/css/reset/
+*/
+
+
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+  display: block;
+}
+body {
+  line-height: 1;
+}
+ol, ul {
+  list-style: none;
+}
+blockquote, q {
+  quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+  content: '';
+  content: none;
+}
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+/* particleground demo */
+
+* { 
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  font-family: 'Microsoft YaHei', sans-serif;
+  line-height: 1.3;
+  -webkit-font-smoothing: antialiased;
+  position:relative;
+}
+
+#particles {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+.loginbox{
+	position:absolute;
+	top:50%;
+	max-width:406px;
+	height:410px;
+	background:#fff;
+	margin-top:-205px;
+	box-shadow:0px 8px 20px 2px rgba(0,0,0,0.2);
+	border-radius:4px;
+}
+.loginbox h4{
+	color:#484f5f;
+	font-weight:bold;
+	font-family:"Microsoft YaHei",Arial, Helvetica, sans-serif;
+	padding:14px 32px;
+	padding-top:18px;
+	font-size:20px;
+	opacity:0.9;
+}
+.loginbox h4 strong{
+	font-size:12px;
+	color:#a7adb6;
+	margin-left:10px;
+}
+.login-main{
+	padding:0 32px;
+}
+.login-input-icon{
+	color:#999;
+	font-size:14px;
+	border-right:0;
+}
+.loginbox .form-group .input-group{
+	margin:24px 0;
+}
+.dri-login-btn-margin{
+	/*width:320px;*/
+	margin-top:16px;
+	margin-bottom:22px;
+}
+
+.bodyBg{
+	animation:bgColor 100s alternate infinite;
+	-webkit-animation:bgColor 100s alternate infinite;
+	-moz-animation:bgColor 100s alternate infinite;
+	-o-animation:bgColor 100s alternate infinite;
+	background-color:#1a3e86;
+}
+
+@keyframes bgColor{
+	0% { background-color:#1a3e86;}
+	50% { background-color:#0b78d5;}
+	100% { background-color:#14cab2;}
+}
+@-webkit-keyframes bgColor{
+	0% { background-color:#1a3e86;}
+	50% { background-color:#0b78d5;}
+	100% { background-color:#14cab2;}
+}
+@-moz-keyframes bgColor{
+	0% { background-color:#1a3e86;}
+	50% { background-color:#0b78d5;}
+	100% { background-color:#14cab2;}
+}
+@-o-keyframes bgColor{
+	0% { background-color:#1a3e86;}
+	50% { background-color:#0b78d5;}
+	100% { background-color:#14cab2;}
+}
+
+/*loginBtnAnimation*/
+.dri-btn-gra-ani{animation: btnGra linear 1500ms infinite;}
+.dri-btn-gra{
+  width:770px; 
+  height:50px;
+  position:absolute; 
+  top:0;
+  left:0;
+  z-index:-1;
+}
+.dri-btn-blue-green{
+  background-image: -webkit-linear-gradient(120deg,#06b7f1,#17e0b8,#06b7f1,#17e0b8,#06b7f1,#17e0b8); /* Safari 5.1 - 6.0 */
+  background-image: -o-linear-gradient(120deg,#06b7f1,#17e0b8,#06b7f1,#17e0b8,#06b7f1,#17e0b8); /* Opera 11.1 - 12.0 */
+  background-image: -moz-linear-gradient(120deg,#06b7f1,#17e0b8,#06b7f1,#17e0b8,#06b7f1,#17e0b8); /* Firefox 3.6 - 15 */
+  background-image: linear-gradient(120deg,#06b7f1,#17e0b8,#06b7f1,#17e0b8,#06b7f1,#17e0b8) !important; /* 标准的语法 */
+}
+.dri-btn-blue-purple{
+  background-image: -webkit-linear-gradient(120deg,#2b5bd5,#ac63e6,#2b5bd5,#ac63e6,#2b5bd5); /* Safari 5.1 - 6.0 */
+  background-image: -o-linear-gradient(120deg,#2b5bd5,#ac63e6,#2b5bd5,#ac63e6,#2b5bd5); /* Opera 11.1 - 12.0 */
+  background-image: -moz-linear-gradient(120deg,#2b5bd5,#ac63e6,#2b5bd5,#ac63e6,#2b5bd5); /* Firefox 3.6 - 15 */
+  background-image: linear-gradient(120deg,#2b5bd5,#ac63e6,#2b5bd5,#ac63e6,#2b5bd5) !important; /* 标准的语法 */
+}
+.dri-btn-red-orange{
+  background-image: -webkit-linear-gradient(120deg,#f8426d,#f86a4e,#f8426d,#f86a4e,#f8426d); /* Safari 5.1 - 6.0 */
+  background-image: -o-linear-gradient(120deg,#f8426d,#f86a4e,#f8426d,#f86a4e,#f8426d); /* Opera 11.1 - 12.0 */
+  background-image: -moz-linear-gradient(120deg,#f8426d,#f86a4e,#f8426d,#f86a4e,#f8426d); /* Firefox 3.6 - 15 */
+  background-image: linear-gradient(120deg,#f8426d,#f86a4e,#f8426d,#f86a4e,#f8426d) !important; /* 标准的语法 */
+}
+.dri-btn-green-lime{
+  background-image: -webkit-linear-gradient(120deg,#a6ef64,#2fdec3,#a6ef64,#2fdec3,#a6ef64); /* Safari 5.1 - 6.0 */
+  background-image: -o-linear-gradient(120deg,#a6ef64,#2fdec3,#a6ef64,#2fdec3,#a6ef64); /* Opera 11.1 - 12.0 */
+  background-image: -moz-linear-gradient(120deg,#a6ef64,#2fdec3,#a6ef64,#2fdec3,#a6ef64); /* Firefox 3.6 - 15 */
+  background-image: linear-gradient(120deg,#a6ef64,#2fdec3,#a6ef64,#2fdec3,#a6ef64) !important; /* 标准的语法 */
+}
+.dri-blue-green-shadow,.dri-red-orange-shadow,.dri-blue-purple-shadow,.dri-green-lime-shadow{
+  transition: box-shadow 300ms;
+  -webkit-transition: box-shadow 300ms;
+  -moz-transition: box-shadow 300ms;
+  overflow:hidden;
+  position:relative;
+}
+.dri-blue-green-shadow:hover{
+	box-shadow:0px 8px 18px 1px rgba(5,183,241,.4); 
+}
+.dri-red-orange-shadow:hover{
+	box-shadow:0px 8px 18px 1px rgba(248,66,109,.4); 
+}
+.dri-blue-purple-shadow:hover{
+	box-shadow:0px 8px 18px 1px rgba(102,94,221,.4); 
+}
+.dri-green-lime-shadow:hover{
+	box-shadow:0px 8px 18px 1px rgba(166,239,100,.4); 
+}
+@keyframes btnGra{
+	0%{ left:0;}
+	100%{ left:-330px;}
+}
+@-webkit-keyframes btnGra{
+	0%{ left:0;}
+	100%{ left:-330px;}
+}
+@-moz-keyframes btnGra{
+	0%{ left:0;}
+	100%{ left:-330px;}
+}
+@-o-keyframes btnGra{
+	0%{ left:0;}
+	100%{ left:-330px;}
+}
+.dri-title-shadow{ text-shadow:0px 2px 8px rgba(0,0,0,.2);}
+.login-border{ border-bottom:1px solid #e5e5e5;}
+.login-footer{ position:fixed; bottom:10px; width:100%; text-align:center; color:#fff;}
+.dri-login-bg{ 	
+	background-repeat:no-repeat; 
+	background-position:top center;
+}
+.login-bg-4{background-image:url('../images/loginBg_4.jpg'); }
+.login-bg-2{background-image:url('../images/loginBg_2.jpg'); }
+.login-bg-3{background-image:url('../images/loginBg_3.jpg'); }
+.login-bg-3 .login-footer{ color:#333;} 
+.login-bg-2 .login-footer{ color:#fff;}
+.login-bg-4 .login-footer{ color:#fff;}
+.login-footer-top{ margin-top:30px;}
+/*右下角底部弹窗*/
+@font-face {
+  font-family: 'iconfont';
+  src: url('iconfont.eot');
+  src: url('iconfont.eot?#iefix') format('embedded-opentype'),
+  url('iconfont.woff') format('woff'),
+  url('iconfont.ttf') format('truetype'),
+  url('iconfont.svg#iconfont') format('svg');
+}
+.iconfont{
+  font-family:"iconfont" !important;
+  font-size:16px;font-style:normal;
+  -webkit-font-smoothing: antialiased;
+  -webkit-text-stroke-width: 0.2px;
+  -moz-osx-font-smoothing: grayscale;
+}
+.alert-tip{
+	width: 350px;
+	height: 300px;
+	border: 2px solid darkgrey;
+	position: fixed;
+	bottom: -320px;
+	right: 0;
+	border-radius: 5px;
+	background-color: gainsboro;
+	transition-duration: 1.8s;
+	-moz-transition-duration: 1.8s;
+	-webkit-transition-duration: 1.8s;
+	-o-transition-duration: 1.8s;
+}
+.close-butt{
+	height: 35px;
+	/*background-color: #2B669A;*/
+	box-sizing: border-box;
+	padding: 5px 10px;
+}
+.tip-title{
+	font-size:22px;
+	line-height:25px;
+	color:white;
+}
+.tips-text{
+	font-size: 20px;
+	padding-top: 20px;
+	box-sizing: border-box;
+	padding: 10px 15px;
+}
+/*判断式对话框*/
+.judgment-tip{
+	width: 350px;
+	height: 200px;
+	overflow: hidden;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	margin-top: -125px;
+	margin-left: -100px;
+	border-radius: 5px;
+	z-index:9999;
+	background-color: whitesmoke;
+}
+.judgment-title{
+	height: 35px;
+	background-color: #2B669A;
+	box-sizing: border-box;
+	padding: 5px 10px;
+	color: white;
+	font-size: 17px;
+	line-height: 25px;
+}
+.judgment-title-close{
+	font-size: 17px;
+	line-height: 25px;
+	color: white;
+	float:right;
+}
+.judgment-context{
+	font-size: 17px;
+	padding-top: 20px;
+	box-sizing: border-box;
+	padding: 10px 25px;
+	height: 165px;
+	border: 2px solid #2B669A;
+	border-top: 0;
+}
+.judgment-context span{
+	float:left;
+	margin-top:20px;
+	margin-left:20px;
+}
+.judgment-context-icon{
+	font-size:50px;
+}
+.judgment-button{
+	width: 150px;
+	height: 50px;
+	text-align: center;
+	position: absolute;
+	bottom: 0;
+	left: 50%;
+	margin-left: -75px;
+}
+.judgment-button-yes,.judgment-button-no{
+	float: left;
+	height: 25px;
+	background-color: #C0C0C0;
+	border-radius: 3px;
+	text-align: center;
+	font-size: 14px;
+	line-height: 25px;
+	padding: 1px 10px;
+}
+.judgment-button-no{
+	float: right;
+}
+
+
+/*自定义可最大化最小化模态框*/
+.modelTipWrap {
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index:9999;
+	background-color: rgba(0,0,0,0.2);
+}
+.modelTipWrap-s{
+	position: static;
+	width: 0;
+	height: 0;
+}
+.modelTip{
+	background-color: #FFF;
+	border: 1px solid #999;
+	border-radius: 10px;
+	box-shadow: 5px 5px 5px #8f8f8f;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	margin-top: -250px;
+	margin-left: -250px;
+}
+.modelTip-s{
+	width: 300px;
+	top: auto;
+	bottom: 10px;
+	left: 10px;
+	margin-top: 0;
+	margin-left: 0;
+}
+.modelTip-m{
+	width: 100%;
+	height: 100%;
+	top: 0;
+	left: 0;
+	margin-top: 0;
+	margin-left: 0;
+}
+.modelTip-title{
+	height: 45px;
+	box-sizing: border-box;
+	padding: 10px 1em;
+	font-size: 18px;
+	line-height: 25px;
+	border-bottom: 1px solid #999;
+}
+.modelTip-title-m{
+	height: 10%;
+	padding: 3% 3em;
+	font-size: 30px;
+}
+.modelTip-title-icon{
+	font-size:20px;
+}
+.modelTip-title-min,.modelTip-title-close,.modelTip-title-max{
+	float: right;
+	font-size: 25px;
+}
+.modelTip-title-min-m,.modelTip-title-close-m,.modelTip-title-max-m{
+	font-size: 30px;
+}
+.modelTip-title-min,.modelTip-title-max{
+	margin-right: 20px;
+}
+.model-context{
+	box-sizing: border-box;
+	padding: 10px 1em;
+	font-size: 18px;
+	line-height: 22px;
+	border-bottom: 1px solid #999;
+	margin-bottom: 10px;
+}
+.model-context-m{
+	height: 60%;
+	font-size: 30px;
+	padding: 3% 3em;
+}
+.model-context-s{
+	display: none;
+}
+.model-buttons{
+	box-sizing: border-box;
+	padding: 0 1em;
+	text-align: right;
+}
+.model-buttons-s{
+	display: none;
+}
+.model-buttons button{
+	height: 25px;
+	margin-right: 10px;
+	margin-bottom: 10px;
+	padding: 0 5px;
+	border-radius: 3px;
+	background-color: #FFF;
+	outline: 0;
+	line-height: 25px;
+	border: 1px solid #999;
+}
+.model-buttons-m button{
+	height: 40px;
+	font-size: 20px;
+	margin-right: 3%;
+	margin-bottom: 5%;
+	padding: 0 1em;
+}
+.model-buttons button:hover{
+	background-color: #E6E6E6;
+	color: #333333;
+}

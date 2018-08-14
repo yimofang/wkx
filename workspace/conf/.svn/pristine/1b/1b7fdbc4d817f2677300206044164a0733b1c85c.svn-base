@@ -1,0 +1,232 @@
+input.on,select.on{
+    border:1px solid #da0e00 !important;
+}
+.wrapper{
+    padding-bottom: 0;
+}
+.survey_box{
+    padding: 25px;
+    height: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+.survey_all{
+    float: left;
+    width: 630px;
+    height: 100%;
+    overflow: auto;
+}
+.survey_type{
+    float: right;
+    width: 400px;
+    padding: 15px;
+    border: 1px solid #d5d6de;
+    box-sizing: border-box;
+}
+@media screen and (max-width: 1200px) {
+    .survey_type{
+        width: 270px;
+    }
+}
+.type_tit{
+    line-height: 30px;
+
+}
+.type_list li{
+    line-height: 30px;
+    border: 1px solid #d5d6de;
+    margin-bottom: 10px;
+    text-align: center;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.left_tit{
+    float: left;
+    width: 80px;
+    line-height: 30px;
+}
+.left_tit b{
+    color: #da0e00;
+}
+.survey_tit li,.survey_tiankong li,.survey_radio li,.survey_checkbox li{
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+.survey_tit li input{
+    float: left;
+    width: 520px;
+    height: 30px;
+    padding: 0 10px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    box-sizing: border-box;
+}
+.survey_jj{
+    float: left;
+    width: 520px;
+    min-height: 110px;
+    border: 1px solid #ddd;
+    box-sizing: border-box;
+    border-radius: 5px;
+    position: relative;
+}
+.survey_jj textarea{
+    display: block;
+    width: 500px;
+    height: 80px;
+    margin: 0 auto;
+    padding: 10px 0;
+    border: 0;
+    border-bottom: 1px solid #ddd;
+    box-sizing: border-box;
+
+}
+.font_num{
+    position: absolute;
+    right: 10px;
+    bottom: 0px;
+    font-size: 14px;
+    line-height: 25px;
+}
+.survey_tiankong li>input{
+    float: left;
+    width: 490px;
+    height: 30px;
+    padding: 0 10px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    box-sizing: border-box;
+}
+.del_question{
+    float: left;
+    width: 30px;
+    height: 30px;
+    background: url(../img/lese.png) no-repeat center center;
+    background-size: 22px;
+    cursor: pointer;
+}
+.left_tit input[type="checkbox"]{
+    margin-right: 10px;
+}
+.radio_all,.check_all{
+    float: left;
+    width: 520px;
+}
+.radio_question,.check_question{
+    margin-bottom: 10px;
+    overflow: hidden;
+}
+.radio_question input,.check_question input{
+    float: left;
+    width: 490px;
+    height: 30px;
+    padding: 0 10px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    box-sizing: border-box;
+}
+.option_list{
+    width: 450px;
+}
+.option_list li{
+    margin-bottom: 10px;
+    overflow: hidden;
+    position: relative;
+}
+.option_list li b{
+    position: absolute;
+    top: 1px;
+    left: 1px;
+    width: 28px;
+    height: 28px;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    background: url(../img/radio.png)#eee no-repeat center center;
+    background-size: 15px;
+}
+.option_list li input{
+    display: block;
+    width: 100%;
+    height: 30px;
+    padding: 0 40px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    box-sizing: border-box;
+}
+.del_option{
+    position: absolute;
+    top: 1px;
+    right: 1px;
+    width: 28px;
+    height: 28px;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    background: url(../img/delete.png)#eee no-repeat center center;
+    background-size: 14px;
+    cursor: pointer;
+}
+.add_option{
+    float: left;
+    padding-left: 20px;
+    line-height: 25px;
+    color: #da0e00;
+    cursor: pointer;
+    background: url(../img/add_option.png) no-repeat center left;
+    background-size: 16px;
+}
+
+.max_min{
+    float: right;
+    margin-right: 50px;
+}
+.max_min select{
+    width: 90px;
+    height: 30px;
+    border: 1px solid #ddd;
+    margin: 0 20px;
+}
+.survey_tiankong,.survey_radio,.survey_checkbox{
+    border-bottom: 1px dashed #ddd;
+    margin-bottom: 20px;
+}
+
+.survey_btn{
+    float: right;
+    overflow: hidden;
+}
+.survey_btn button{
+    float: left;
+    width: 80px;
+    height: 29px;
+    line-height: 29px;
+    text-align: center;
+    border-radius: 5px;
+    color: #fff;
+    border: 0;
+    margin: 8px;
+    outline:none;
+    cursor: pointer;
+}
+.survey_btn button.survey_save{
+    background: #212123;
+}
+.survey_btn button.survey_release{
+    background: #da0e00;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

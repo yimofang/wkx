@@ -1,0 +1,44 @@
+$(document).ready(function(e){
+	$("#type").click(function(e){
+		$("#select").show();
+		$(".danx_list").hide();
+		$(".duox_list").hide();
+		/*填空*/
+		$("#tk").click(function(e){
+			$("#select").hide();
+			$("#type_choice").text(function(i,origText){
+				return "填空";
+			});
+		});
+		/*单选*/
+		$("#danx").click(function(e){
+			$("#danx_list").show();
+			$("#select").hide();
+			$("#type_choice").text(function(i,origText){
+				return "单选";
+			});
+			$(".addList").click(function(e){
+				$(".list_content").append("<div><span>选项</span><input type='text' placeholder='请填写选项'><button class='danx_list_btn' style='background:url(../img/false.png) no-repeat'></button></div>");
+			});
+			$(".list_btn").click(function(e){
+				$(this).parent().remove();
+			})
+
+		});	
+		/*多选*/
+		$("#duox").click(function(e){
+			$("#duox_list").show();
+			$("#select").hide();
+			$("#type_choice").text(function(i,origText){
+				return "多选";
+			});
+			$(".addList").click(function(e){
+				$(".list_content").append("<div><span>选项?</span><input type='text' placeholder='请填写选项'><button class='danx_list_btn' style='background:url(img/false.png) no-repeat'></button></div>");
+			});
+			$(".list_btn").click(function(e){
+				$(this).parent().remove();
+			})
+
+		});		
+	})
+});

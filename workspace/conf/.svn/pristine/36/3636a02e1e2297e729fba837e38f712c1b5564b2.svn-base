@@ -1,0 +1,260 @@
+var surveyId = '';
+$(function(){
+	GetSurveyList();
+
+	/*隐藏：题型弹框*/
+	$("#cancel").click(function(){
+		if((".haveContent li").length > 0){
+			$(".content").hide();
+			$(".addQuestion").hide();
+			$(".haveContent").show();
+		}
+	});
+
+	/*隐藏：删除问题弹框*/
+	$("#conCel").click(function(){
+		$(".deleBg").hide();
+	});
+
+	/*展示：删除问题弹框*/
+	$(".haveContent .conList").on('click','.delete',function(){
+		$(".deleBg").show();
+		$('#conSure').attr('data-id',$(this).parents(".quesList").attr('id'));
+        $('#conSure').attr('data-index',$(this).parents('.quesList').index());
+	});
+
+	/*删除问题*/
+	$("#conSure").click(function(){
+		var delId = $(this).attr('data-id');
+		var index = $(this).attr('data-index');
+
+		$.ajax({
+			type:'POST',
+			url:Urlstr + 'qnrTitle_web/deleteTitleDetails.do',
+			data:{
+				titleid:delId,
+				token:Token
+			},
+			dataType:'json',
+			success:function(res){
+				if(res.error == 0){
+					$('haveContent .conList li:eq('+ index +')').remove();
+					if($(".haveContent .quesList").length > 0){
+						for(var i = 0;i < $(".haveContent .quesList").length;i++){
+							$('.haveContent .quesList:eq('+ i +').num').html(i + 1);
+						}
+					}else{
+						$(".haveContent").hide();
+						$(".content").show();
+					}
+					// alert(res.msg);
+					location.reload();//刷新当前页面
+				}else if(res.error == 5){
+					alert(res.msg);
+					ReqToken();
+                	Token = sessionStorage.getItem('token');
+				}else{
+					alert(res.msg);
+				}
+			}
+		});
+	});
+
+	/*修改问题*/
+	$(".haveContent .conList").on('click','.edit',function(){
+		var questionId = $(this).parents(".quesList").attr('id');
+		var dataType = $(this).attr("data-type");
+
+		if (dataType == 1){
+			location.href = 'surveySingle.html?confsid='+NumAll.confsid + '&&surveyId='+surveyId + '&&questionId=' + questionId;
+		}else if(dataType == 2){
+			location.href = 'surveyDouble.html?confsid='+NumAll.confsid + '&&surveyId='+surveyId + '&&questionId=' + questionId;
+		}else if(dataType == 3){
+			location.href = 'surveyBlank.html?confsid='+NumAll.confsid + '&&surveyId='+surveyId + '&&questionId=' + questionId;
+		}
+	});
+});
+
+/*展示：题型弹框*/
+function type(){
+	$(".addQuestion").show();
+}
+
+/*查询问卷*/
+function GetSurveyList(){
+	$.ajax({
+		type: 'POST',
+		url: Urlstr + 'qnr_web/getQnrDetails.do',
+		data: {
+			confid:NumAll.confsid,
+			token:Token
+		},
+		dataType: 'json',
+		success:function(res){
+			if(	res.error == 0 ){
+				surveyId = res.row.id;
+				/*查看是否有问卷*/
+				/*有问卷：获取问卷id+问题；无问卷，获取问卷id,创建问题*/
+				var surList = res.row;
+				var quesArray = res.row.titles;//问题集合
+				$(".haveContent").attr('data-id',res.row.id);
+
+				if(quesArray.length == 0){
+					$("#content").show();
+					$("#haveContent").hide();
+				}else{
+					/*展示问题*/
+					$("#content").hide();
+					$("#haveContent").show();
+					var htmlstr = '';
+					var pubHtmlstr = '';
+
+					for(var i=0;i<quesArray.length;i++){
+						/*单选*/
+						if(quesArray[i].tstate == 1){
+							htmlstr += `<li class="singleCon quesList" id="${quesArray[i].id}">
+											<div class="sinTop">
+												<span class="sinTitle"><span class="queNum">${(i+1)+'、'}</span><span class="questionName">${quesArray[i].fname}</span></span>
+												<span class="sinEdit edit" data-type="1"></span>
+												<span class="sinDel delete"></span>
+											</div>`;
+							for(var j=0;j<quesArray[i].options.length;j++){
+								htmlstr += `<div class="sinOption">
+												<input type="radio" name="one"><span class="singOptName">${quesArray[i].options[j].fname}<span>
+											</div>`;
+							}
+							htmlstr += `</li>`;
+						}
+						/*多选*/
+						if(quesArray[i].tstate == 2){
+							htmlstr += `<li class="doubleCon quesList" id="${quesArray[i].id}">
+											<div class="douTop">
+												<span class="douTitle"><span class="queNum">${(i+1)+'、'}</span><span class="questionName">${quesArray[i].fname}</span><i>【多选】</i></span>
+												<span class="douEdit edit" data-type="2"></span>
+												<span class="douDel delete"></span>
+											</div>`;
+							for(var j=0;j<quesArray[i].options.length;j++){
+								htmlstr += `<div class="douOption">
+												<input type="checkbox"><span class="doubOptName">${quesArray[i].options[j].fname}</span>
+											</div>`;
+							}
+							htmlstr += `</li>`;
+						}							
+						/*填空*/
+						if(quesArray[i].tstate == 3){
+							htmlstr += `<li class="blankCon quesList" id="${quesArray[i].id}">
+											<div class="blkTop">
+												<span class="blkTitle"><span class="queNum">${(i+1)+'、'}</span><span class="questionName">${quesArray[i].fname}</span></span>
+												<span class="blkEdit edit" data-type="3"></span>
+												<span class="blkDel delete"></span>
+											</div>
+											<input class="blkAnswer" type="text" placeholder="请输入答案">
+										</li>`;
+						}
+						$(".conList").html(htmlstr);
+
+						/*判断是否发布*/
+						if(res.row.rls == 1){ //已发布
+							$(".edit").hide();
+							$(".blkDel").hide();
+							$(".delete").hide();
+							$(".bottomBtn").hide();
+							$(".haveContent .conList").css('height','auto');
+						}else if(res.row.rls == 2){ //未发布
+							$(".edit").show();
+							$(".delete").show();
+							$(".bottomBtn").show();
+						}
+					}	
+				}
+			}else if(res.error == 5){
+				alert(res.msg);
+                ReqToken();
+                Token = sessionStorage.getItem('token');
+			}else{
+				alert(res.msg);
+			}
+		}
+	});
+}
+
+/*发布状态*/
+function pubSurvey(){
+	var surId = $("#haveContent").attr('data-id');
+	var isCheck = $("#onlyCheck").is(':checked');
+	var pubState = '';
+	if(isCheck == true){
+		pubState = 1; //只能作答一次
+	}else if(isCheck == false){
+		pubState = 2; //作答多次
+	}
+
+	$.ajax({
+		type:'post',
+		url:Urlstr + 'qnr_web/qnrIssue.do',
+		data:{
+			isphone:pubState,
+			qnrid:surId,
+			token:Token
+		},
+		dataType:'json',
+		success:function(res){
+			if(res.error == 0){
+				$(".edit").hide();
+				$(".delete").hide();
+				$(".bottomBtn").hide();
+				$(".haveContent .conList").css('height','auto');
+				alert(res.msg);
+			}else if(res.error == 5){
+				alert(res.msg);
+				ReqToken();
+                Token = sessionStorage.getItem('token');
+			}else{
+				alert(res.msg);
+			}
+		}
+	});
+}
+
+/*选择题型*/
+function other(page){
+	$.ajax({
+		type: 'POST',
+		url: Urlstr + 'qnr_web/getQnrDetails.do',
+		data: {
+			confid:NumAll.confsid,
+			token:Token
+		},
+		dataType: 'json',
+		success:function(res){
+			if(res.error == 0){
+				location.href = $(page).attr('data-url') + '?confsid=' + NumAll.confsid + '&&other=' + res.row.id + '&&state=1';
+			}else if(res.error == 5){
+				alert(res.msg);
+				ReqToken();
+                Token = sessionStorage.getItem('token');
+			}else{
+				alert(res.row);
+			}
+		}
+	});		
+}
+
+//Token 过期 重新请求
+function ReqToken() {
+    $('#reqtoken').load("login2.html", function () {
+        $('#reqtoken').show();
+    });
+}
+
+
+
+
+	
+
+
+
+
+
+
+

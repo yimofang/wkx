@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>会议预览</title>
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/meet_preview.css">
+    <script src="js/jquery-2.1.4.min.js"></script>
+    <script src="js/rem.js"></script>
+    <script src="jscript/meet_preview.js"></script>
+    <script src="js/removeHeader.js"></script>
+</head>
+<body>
+<!--header-->
+<div class="Header">
+    <a href="javascript:history.go(-1)" class="Goback"></a>
+    <!-- <a class="HShare" href="meetShare.html"></a> -->
+    <p>会议预览</p>
+</div>
+<!--会议预览-->
+<div class="meetPreview">
+   
+    <!--container-->
+    <div class="Container deleteHeader">
+        <!--banner-->
+        <div class="BannerImg">
+            <img src="" alt="" id="meetbanner">
+        </div>
+        <!--title-->
+        <div class="PreviewTitle">
+            <!--<h2>2017中国(河北)国际环境保护产业论坛会</h2>-->
+            <!--<p><i class="Icon Icon1"></i><span>北京中关村A3楼3层报告厅</span></p>-->
+            <!--<p><i class="Icon Icon2"></i><span>2017-08-25  10:00 AM</span></p>-->
+            <!--<p><i class="Icon Icon3"></i><span>环委会</span></p>-->
+        </div>
+        <!--preview-->
+        <div class="PreviewContainer">
+            <ul class="PreConTitle" id="PreConTitle">
+                <li class="active"><span>会议描述</span></li>
+                <li><span>会议资料</span></li>
+                <li><span>问卷调查</span></li>
+                <li><span>下期预告</span></li>
+            </ul>
+            <div class="PreContainerALL">
+                <!--描述-->
+                <div class="PreConListAll block PreDescribe">
+                    <div id="Meetms">
+                        <p class="miaoshu">
+
+                        </p>
+                        <div id="imgAll">
+                            <!--<img class="miaoshuImg" src="img/new1.jpg" alt="">-->
+                            <!--<img class="miaoshuImg" src="img/new2.png" alt="">-->
+                        </div>
+                    </div>
+                    <div class="GuestList">
+                        <p class="GuestListTitle">会议嘉宾</p>
+                        <ul>
+
+                        </ul>
+                    </div>
+                    <div>
+                        <p class="GuestListTitle">会议流程</p>
+                        <div class="PreProcess"></div>
+                    </div>
+                </div>
+                <!--资料-->
+                <div class="PreConListAll PreData">
+                    <ul>
+                        <!--<a href="dataDetail.html"><li>-->
+                        <!--<img src="img/ppt.jpg" alt="">-->
+                        <!--<div class="DataInfo">-->
+                        <!--<p class="DataTitle Ove" >中国环境保护的方针、政策和制度</p>-->
+                        <!--<p class="DataNum Ove">-->
+                        <!--<span class="DataLook"></span>-->
+                        <!--<span>129</span>-->
+                        <!--<span class="DataShare"></span>-->
+                        <!--<span>47</span>-->
+                        <!--</p>-->
+                        <!--</div>-->
+                        <!--</li></a>-->
+                        <!--<li>-->
+                        <!--<img src="img/word.jpg" alt="">-->
+                        <!--<div class="DataInfo">-->
+                        <!--<p class="DataTitle Ove" >会议安排</p>-->
+                        <!--<p class="DataNum Ove">-->
+                        <!--<span class="DataLook"></span>-->
+                        <!--<span>214</span>-->
+                        <!--<span class="DataShare"></span>-->
+                        <!--<span>42</span>-->
+                        <!--</p>-->
+                        <!--</div>-->
+                        <!--</li>-->
+                        <!--<li>-->
+                        <!--<img src="img/pdf.jpg" alt="">-->
+                        <!--<div class="DataInfo">-->
+                        <!--<p class="DataTitle Ove" >2017版环境保护法新旧对照表</p>-->
+                        <!--<p class="DataNum Ove">-->
+                        <!--<span class="DataLook"></span>-->
+                        <!--<span>186</span>-->
+                        <!--<span class="DataShare"></span>-->
+                        <!--<span>76</span>-->
+                        <!--</p>-->
+                        <!--</div>-->
+                        <!--</li>-->
+                    </ul>
+                </div>
+                <!--调查-->
+                <div class="PreConListAll previewContent" data-surId="">
+                    <ul>
+                        <!--<li>-->
+                            <!--<p>1.您的公司名称</p>-->
+                            <!--&lt;!&ndash; <p class="comName">易魔方科技有限公司</p> &ndash;&gt;-->
+                            <!--<input type="text" class="comName" placeholder="请输入公司名称">-->
+                        <!--</li>-->
+                        <!--<li>-->
+                            <!--<p>2.您是否参加过类似会议</p>-->
+                            <!--<p><input type="radio" name="que">是</p>-->
+                            <!--<p><input type="radio" name="que">否</p>-->
+                        <!--</li>-->
+                        <!--<li>-->
+                            <!--<p>3.您参加会议的目的有哪些<span style="color:#bd0f10">[多选题]</span></p>-->
+                            <!--<p><input type="checkbox">认识更多同行朋友</p>-->
+                            <!--<p><input type="checkbox">寻找机会，拓展业务</p>-->
+                            <!--<p><input type="checkbox">关注当前行业发展趋势</p>-->
+                        <!--</li>-->
+                        <!--<li>-->
+                            <!--<p>4.您是通过哪种渠道获取到会议信息的</p>-->
+                            <!--<p><input type="radio" name="get">网络推广</p>-->
+                            <!--<p><input type="radio" name="get">朋友推荐</p>-->
+                            <!--<p><input type="radio" name="get">收到邀请函</p>-->
+                            <!--<p><input type="radio" name="get">公司派遣</p>-->
+                        <!--</li>-->
+                        <!--<li style="border:none">-->
+                            <!--<p>5.您觉得会议的哪种因素比较重要<span style="color:#bd0f10">[多选题]</span></p>-->
+                            <!--<p><input type="checkbox">分享行业动态</p>-->
+                            <!--<p><input type="checkbox">讨论行业前景</p>-->
+                            <!--<p><input type="checkbox">行业大佬讲解经验</p>-->
+                            <!--<p><input type="checkbox">会场整洁干净</p>-->
+                        <!--</li>-->
+                    </ul>
+                    <div class="btn" id="pShow">提交</div>
+
+                    <!--输入手机号弹框-->
+                    <div class="phoneBg" style="display: none">
+                        <div class="phoneInfo">
+                            <p class="item">温馨提示</p>
+                            <p class="pNum">
+                                <span>手机号：</span>
+                                <input id="mobileNum" type="phone" placeholder="请输入手机号"></p>
+                            <p class="pInfo">
+                                <span class="pClose" id="pClose">取消</span>
+                                <span class="pSure" onclick="surSubmit()">确定</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <!--下期预告-->
+                <div class="PreConListAll nextmeet">
+                    <div>
+                        <p class="nextmeetinfo"></p>
+                        <div class="nextmeetimg"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--button-->
+
+    </div>
+</div>
+<!--主办方-->
+<div class="hostBg" style="display: none">
+    <div class="hostInfo">
+        <p>温馨提示</p>
+        <p><a href="tel:83118888">83118888</a></p>
+        <p>您确定拨打主办方电话吗？</p>
+        <p class="hostSure">
+            <span id="close_phone">取消</span>
+            <span id="sure_phoe">
+                    <a href="tel:83118888">确定</a>
+                </span>
+        </p>
+    </div>
+</div>
+<!--报名-->
+<div id="addName" style="display: none">
+    <!--header-->
+    <div class="Header header_name">
+        <a href="javascript:void(0)" id="addNameHeader" onclick="goback()"></a>会议报名
+    </div>
+    <!--addName_content-->
+    <div class="addName_content deleteHeader">
+        <div id="AddNameList">
+            <div class="name">
+                <span>姓名<b>*</b></span>
+                <input type="text" id="name" placeholder="请填写参会者姓名">
+            </div>
+            <div class="mobile">
+                <span>手机号码<b>*</b></span>
+                <input type="text" id="phone" placeholder="请填写参会者手机号码">
+            </div>
+            <div class="email">
+                <span>邮箱</span>
+                <input type="text" id="mail" placeholder="请填写参会者邮箱">
+            </div>
+            <div class="company">
+                <span>公司</span>
+                <input type="text" id="company" placeholder="请填写参会者公司">
+            </div>
+            <div class="job">
+                <span>职位</span>
+                <input type="text" id="job" placeholder="请填写参会者职位">
+            </div>
+        </div>
+    </div>
+    <div class="nameBtn">
+        <div class="back_btn" onclick="goback()">返回</div>
+        <div class="succ_btn">完成</div>
+    </div>
+</div>
+<div class="PhoneAndName">
+    <p class="Phone">联系主办方</p>
+    <p class="Name">报名</p>
+</div>
+<div id="reqtoken" class="reqtoken"></div>
+</body>
+</html>

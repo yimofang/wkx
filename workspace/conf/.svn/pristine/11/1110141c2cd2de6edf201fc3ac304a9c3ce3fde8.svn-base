@@ -1,0 +1,13 @@
+$(function(){
+	//判断是否是微信浏览器
+    var ua = window.navigator.userAgent.toLowerCase();  
+    if(ua.match(/MicroMessenger/i) == 'micromessenger'){  
+        $('.Header').remove();
+        $('.nameHeader').remove();
+        $('.meetStatistics>.Header').remove();
+        $('.deleteHeader').css('margin-top','0.2rem');
+        $('.meetStatistics>.nav').css('margin-top','0.2rem');
+        $('.deleteHeaderPM').css('margin-top','0');
+
+    } 
+});

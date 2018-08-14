@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>微会议</title>
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/meetName.css">
+</head>
+
+<body>
+<div class="topLine"></div>
+<div class="header">
+
+</div>
+
+<div class="left_nav">
+    <ul class="nav_one">
+        <li class="nav_manage active">
+            <a href="meetList.html">
+                <b class="active"></b>
+                <span>会议管理</span>
+            </a>
+        </li>
+        <li class="nav_release">
+            <a href="meetPublish.html">
+                <b ></b>
+                <span>发布会议</span>
+            </a>
+        </li>
+        <li class="nav_pwd">
+            <a href="password.html">
+                <b></b>
+                <span>修改密码</span>
+            </a>
+        </li>
+    </ul>
+    <ul class="nav_two" style="display: block;">
+        <li>
+            <a href="meetModify.html">会议修改</a>
+        </li>
+        <li >
+            <a href="meetCode.html">二维码 </a>
+        </li>
+        <li  class="on">
+            <a href="meetName.html">名单管理 </a>
+        </li>
+        <li>
+            <a href="meetData.html">资料管理 </a>
+        </li>
+        <li>
+            <a href="meetCount.html">会议统计 </a>
+        </li>
+        <li>
+            <a href="meetSurvey.html">调研问卷 </a>
+        </li>
+        <li>
+            <a href="meetBriefing.html">简报管理 </a>
+        </li>
+        <li>
+            <a href="meetSign.html">上传签到表 </a>
+        </li>
+    </ul>
+</div>
+<div class="right_wrapper">
+    <div class="top">
+        <a href="#">会议管理</a> &nbsp;/&nbsp;
+        <a href="#">名单管理</a>
+        <div class="right">
+            <div class="inpBtn">
+                <input type="text" placeholder="搜索参会人姓名或手机号">
+                <span></span>
+            </div>
+            <span class="download">批量下载</span>
+            <span class="addName">+添加名单</span>
+        </div>
+
+    </div>
+    <div class="wrapper">
+        <div class="main">
+            <div class="title">
+                <span class="active">全部</span>
+                <span>已签到</span>
+                <span>上传名单</span>
+            </div>
+            <!--全部-->
+            <div class="cont1">
+                <ul>
+                    <li class="tit">
+                        <span class="man">参会人</span>
+                        <span class="tel">手机号码</span>
+                        <span class="time">报名时间</span>
+                        <span class="sign">签到否</span>
+                        <span class="caouo">操作</span>
+                    </li>
+                    <li>
+                        <span >参会人</span>
+                        <span> 15612125656</span>
+                        <span> 2017-05-15</span>
+                        <span> <img src="img/yes.png" alt=""></span>
+                        <span>
+                            <span class="see">查看</span>
+                            <span class="edit">编辑</span>
+                            <span class="del">删除</span>
+                        </span>
+                    </li>
+                    <li>
+                        <span>参会人</span>
+                        <span>手机号码</span>
+                        <span>报名时间</span>
+                        <span>签到否</span>
+                        <span>操作</span>
+                    </li>
+                </ul>
+            </div>
+            <!--已签到-->
+            <div class="cont2">222</div>
+            <!--上传名单-->
+            <div class="cont3">
+                33
+            </div>
+        </div>
+    </div>
+
+</div>
+<div class="footer">
+</div>
+<script src="javascript/jquery-2.1.4.min.js"></script>
+<script src="javascript/common.js"></script>
+<script src="js/meetName.js"></script>
+<script>
+    $(function () {
+        getHeader();
+    })
+</script>
+</body>
+
+</html>

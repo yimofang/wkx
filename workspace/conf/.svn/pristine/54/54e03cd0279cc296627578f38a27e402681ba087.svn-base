@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>微会议</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/meetList.css">
+    <link href="css/myPage.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+<div class="topLine"></div>
+<div class="header"></div>
+<div class="left_nav">
+    <ul class="nav_one">
+        <li class="nav_manage active">
+            <a href="meetList.html">
+                <b class="active"></b>
+                <span>会议管理</span>
+            </a>
+        </li>
+        <li class="nav_release">
+            <a href="meetPublish.html">
+                <b></b>
+                <span>发布会议</span>
+            </a>
+        </li>
+        <li class="nav_pwd">
+            <a href="password.html">
+                <b></b>
+                <span>修改密码</span>
+            </a>
+
+        </li>
+    </ul>
+</div>
+<div class="right_wrapper">
+    <!--top-->
+    <div class="top">
+        <span class="active" data-type="0">全部 <img src="img/down.png"></span>
+        <span data-type="1">报名中 <img src="img/down.png"></span>
+        <span data-type="2">已结束 <img src="img/down.png"></span>
+        <div class="meet_search">
+            <div class="h_search">
+                <input type="text" class="h_searchinput" placeholder="请输入...">
+                <span class="h_searchicon"></span>
+            </div>
+            <select name="" id="meetType" class="h_type">
+                <option value="">全部类型</option>
+            </select>
+        </div>
+    </div>
+    <div class="wrapper">
+        <!--会议列表 -->
+        <div class="mList">
+            <ul>
+            </ul>
+            <div class="noData">
+                <img src="img/nodata.png">
+                <p>暂无数据</p>
+            </div>
+        </div>
+        <form id="form1" runat="server">
+            <div>
+                <ul class="pagination" id="pagination">
+                </ul>
+                <input type="hidden" id="PageCount" runat="server" />
+                <input type="hidden" id="PageSize" runat="server" value="10" />
+                <input type="hidden" id="countindex" runat="server" value="10"/>
+                <!--设置最多显示的页码数 可以手动设置 默认为7-->
+                <input type="hidden" id="visiblePages" runat="server" value="4" />
+            </div>
+        </form>
+
+    </div>
+
+</div>
+<div class="footer"></div>
+<div class="shade"></div>
+<div class="mask">
+    <div class="maskInfo">
+        <h3>温馨提示</h3>
+        <p class="message">您确定要删除此会议吗？</p>
+        <p class="btns">
+            <span class="no_btn" onclick="goback()">取消</span>
+            <span class="yes_btn" onclick="deletemeet(this)">确定</span>
+        </p>
+    </div>
+</div>
+<div class="mask2">
+    <div class="maskInfo2">
+        <p class="title">会议二维码</p>
+        <img src="" alt="">
+        <input class="mask2_url" value="http://www.baidu.com" disabled id="mask2_url">
+        <textarea id="contents" rows="10" cols="10" style="height:0;width:0;opacity: 0;"></textarea>
+        <div class="btns2">
+            <span class="mask2_close" onclick="goback2()">关闭</span>
+            <span class="mask2_copy" onclick="copyText()">复制</span>
+        </div>
+    </div>
+</div>
+
+<script src="javascript/jquery-2.1.4.min.js"></script>
+<script src="javascript/common.js"></script>
+<script src="javascript/jqPaginator.min.js" type="text/javascript"></script>
+<script src="js/meetList.js"></script>
+</body>
+
+</html>

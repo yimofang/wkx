@@ -1,0 +1,92 @@
+var NumAll = GetRequest(),
+    Token;
+$(function(){
+    //修改九宫格a的链接
+	$('.MeetInfoList a').click(function () {
+        location.href = Urlstr + $(this).attr('data-url') + NumAll.confsid;
+    })
+	//删除会议
+	$('#delete').click(function(){
+        $('.bg').show();
+        $('#sure').attr('onclick','DeleteMeet()');
+    });
+	//取消删除会议
+    $('close').click(function () {
+        $('.bg').hide();
+        $('#sure').attr('onclick','');
+    })
+});
+//确定删除会议
+function DeleteMeet() {
+    $.ajax({
+        type : 'POST',
+        url : Urlstr,
+        data : {
+            confsid:NumAll.confsid,
+            token:Token,
+        },
+        dataType : 'json',
+        success : function (res) {
+
+        }
+    })
+}
+//签到确定
+function SignSure() {
+    $('.bg').hide();
+}
+//请求签到人数
+function GetPopleNum() {
+    $.ajax({
+        type : 'POST',
+        url : Urlstr+'confs_web/listpage.do',
+        data : {
+            confsid:NumAll.confsid,
+            token:Token,
+        },
+        dataType : 'json',
+        success : function (res) {
+            console.log(res);
+            if(res.error == 0){
+                $('#SignYes').html(res.row.sgin);
+                $('#SignAll').html(res.row.total);
+                $('#SignNo').html(res.row.unsgin);
+            }
+            if(res.row.arrive == 2){
+                $('.SignStart').html('开始签到');
+                $('.SignStart').attr('onclick','Sign()');
+            }else{
+                $('.SignStart').html('已签到');
+                $('.SignStart').attr('onclick','');
+            }
+        }
+    })
+}
+//签到
+function Sign() {
+    $.ajax({
+        type : 'POST',
+        url : Urlstr,
+        data : {
+            confsid:NumAll.confsid,
+            token:Token,
+        },
+        dataType : 'json',
+        success : function (res) {
+
+        }
+    })
+}
+//截取url数据
+function GetRequest() {
+    var url = location.search; //获取url中"?"符后的字串
+    var theRequest = new Object();
+    if (url.indexOf("?") != -1) {
+        var str = url.substr(1);
+        strs = str.split("&");
+        for(var i = 0; i < strs.length; i ++) {
+            theRequest[strs[i].split("=")[0]]=decodeURI(strs[i].split("=")[1]);
+        }
+    }
+    return theRequest;
+}

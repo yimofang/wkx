@@ -1,0 +1,25 @@
+$(function(){
+	var data = [
+		{'id': '10001', 'value': '签到'},
+    	{'id': '10002', 'value': '未签到'}
+	];
+	var showCheckIn = document.querySelector('#checkIn');
+    var checkInId = document.querySelector('#choiceCheckIn');
+    showCheckIn.addEventListener('click', function () {
+        var bankId = showCheckIn.dataset['id'];
+        var bankName = showCheckIn.dataset['value'];
+        var bankSelect = new IosSelect(1, 
+        	[data],
+            {
+                container: '.container',
+                title: '是否签到',
+                itemHeight: 50,
+                itemShowCount: 3,
+                oneLevelId: bankId,
+                showAnimate:true,
+                callback: function (selectOneObj) {
+                    checkInId.innerHTML = selectOneObj.value;
+                }
+        	});
+    });
+});

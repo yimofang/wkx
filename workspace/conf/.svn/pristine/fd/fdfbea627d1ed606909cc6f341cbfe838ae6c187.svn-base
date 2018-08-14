@@ -1,0 +1,76 @@
+.Nav{position: fixed;top: 0.88rem;left: 0;width: 100%;background: #fff;    padding-top: 0.2rem;}
+.Nav a>.Search{height:0.7rem;line-height:0.7rem;font-size: 0.28rem; background: #f3f4f5;text-align: center;color: #83838b;width: 90%;margin: 0 auto;}
+/*.Nav a .Search span{padding-left: 0.5rem;background: url(../img/index.png) no-repeat -0.75rem -0.01rem;background-size: 10rem;}*/
+.Nav .Search p{padding-left: 3%;background: url(../img/search2.png) no-repeat;background-size: 0.3rem 0.3rem;background-position: left;width: 15%;margin-left: 41%;}
+.Nav .NavList{overflow: hidden;margin: 0 0.32rem;}
+.Nav .NavList li{float: left;width: 50%;}
+.Nav .NavList li span{display: block;width:100%;height:0.6rem;line-height:0.6rem;font-size:0.28rem;text-align: center}
+.Nav .NavList li span.active{border-bottom: 0.04rem solid #bd0f10;box-sizing: border-box;color: #bd0f10;font-size:0.3rem;}
+
+.IndexContent{position:fixed;top: 2.6rem;bottom:0;left:0;right:0;overflow-y: auto;}
+.IndexContent .MeetingList{margin-bottom: 0.98rem;}
+.IndexContent .MeetingList li{background: #fff;margin-bottom: 0.24rem;}
+.IndexContent .MeetingList li img{display: block;width: 100%;height: 3.2rem;border-radius: 0.08rem}
+.IndexContent .MeetingList li .MeetingAddress{margin: 0 0.32rem;padding-bottom: 0.3rem;}
+.IndexContent .MeetingList li h2{height:0.9rem;line-height: 0.9rem;font-size: 0.3rem;font-weight: bold;color: #333;}
+.IndexContent .MeetingList li p{height:0.4rem;line-height: 0.4rem;padding-left:0.4rem; font-size: 0.26rem;color: #999cab;}
+.IndexContent .MeetingList li p.Address{background:url(../img/index.png) no-repeat 0 -0.95rem;background-size: 10rem}
+.IndexContent .MeetingList li p.Time{background:url(../img/index.png) no-repeat 0 -1.44rem;background-size: 10rem}
+.conIng,.conHad{display: none;}
+
+/*无会议列表*/
+.unContent{width: 100%;margin-top: 5rem;text-align: center;}
+.unContent p{font-size: 0.26rem;color: #999cab;margin-top: 0.4rem;}
+/*会议管理*/
+.MeetData,.MeetInfoList{overflow: hidden;background: #fff;position: relative;margin-bottom: 0.24rem;box-shadow: 0 0.05rem 0.05rem #e9eaed;}
+.MeetData>div{float: left;width: 33.33%;height: 1.96rem;}
+.MeetData>div p{height:0.5rem;line-height:0.5rem;font-size:0.3rem;text-align: center;color: #333;}
+.MeetData>div p.Num{color: #bd0f10;margin-top: 0.48rem;}
+.MeetData div.Border1,.MeetData div.Border2{position: absolute;top: 0.48rem;width: 0.02rem;height: 1rem;background: #f1f1f1;}
+.MeetData div.Border1{left: 33.3%;}
+.MeetData div.Border2{left: 66.6%;}
+
+.MeetInfoList a{float: left;width: 33.33%;height: 2.16rem;}
+.MeetInfoList a i{display: block;width: 0.66rem;height: 0.66rem;margin: 0.5rem auto 0;}
+.MeetInfoList a i.ListIcon1{background: url(../img/meetmanage.png) no-repeat 0.03rem 0;background-size: 3rem;}
+.MeetInfoList a i.ListIcon2{background: url(../img/meetmanage.png) no-repeat -0.97rem 0;background-size: 3rem;}
+.MeetInfoList a i.ListIcon3{background: url(../img/meetmanage.png) no-repeat -1.98rem 0;background-size: 3rem;}
+.MeetInfoList a i.ListIcon4{background: url(../img/meetmanage.png) no-repeat 0.03rem -1rem;background-size: 3rem;}
+.MeetInfoList a i.ListIcon5{background: url(../img/meetmanage.png) no-repeat -0.97rem -1rem;background-size: 3rem;}
+.MeetInfoList a i.ListIcon6{background: url(../img/meetmanage.png) no-repeat -1.98rem -1rem;background-size: 3rem;}
+.MeetInfoList a i.ListIcon7{background: url(../img/meetmanage.png) no-repeat 0.03rem -2rem;background-size: 3rem;}
+.MeetInfoList a i.ListIcon8{background: url(../img/meetmanage.png) no-repeat -0.95rem -2rem;background-size: 3rem;}
+.MeetInfoList a i.ListIcon9{background: url(../img/meetmanage.png) no-repeat -2rem -2rem;background-size: 3rem;}
+.MeetInfoList a p{height: 0.5rem;line-height: 0.5rem;font-size: 0.28rem;text-align: center;}
+.SignStart,.SignDelete{height: 1rem;line-height: 1rem;margin: 0 0.32rem;border-radius: 0.08rem;font-size: 0.32rem;color: #fff;background: #1b1b1b;text-align: center;box-shadow: 0 0.05rem 0.05rem #cdcdcd;}
+.SignStart{background: #1b1b1b;margin-top: 0.5rem;}
+.SignDelete{background: #bd0f10;margin-top: 0.14rem;margin-bottom: 0.5rem;}
+
+/*删除会议*/
+.bg{display:none;width: 100%;top: 0;bottom: 0;left: 0;right: 0;position: fixed;z-index: 999;background: rgba(0,0,0,.2);}
+.deleteMeet{position: fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index: 1000;width: 5.57rem;height: 4.3rem;border-radius: 0.1rem;background: #fff;text-align: center;}
+.deleteMeet p:nth-child(1){width: 5.57rem;height: 0.9rem;line-height: 0.9rem;text-align: center;background: #bd0f10;font-size: 0.32rem;color: #fff;border-top-left-radius: 0.1rem;border-top-right-radius: 0.1rem;}
+.deleteMeet p:nth-child(2){font-size:0.28rem;margin-top: 0.8rem;}
+.deleteMeet p:nth-child(3){width: 100%;height: 0.68rem;line-height: 0.68rem;font-size: 0.3rem;text-align: center;margin: 0.4rem auto 0;}
+.deleteMeet .bg_btn span{float: left;width: 40%;margin: 0 5%;border-radius: 0.1rem;color: #fff;}
+.deleteMeet .bg_btn span.bg_btn1{background: #1b1b1b;}
+.deleteMeet .bg_btn span.bg_btn2{background: #bd0f10;}
+
+/*搜索页面*/
+.indexSearch{position: fixed;top: 0.2rem;left: 0;width: 100%;height: 0.88rem;line-height: 0.88rem;font-size: 0.36rem;background: #f3f4f5;color: #fff;text-align: center;z-index: 999;}
+.indexSearch .search{float: left;width: 80%;height: 0.3rem;line-height: 0.3rem;padding: 0.3rem 0.7rem;background: url(../img/search2.png) #fff no-repeat 0.2rem 0.16rem;background-size: 0.3rem;border: 0;border-radius: 0.08rem;margin-left: 5%;box-sizing: border-box;margin-top: 0.14rem;font-size: 0.26rem;}
+.indexSearch .cancel{position: relative;float: left;width: 15%;line-height: 0.6rem;text-align: center;font-size: 0.32rem;color: #333;margin-top: 0.14rem;}
+
+
+
+
+
+
+
+
+
+
+
+
+
+

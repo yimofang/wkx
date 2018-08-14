@@ -1,0 +1,111 @@
+
+<head>
+<meta charset="utf-8" />
+<title></title>
+
+</head>
+<script src="../html/js/jquery-2.1.4.min.js"></script>
+<!-- jquery.form 插件 支持ajax文件上传,普通的js ajax 无法文件上传-->
+<script type="text/javascript" src="../js/jqueryform.js"></script>
+<script type="text/javascript">
+
+var url = "http://192.168.2.220:8080/conf";
+
+var datas ={};
+
+   datas.rejoins =[   //问题集合信息
+	    {   //单选1  runningman
+	        "titleid": "180116152258xXXjmql6",	// 问题ID
+	        "optionid": "1801161522581OLLVMCT"       //选项id(1)
+	       // "optionid": "180116152258LZXBoSmd"       //选项id(2)
+	        
+	    },
+	    {   //单选2   圆明园
+	        "titleid": "180116151540zy9cMIHf",	// 问题ID
+	        "optionid": "180116151720g3TBBlu9"       //选项id(1)
+	      // "optionid": "1801161517204ADSEjWD"       //选项id(2)
+	    },
+	    {   //单选3 olivia
+	        "titleid": "1801161521552zFs3YR6",	// 问题ID
+	        "optionid": "180116152155yOmh9oQF"       //选项id(1)
+	      // "optionid": "180116152155AxgNwoII"       //选项id(2)  
+	    },
+	    {   //多选1  酸奶
+	        "titleid": "180116151955PvfuS3co",	// 问题ID
+	        //"optionid": "180116151955I8TQxBYz,180116151955oLY7ICUn"       //选项id
+	        "optionid": "180116151955oLY7ICUn,180116151955A9m2xi1y"       //选项id(2)
+	      // "optionid": "180116151955I8TQxBYz,180116151955oLY7ICUn,180116151955A9m2xi1y"       //选项id(3)
+	    },
+	    {   //多选2 无闻西东
+	        "titleid": "180116152124LGyWR6lf",	// 问题ID
+	        //"optionid": "180116152124fNdqA8hh,180116152124j4RvjW0M"       //选项id
+	       "optionid": "180116152124fNdqA8hh"       //选项id(2)  
+	      // "optionid": "180116152124j4RvjW0M"       //选项id(2)    
+	    },
+	    {    //填空1 从前慢
+	    	"titleid": "180116151850cYnjYZOR",	 // 问题ID
+	        "answer": "梵蒂冈的非官方的图"       //填空信息
+	    },  
+	    {    //填空2 李白
+	    	"titleid": "180116152011zxLfHyDX",	 // 问题ID
+	        "answer": "可费劲的控股zsds"       //填空信息
+	    }  
+	    
+	];
+   datas.confid = "180116140735c0HYm1yb";  // 会议ID
+   datas.qnrid = "180116151522SsiOtQNE";   //问卷ID
+   datas.phone =  "13103110311";		   //手机号
+  // console.log(datas)
+		function ss(){
+			 $.ajax({
+				 url:url+"/rejoin_web/submitAnswers.do",
+				 type:"post",
+				 contentType:"application/json;charset=utf-8",
+				 data:JSON.stringify(datas),
+					  
+				 		
+				// dataType:"json",
+				 success : function(data) {
+						alert(data.msg);
+				}
+			 })
+		} 
+	
+ function doUpload() {  
+     var formData = new FormData($( "#forms" )[0]);  
+     formData.append('token', '18020509115307WDw86zsh19npQg46Yy');
+     $.ajax({  
+          url: url+'/imgupload.do' ,  
+          type: 'POST',  
+          data: formData,  
+          async: false,  
+          cache: false,  			//上传文件不需要缓存
+          contentType: false,  		//已经声明了属性enctype="mutipart/form-data"，所以这里设置为false
+          processData: false,  
+          success: function (data) {  
+        	if(data.error==0){
+        		console.log(data.row.filename);
+        		console.log(data.row.path);
+        	}else{
+        		alert(data.msg);
+        	}
+          },  
+          error: function (returndata) {  
+              alert("上传失败");  
+          }  
+     });  
+ } 
+ 
+</script>
+<body>
+	<div class="jz">
+		<button onclick="ss()">球球</button>
+	</div>
+	<form id="forms">
+		<div>
+			<input type="file" id="fu_UploadFile" name="myfiles" value="" title="上传附件">
+		</div>
+	</form>
+    <input type="button"  onclick="doUpload()" value="上传" />  
+
+</body>

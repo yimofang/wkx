@@ -1,0 +1,8 @@
+$(document).ready(function(e){
+	$("#complete").click(function(){
+		$(".bg").show();
+	});
+	$("#enrolBtn").click(function(){
+		$(".bg").hide();
+	});
+});

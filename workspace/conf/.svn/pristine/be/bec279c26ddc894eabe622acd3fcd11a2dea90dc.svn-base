@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+	<title>会议描述</title>
+	<script src="js/jquery-2.1.4.min.js"></script>
+    <script src="js/removeHeader.js"></script>
+	<script src="js/rem.js"></script>
+
+    <!--图文混排-->
+    <script src="js/index.min.js"></script>
+    <script src="js/index.js"></script>
+
+	<link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" type="text/css" href="css/iosSelect.css"><!--插件-->
+    <link rel="stylesheet" type="text/css" href="css/meetChoice.css">
+</head>
+<body>
+    <!--header-->
+    <div class="Header">
+        <a id="mDesHeader" href="javascript:history.go(-1);" onclick="meetDes_back()"></a>会议描述
+    </div>
+    <!--descript-->
+    <div class="descript deleteHeader">
+        <ul>
+            <li class="desD_content">
+                <div style="width:100%;margin: 0 auto;">
+                    <div class="publish-article-content">
+                        <div class="title-tips">正文</div>
+                        <input type="hidden" id="target">
+                        <div class="article-content" id="content2" contenteditable="true">
+                            <div class="placeholader" style="pointer-events: none;">请输入文章正文内容</div>
+                        </div>
+                        <div class="footer-btn g-image-upload-box">
+                            <div class="upload-button">
+                                <span class="upload" style="display: block;line-height: 0.78rem;">
+                                    <i class="upload-img"></i>
+                                </span>
+                                <input class="input-file" id="imageUpload2" type="file" name="fileInput" accept="image/*" style="position:absolute;left:0;top:0;opacity:0;width:100%;height: 0.78rem;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+    
+
+    <!--submit-->
+    <div class="desBtn" onclick="meetDes()">保存</div>
+
+    <div id="reqtoken" class="reqtoken"></div>
+    <script>
+        $(function(){
+            getMDesc();
+        });
+        //保存会议描述
+        function meetDes() {
+            var imgstr = '';
+            var inpVal = $("#target").val();
+            var desD_content = $('#content2').html();
+            var l = $("#content2 img").length;
+
+            if((inpVal == '') && (l == 0)){
+                window.location.href = 'meetChoice.html?confsid=' + NumAll.confsid;
+            }else{
+               $.ajax({
+                    type: 'post',
+                    url: Urlstr + 'confs_web/addIntrod.do',
+                    data: {
+                        id: NumAll.confsid,
+                        introd: desD_content,
+                        imgs: imgstr == '' ? '' : imgstr.slice(0, -1),
+                        token: Token
+                    },
+                    dataType: 'json',
+                    success: function (res) {
+                        if (res.error == 0) {
+                            alert('保存成功');
+                            window.location.href = 'meetChoice.html?confsid=' + NumAll.confsid;
+                        } else if (res.error == 5) {
+                            alert(res.msg);
+                            ReqToken();
+                        } else {
+                            alert(res.msg);
+                        }
+                    }
+                }); 
+            }
+        }
+        //获取描述内容
+        function getMDesc(){
+            $.ajax({
+            type: 'post',
+            url: Urlstr + 'confs_web/confRim.do',
+            data: {
+                conftoken: NumAll.confsid,
+                type: 1,
+                token: Token
+            },
+            dataType: 'json',
+            success: function (res) {
+                console.log(res);
+                if (res.error == 0) {
+                    if(res.row.introd != null){
+                        $("#content2").html(res.row.introd);
+                    }
+                    
+                } else if (res.error == 5) {
+                    alert(res.msg);
+                    ReqToken();
+                } else {
+                    // alert(res.msg);
+                }
+            }
+        });
+        }
+
+        function meetDes_back(){
+            window.location.href = 'meetChoice.html?confsid=' + NumAll.confsid;
+        }
+    </script>
+</body>
+</html>

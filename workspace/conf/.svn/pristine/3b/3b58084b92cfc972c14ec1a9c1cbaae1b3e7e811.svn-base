@@ -1,0 +1,111 @@
+$(function () {
+    $('#PreConTitle ').on('click','li',function () {
+        $(this).addClass('active').siblings().removeClass('active');
+        var index = $(this).index();
+        if(index == 0){
+            $('#PreConTitle li span').css('border','0');
+            $('#PreConTitle li:eq(2) span').css('border-left','1px solid #e1e1e1').css('border-right','1px solid #e1e1e1')
+        }
+        if(index == 1){
+            $('#PreConTitle li span').css('border','0');
+            $('#PreConTitle li:eq(3) span').css('border-left','1px solid #e1e1e1');
+        }
+        if(index == 2){
+            $('#PreConTitle li span').css('border','0');
+            $('#PreConTitle li:eq(1) span').css('border-left','1px solid #e1e1e1');
+        }
+        if(index == 3){
+            $('#PreConTitle li span').css('border','0');
+            $('#PreConTitle li:eq(1) span').css('border-left','1px solid #e1e1e1').css('border-right','1px solid #e1e1e1');
+        }
+        $('.PreContainerALL>div:eq('+index+')').addClass('block').siblings('div').removeClass('block');
+    });
+
+    /*联系主办方*/
+    var top=0;
+    $(".Phone").click(function(){
+        $(".hostBg").show();
+        top=$(window).scrollTop();
+        $(".meetPreview").css("top",-top+"px");
+        $(".meetPreview").addClass("add");
+
+        $(".hostSure").click(function(){
+            $(".hostBg").hide();
+            $('.meetPreview').removeClass('add');
+            $(window).scrollTop(top);
+        });
+    });
+    
+
+
+    /*报名*/
+    $(".Name").click(function(){
+        $("#addName").show();
+        $(".meetPreview").hide();
+    });
+
+    $(".nameBtn").click(function(){
+        $("#addName").hide();
+        $(".meetPreview").show();
+    });
+    $("#addNameHeader").click(function(){
+        $("#addName").hide();
+        $(".meetPreview").show();
+    });
+    
+    /*报名验证*/
+    /*验证姓名*/
+    $("#name").blur(function(){
+        var username=$("#name").val().match(/^[\u4e00-\u9fa5]{2,4}$/i);
+        if(!username){
+            $("#name").css('padding-right','0.5rem');
+            $("#name").css('background-image','url(img/false2.png)');
+            $("#name").css('background-size','0.4rem 0.4rem');
+            $("#name").css('background-position','right');
+            $("#name").css('background-repeat','no-repeat');
+        }
+        else{ 
+            $("#name").val(username[0]);
+            // $("#addName_content div div input").addClass('inputYes');
+            $("#name").css('padding-right','0.5rem');
+            $("#name").css('background-image','url(img/yes.png)');
+            $("#name").css('background-size','0.32rem 0.22rem');
+            $("#name").css('background-position','right');
+            $("#name").css('background-repeat','no-repeat');
+        }
+    });
+    /*验证电话*/
+    $("#phone").blur(function(){
+        var pNumber=$("#phone").val().match(/^1[34578]\d{9}$/);
+        if(!pNumber){
+            $("#phone").css('padding-right','0.5rem');
+            $("#phone").css('background-image','url(img/false2.png)');
+            $("#phone").css('background-size','0.4rem 0.4rem');
+            $("#phone").css('background-position','right');
+            $("#phone").css('background-repeat','no-repeat');
+        }
+        else{ 
+            $("#phone").val(pNumber[0]);
+            $("#phone").css('padding-right','0.5rem');
+            $("#phone").css('background-image','url(img/yes.png)');
+            $("#phone").css('background-size','0.32rem 0.22rem');
+            $("#phone").css('background-position','right');
+            $("#phone").css('background-repeat','no-repeat');
+        }
+    });
+    /*验证邮箱*/
+    $("#mail").blur(function(){
+        var email=$("#mail").val().match(/^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((\.[a-zA-Z0-9_-]{2,3}){1,2})$/);
+        if(email){
+            $("#mail").val(email[0]);
+            $("#mail").css('padding-right','0.5rem');
+            $("#mail").css('background-image','url(img/yes.png)');
+            $("#mail").css('background-size','0.32rem 0.22rem');
+            $("#mail").css('background-position','right');
+            $("#mail").css('background-repeat','no-repeat');
+        }
+    });
+    
+
+
+})

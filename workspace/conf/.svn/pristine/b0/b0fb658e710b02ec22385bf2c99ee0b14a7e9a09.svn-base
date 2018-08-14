@@ -1,0 +1,7 @@
+*{padding:0;margin:0;}
+.myHead{margin-top: 0.88rem;width:100%;height:4.8rem;text-align: center;background:url(../img/myHeadBg.png) no-repeat center center;background-size:8rem 4.8rem;}
+.myHead .myPhoto{position: relative;width:1.9rem;height:1.9rem;border-radius: 1.9rem;border:0.01rem solid #efefef;top: 0.93rem;margin: 0 auto;background: url(../img/myPhoto.png) no-repeat center center;}
+.myHead .myName{font-size: 0.32rem;color:#fff;margin-top: 1.3rem;}
+.myInfo{width:100%;height:auto;margin-top:0.52rem;}
+.myInfo ul li{width:90%;height:0.88rem;line-height: 0.88rem;padding:0 5%;font-size:0.28rem;background:#fff;border-bottom:0.01rem solid #efefef;}
+.myInfo .infoCenter{padding-left: 0.4rem;}

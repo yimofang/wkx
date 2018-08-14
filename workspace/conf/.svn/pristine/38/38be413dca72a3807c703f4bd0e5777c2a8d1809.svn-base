@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>微会议</title>
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/meetPreview.css">
+</head>
+<body>
+    <div class="banner">
+        <img src="img/preBg.png" alt="">
+        <p class="p1">微会议-专业会议服务平台</p>
+        <p class="p2">创建、统计、管理、您的专属定制工具</p>
+    </div>
+    <div class="content">
+        <div class="con_info">
+            <div class="info1">
+                <img src="img/msg.png" alt="">
+            </div>
+            <div class="info2">
+                <p class="title">飞鸟丨2018中国区块链技术与应用高峰论坛</p>
+                <p class="type">
+                    <span class="tImg">类&nbsp;&nbsp;&nbsp;型：</span>
+                    <span class="tName">年会</span>
+                    <span class="tPost">报名中</span>
+                </p>
+                <p class="host">
+                    <span class="hImg">主办方：</span>
+                    <span class="hostVal">防晒霜</span>
+                </p>
+                <p class="address">
+                    <span class="aImg">地&nbsp;&nbsp;&nbsp;点：</span>
+                    <span class="addVal">阿飞地方的打发斯蒂芬</span>
+                </p>
+                <p class="time">
+                    <span class="tImg">时&nbsp;&nbsp;&nbsp;间：</span>
+                    <span class="t_start">2012-08-02</span>&nbsp;&nbsp;
+                    <span class="t_end">2012-03-45</span>
+                </p>
+                <div class="preBtn">
+                    <span class="btnHost">联系主办方</span>
+                    <span class="btnName">我要报名</span>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- 4项切换和二维码 -->
+        <div class="con_cont">
+            <!--切换-->
+            <div class="cont_four">
+                <div class="msgTop">
+                    <span class="active">会议描述</span>
+                    <span>会议资料</span>
+                    <span>问卷查阅</span>
+                    <span>下期预告</span>
+                </div>
+                <!--描述-->
+                <div class="cont1" style="display:block;">
+                    <div class="contDes">
+
+                    </div>
+                    <!--嘉宾-->
+                    <div class="contGuest">
+                        <p class="gTitle">会议嘉宾</p>
+                        <ul>
+                            <!--<li>-->
+                                <!--<div class="g_info">-->
+                                    <!--<img src="img/msg.png" alt="">-->
+                                    <!--<p class="g_name">交电费</p>-->
+                                    <!--<p class="p_honor">飞家阿发就发的</p>-->
+                                <!--</div>-->
+                                <!--<p class="g_intro">nanfadsfnasfna假睫毛都发偶发那是地方能反思东方能减肥呢爱上东方能烦死佛教啊发烧级烦恼经费阿飞那犯法减肥那搜集地方的能回答搜救分</p>-->
+                            <!--</li>-->
+
+                        </ul>
+                        <div style="clear:both"></div>
+                    </div>
+                    <!--流程-->
+                    <div class="contFlow">
+                        <p class="fTitle">会议流程</p>
+                        <ul>
+                            <!--<li>-->
+                                <!--<span class="circle active"></span>-->
+                                <!--<div>-->
+                                    <!--<span class="f_num">【流程1】</span>-->
+                                    <!--<span class="f_time">2012-02-25</span>-->
+                                <!--</div>-->
+                                <!--<p class="f_desc">发哦烦死发生地方那是发生奥发顺丰大三房阿飞马搜到发阿飞马上发</p>-->
+                            <!--</li>-->
+
+                        </ul>
+                    </div>
+                </div>
+                <!--资料-->
+                <div class="cont2" style="display: none;">
+                    <ul>
+                        <!--<li>-->
+                            <!--<img src="img/word.jpg" alt="">-->
+                            <!--<div class="zl_msg">-->
+                                <!--<p class="zl_tit">中国环境保护的方针、政策和制度</p>-->
+                                <!--<div class="zl_p">-->
+                                    <!--<span class="eye">129</span>-->
+                                    <!--<span class="share">47</span>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                        <!--</li>-->
+                    </ul>
+                </div>
+                <!--问卷-->
+                <div class="cont3" style="display: none;">
+                    <p class="tishi">为了给您提供更好的服务，希望您能抽出几分钟时间，给我们一些建议，我们将非常感谢！</p>
+                    <ul>
+                        <!--<li>-->
+                            <!--<p class="breTit">-->
+                                <!--<span>1</span>.您的公司名称是?-->
+                            <!--</p>-->
+                            <!--<input type="text" class="tk">-->
+                        <!--</li>-->
+                        <!--<li>-->
+                            <!--<p class="breTit">-->
+                                <!--<span>2</span>.您的公司名称是?-->
+                            <!--</p>-->
+                            <!--<p><input type="radio" name="2" class="dx">是</p>-->
+                            <!--<p><input type="radio" name="2" class="dx">否</p>-->
+                        <!--</li>-->
+                        <!--<li>-->
+                            <!--<p class="breTit">-->
+                                <!--<span>3</span>.您的目的有哪些？-->
+                                <!--<span class="dx">[多选题]</span>-->
+                            <!--</p>-->
+                            <!--<p><input type="checkbox" class="doux">11</p>-->
+                            <!--<p><input type="checkbox" class="doux">22</p>-->
+                        <!--</li>-->
+                    </ul>
+                    <div class="breBtn">提交</div>
+                </div>
+                <!--下期预告-->
+                <div class="cont4" style="display: none">
+                 </div>
+            </div>
+            <!--二维码-->
+            <div class="cont_code">
+                <p class="codeTit">扫描二维码</p>
+                <div class="codeImg">
+                    <div class="imgInner">
+                        <ul>
+                            <li class="postName">
+                                <img src="img/code.png" alt="">
+                                <p class="p1">参会者扫描此二维码</p>
+                                <p class="p2">查看活动详情并进行活动报名</p>
+                            </li>
+                            <li class="signUp">
+                                <img src="img/code.png" alt="">
+                                <p class="p1">参会者扫描此二维码</p>
+                                <p class="p2">进行签到</p>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+       
+
+    </div>
+
+    <!--bottom-->
+    <div class="bottom">Copyright © 2014-2018 北京易魔方科技集团有限公司.  京ICP备13046454号-4</div>
+    <!--联系主办方-->
+    <div class="shade" style="display: none">
+        <div class="shadeCont">
+            <div class="link">
+                <p>联系主办方</p>
+                <span class="close"></span>
+            </div>
+            <div class="tel">
+                <img src="img/tel.png" alt="">
+                <span class="telImg">主办方电话：</span>
+                <span class="telNum">130-1234-6547</span>
+            </div>
+        </div>
+    </div>
+
+    <!--我要报名-->
+    <div class="shade2" style="display:none">
+        <div class="nameCont">
+            <p>我要报名</p>
+            <ul>
+                <li>
+                    <span><i>*</i>姓名：</span>
+                    <input type="text" class="name" placeholder="请输入您的姓名">
+                </li>
+                <li>
+                    <span><i>*</i>手机号码：</span>
+                    <input type="text" class="mobile" placeholder="请输入您的手机号">
+                </li>
+                <li>
+                    <span>邮箱：</span>
+                    <input type="text" class="mail" placeholder="请输入您的邮箱">
+                </li>
+            </ul>
+            <div class="nameBtn">
+                <span class="btnCel">取消</span>
+                <span class="btnSure" onclick="postNamed()">确定</span>
+            </div>
+        </div>
+    </div>
+
+    <!--问卷手机号-->
+    <div class="shade3" style="display:none;">
+        <div class="brCont">
+            <p>提交问卷</p>
+            <input type="text" placeholder="请输入手机号">
+
+            <div class="breBtns">
+                <span class="breCel" onclick="gobacks()">取消</span>
+                <span class="breSure" onclick="postBrief()">确定</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="javascript/jquery-2.1.4.min.js"></script>
+    <script src="javascript/common.js"></script>
+    <script src="js/meetPreview.js"></script>
+</body>
+</html>

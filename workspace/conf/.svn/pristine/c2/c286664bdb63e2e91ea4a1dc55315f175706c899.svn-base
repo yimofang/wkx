@@ -1,0 +1,5 @@
+$(function(){
+	$(".dataBtn").click(function(){
+		$(this).parent().hide();
+	})
+});

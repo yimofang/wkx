@@ -1,0 +1,191 @@
+.count_tab {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 45px;
+    padding: 0 22px;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.count_tab span {
+    float: left;
+    height: 45px;
+    line-height: 45px;
+    padding: 0 20px;
+    text-align: center;
+    box-sizing: border-box;
+    cursor: pointer;
+}
+.count_tab span.on{
+    border-bottom: 1px solid #da0e00;
+}
+.count_taninfo{
+    position: absolute;
+    top:45px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+}
+.tabs{
+    overflow: hidden;
+    padding: 25px;
+}
+.tab1,.tab2{
+    display: none;
+}
+.tabs>ul{
+    float: left;
+    width: 600px;
+    overflow: hidden;
+}
+.jb_list{
+    position: absolute;
+    top: 25px;
+    left: 25px;
+    bottom: 0;
+    width: 600px;
+    overflow: auto;
+}
+.jb_list ul li{
+
+}
+.tabs>ul li{
+    float: left;
+    width: 100%;
+    height: 30px;
+    line-height: 30px;
+    padding: 0 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-sizing: border-box;
+    cursor: pointer;
+
+}
+.tabs ul li.count_num{
+    width: 30.33%;
+    height: 100px;
+    padding: 20px;
+}
+.tabs ul li.count_num2 {
+    margin: 0 4.5%;
+}
+.num1{
+    display: block;
+    font-size: 36px;
+    line-height: 40px;
+    text-align: center;
+    color: #da0e00;
+}
+.count_num span{
+    display: block;
+    text-align: center;
+}
+.num2{
+    float: right;
+    color: #999cab;
+}
+.num3{
+    float: right;
+    width: 60px;
+    text-align: center;
+    color: #999cab;
+    padding-right: 15px;
+    background: url(../img/more.png) no-repeat 50px 7px;
+    background-size: 16px;
+}
+.problem_all,.media_all{
+    float: right;
+    width: 400px;
+    height: 500px;
+    padding: 15px;
+    border: 1px solid #d5d6de;
+    overflow: auto;
+    box-sizing: border-box;
+}
+@media screen and (max-width: 1200px) {
+    .problem_all,.media_all{
+        float: right;
+        width: 300px;
+        height: 500px;
+        padding: 15px;
+        border: 1px solid #d5d6de;
+        overflow: auto;
+        box-sizing: border-box;
+    }
+}
+.problem_tit,.media_tit{
+    line-height: 30px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #d5d6de;
+    box-sizing: border-box;
+}
+.problem_list,.media_list{
+    margin:15px 0;
+}
+.problem_list li{
+    border: 1px solid #d5d6de;
+    margin-bottom: 10px;
+    padding: 5px 10px;
+}
+.problem_list li p{
+    line-height: 30px;
+}
+.pro_name{
+    border-bottom: 1px solid #d5d6de;
+}
+.problem_list li p span{
+    color: #da0e00;
+}
+
+.tabs ul li.item_act{
+    width: 100%;
+    height: 80px;
+    padding: 10px 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-sizing: border-box;
+    cursor: pointer;
+}
+.tabs ul li.on{
+    border: 1px solid #da0e00;
+}
+.item_act p{
+    height: 30px;
+    line-height: 30px;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+.item_act p.act_tit{
+    border-bottom: 1px solid #d5d6de;
+}
+.rigth_num{
+    float: right;
+}
+.media_list li{
+    border: 1px solid #d5d6de;
+    margin-bottom: 10px;
+    padding: 5px 10px;
+    text-align: center;
+}
+
+.mores{
+    width: 120px;
+    height: 30px;
+    line-height: 30px;
+    margin:10px auto;
+    border: 1px solid #ddd;
+    cursor: pointer;
+    text-align: center;
+}
+
+
+
+
+
+
+

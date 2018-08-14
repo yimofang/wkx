@@ -1,0 +1,96 @@
+package net.emof.building.web.service;
+
+import java.util.List;
+import java.util.Map;
+
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import net.emof.building.admin.service.SqlToolseService;
+import net.emof.building.dao.ConfsMapper;
+import net.emof.building.model.Confs;
+import net.emof.building.util.DataMap;
+
+/**
+ * 会议业务处理层
+ * @author xilongfei
+ * @creation 2017年11月10日
+ */
+@Service
+public class Confs_web_Service extends SqlToolseService {
+	
+	// log4j日志
+	private final Logger logger = Logger.getLogger(this.getClass());
+	
+	@Autowired
+	private ConfsMapper confsMapper;
+	
+	
+	/**
+	 * 添加会议基本信息
+	 * @author xilongfei
+	 * @creation 2017年11月10日
+	 * @param confs		会议信息
+	 * @return
+	 */
+	public DataMap addConfsInfo(Confs confs){
+		DataMap dataMap = new DataMap();
+		int num = confsMapper.insertSelective(confs);
+		if(num < 1){
+			dataMap.addMsg_diy_obj(null, 6, "创建信息失败,请重试");
+			return dataMap;
+		}
+		dataMap.addMsg_obj(confs.getId(), 0); //存入数据
+		return dataMap;
+	}
+	
+	/**
+	 * 保存(修改)会议基本信息
+	 * @author xilongfei
+	 * @creation 2017年11月10日
+	 * @param confs		会议信息
+	 * @param msg		返回信息
+	 * @return
+	 */
+	public DataMap alterConfsInfo(Confs confs, String msg ){
+		DataMap dataMap = new DataMap();
+		int num = confsMapper.updateByPrimaryKeySelective(confs);
+		if(num < 1){
+			dataMap.addMsg_diy_obj(null, 6, "保存信息失败,请重试");
+			return dataMap;
+		}
+		dataMap.addMsg_diy_obj(confs.getId(), 0, msg);
+		return dataMap;
+	}
+	
+	/**
+	 * 查询会议信息(单表),根据会议id
+	 * @author xilongfei
+	 * @creation 2017年12月13日
+	 * @param id	会议id
+	 * @return 会议信息
+	 */
+	public Confs selectConfs(String id){
+		return confsMapper.selectByPrimaryKey(id);
+	}
+	
+	/**
+	 * 查询会议报名填写选项
+	 * @author xilongfei
+	 * @creation 2017年12月13日
+	 * @param enlist 会议报名填写选项
+	 * @param type 类型  1已添加  2未添加
+	 * @return
+	 */
+	public List<Map<String, Object>> selctEnlistInfo(String enlist , int type) {
+		String table_name = " confs_enlist as obj  "; // 表名
+		String find = " obj.id, obj.ename "; // 显示字段
+		String where = " obj.id in("+enlist+") "; // 条件
+		if(type==2){
+			where = " not obj.id in("+enlist+") ";
+		}
+		List<Map<String, Object>> list = this.selectAll(table_name, find, where, null);
+		return list;
+	}
+}

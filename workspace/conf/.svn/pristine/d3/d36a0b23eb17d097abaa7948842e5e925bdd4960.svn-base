@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+    <title>调研问卷</title>
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/survey.css">
+    <script src="js/jquery-2.1.4.min.js"></script>
+    <script src="js/rem.js"></script>
+    <script src="js/removeHeader.js"></script>
+    <script src="jscript/addSurvey.js"></script>
+</head>
+<body>
+	<!--header-->
+	<div class="Header">
+    	<a href="javascript:history.go(-1);"></a>填空题
+	</div>
+	<!--添加填空-->
+	<div class="addSurQue">
+		<!--blank-->
+		<div class="blankTitle deleteHeader">
+			<div>
+				<span>题目</span>
+				<input type="text" id="blankTitle" placeholder="请输入题目标题">
+			</div>
+		</div>
+		<div class="blankChoice">
+			<div>
+				
+				<label class="lab1"><input type="radio" name="add" data-state="1"><span class="blankLab1">必答题</span></label><br>
+				<label class="lab2"><input type="radio" name="add" data-state="2" checked><span class="blankLab2">选答题</span></label>
+			</div>
+		</div>
+		<!--submit-->
+		<div class="btn blankBtn" id="blankBtn" onclick="blankBtn()">递交</div>	
+	</div>
+	<!--修改填空-->
+	<div class="editSurQue" style="display: none">
+		<!--blank-->
+		<div class="blankTitle deleteHeader">
+			<div>
+				<span>标题</span>
+				<input type="text" id="editBlankTitle" placeholder="输入题目标题">
+			</div>
+		</div>
+		<div class="blankChoice">
+			<div>
+				<span>题目类型</span>
+				<label class="lab1"><input type="radio" name="choice" data-state="1"><span class="blankLab1">必答题</span></label>
+				<label class="lab2"><input type="radio" name="choice" data-state="2"><span class="blankLab2">选答题</span></label>
+			</div>
+		</div>
+		<!--submit-->
+		<div class="btn blankBtn" id="editBlankBtn" onclick="editBlankBtn()">保存修改</div>	
+	</div>
+
+	<div id="reqtoken" class="reqtoken"></div>
+</body>
+</html>

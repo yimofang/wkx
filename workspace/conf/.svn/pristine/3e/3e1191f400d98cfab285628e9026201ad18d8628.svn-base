@@ -1,0 +1,1118 @@
+@charset "utf-8";
+*{margin:0;padding:0;}
+/*nav*/
+.nav{
+	width:100%;
+	height:0.8rem;
+	font-size:0.28rem;
+	margin-top: 0.88rem;
+	background: #fff;
+}
+.nav .nav_title{
+	width:52%;
+	height:0.8rem;
+	line-height: 0.8rem;
+	text-align: center;
+	margin:0 auto;
+}
+.nav .nav_title li{
+	width:50%;
+	height:0.76rem;
+	float:left;
+}
+.nav .nav_title li.current{
+	border-bottom:0.04rem solid #bd0f10;
+	color: #bd0f10;
+}
+/*bmqd*/
+.bmqd{
+	width:100%;
+	height:auto;
+}
+.bmqd_content{
+	position:relative;
+	width:100%;
+	height: 2rem;
+	line-height: 2rem;
+	text-align: center;
+	margin-top: 0.16rem;
+	background: #fff;
+	border-bottom: 0.02rem solid #efefef;
+}
+.bmqd_content .bmqd_content_info{
+	position: absolute;
+	width:90%;
+	height:1rem;
+	margin:auto;
+	margin-top: 0.5rem;
+	margin-left:5%;
+	font-size: 0.3rem;
+}
+.bmqd_content .bmqd_content_info div{
+	width:33%;
+	height: 1rem;
+	line-height: 1rem;
+	border-right:0.01rem solid #efefef;
+	text-align: center;
+	float: left;
+}
+.bmqd_content .bmqd_content_info div p{
+	height:0.5rem;
+	line-height: 0.5rem;
+	
+}
+.bmqd_list{
+	width: 100%;
+	height:3.5rem;
+	margin-top: 0.16rem;
+	background: #fff;
+	font-size: 0.28rem;
+}
+.bmqd_list div{
+	width:90%;
+	height:3.5rem;
+	margin:0 auto;
+}
+.bmqd_list div ul li{
+	width:100%;
+	height:0.87rem;
+	line-height: 0.87rem;
+	border-bottom: 0.01rem solid #efefef;
+}
+.bmqd_list div ul li span:last-child{
+	float:right;
+}
+/*submit*/
+.btn{
+	width:90%;
+	height:0.98rem;
+	line-height: 0.98rem;
+	margin-left:5%;
+	background:#1b1b1b;
+	border-radius:0.1rem;
+	font-size:0.32rem;
+	color:#fff;
+	text-align: center;
+}
+/*dytj*/
+.dytj{
+	width:100%;
+	height:auto;
+	background:#fff;
+	margin-top: 0.16rem;
+}
+.dytj .dytj_title{
+	width:90%;
+	height:auto;
+	padding:0.46rem 5%;
+	border-bottom:0.01rem solid #efefef;
+}
+
+.dytj .dytj_title p:first-child{
+	font-size:0.34rem;
+	line-height: 0.49rem;
+}
+.dytj .dytj_title p:last-child{
+	font-size:0.24rem;
+	color:#c0c2cd;
+	line-height: 0.39rem;
+}
+.dytj .dytj_content{
+	width:100%;
+	height:auto;
+	font-size:0.28rem;	
+}
+.dytj .dytj_content ul li{
+	width: 90%;
+	min-height:0.88rem;
+	line-height: 0.88rem;
+	padding:0 5%;
+	border-bottom:0.01rem solid #efefef;
+}
+.dytj .dytj_content ul li a {
+	display: block;
+	height:0.88rem;
+}
+.dytj .dytj_content ul li a:hover{
+	color: #333;
+}
+.dytj_content ul li a>span:nth-child(2){
+	float: right;
+	padding-right:0.3rem;
+	text-align: left;
+	background: url(../img/more.png) no-repeat;
+	background-position: right;
+	background-size:0.1rem 0.18rem;
+}
+.dytj_content .qustitle{
+	overflow:auto;
+	text-overflow:ellipsis;
+	-o-text-overflow:ellipsis;
+	white-space:nowrap;
+	-webkit-line-clamp:1;  
+	width:80%;
+	display:inline-block;
+}
+/*meetQueBlank页面*/
+/*blank*/
+.blankTitle{
+	width:100%;
+	height:1.3rem;
+	margin-top: 0.88rem;
+	background: #fff;
+	
+}
+.blankTitle div{
+	width:90%;
+	height:1.3rem;
+	line-height: 1.3rem;
+	margin:0 auto;
+	font-size: 0.28rem;
+}
+/*blankCompany*/
+.blankCompany{
+	width: 100%;
+	height:auto;
+	margin-top:0.16rem;
+	background: #fff;
+}
+.blankCompany div{
+	width:90%;
+	height:0.8rem;
+	line-height: 0.4rem;
+	padding:0.2rem 0;
+	margin:0 auto;
+	border-bottom:0.01rem solid #efefef;
+}
+.blankCompany div p:nth-child(1){
+	padding-left:0.5rem;
+	background: url(../img/personImg.png) no-repeat;
+	background-position: left;
+	background-size: 0.4rem 0.4rem;
+	font-size:0.22rem;
+	color:#a1a0a0;
+}
+.blankCompany div p:nth-child(2){
+	float:left;
+	font-size:0.26rem;
+}
+
+/*meetQueSingle页面和meetQueDouble页面*/
+.singleTitle,.doubleTitle{
+	width:90%;
+	height:1.3rem;
+	line-height: 1.3rem;
+	padding:0 5%;
+	background:#fff;
+	font-size:0.28rem;
+	margin-top:0.88rem;
+}
+.singleAnswer,.doubleAnswer{
+	width:100%;
+	height: auto;
+	background:#fff;
+	font-size:0.28rem;
+	margin-top: 0.16rem;
+}
+.singleAnswer ul li,.doubleAnswer ul li{
+	width:90%;
+	height:0.88rem;
+	line-height: 0.88rem;
+	margin:0 auto;
+	border-bottom:0.01rem solid #efeffe;
+}
+.singleAnswer ul li span:nth-child(2),.doubleAnswer ul li span:nth-child(2){
+	float:right;
+	color:#868997;
+}
+
+/*meetDes*/
+.descript{
+	width: 100%;
+    height: auto;
+    margin-top: 0.88rem;
+    font-size: 0.28rem;
+    background: #fff;
+        padding-bottom: 0.4rem;
+}
+.descript .desD{
+	width: 90%;
+    height: 0.65rem;
+    line-height: 0.65rem;
+    font-size: 0.24rem;
+    margin: 0 5%;
+}
+.descript .desD_content{
+	width: 90%;
+    height: 100%;
+    margin: 0 auto;
+}
+.descript .desD_content>textarea{
+	width: 100%;
+    height: 1.6rem;
+    padding: 0.25rem 0;
+    font-size: 0.26rem;
+    border: none;
+}
+
+/*meetFlow*/
+.flowBtn{
+	position: fixed;
+	width:100%;
+	height:0.88rem;
+	bottom:0;
+}
+.flowBtn>span{
+	width:50%;
+	height:0.88rem;
+	line-height: 0.88rem;
+	text-align: center;
+	color:#fff;
+	font-size:0.28rem;
+	display: inline-block;
+	float:left;
+}
+.flowBtn>.addFlow{
+	width:50%;
+	background: #bd0f10;
+}
+.flowBtn>.return{
+	background: #1b1b1b;	
+}
+/*未添加*/
+.flowList .unHave{
+	width: 100%;
+    text-align: center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+.flowList .unHave p{
+	font-size:0.26rem;
+	color:#999cab;
+	margin-top: 0.4rem;
+}
+.flowInfo{
+	width: 100%;
+	height:auto;
+	box-shadow: 0 0.01rem 0.05rem #ccc;
+	font-size:0.28rem;
+	margin-bottom: 1.2rem;
+}
+.flowInfo>p{
+	width:100%;
+	height:0.88rem;
+	line-height: 0.88rem;
+	text-align: center;
+	font-size:0.28rem;
+	color:#bd0f10;
+	background: #fff;
+}
+.flowInfo>div{
+	width:90%;
+	height: auto;
+	padding:0 5%;
+	background: #fff;
+	margin-bottom: 0.3rem;
+	border-bottom:0.01rem solid #efefef;
+	margin-top: 0.2rem;
+}
+.flowInfo ul li{
+	border-bottom:0.01rem solid #efefef;
+	height:0.88rem;
+	line-height: 0.88rem;
+}
+.flowInfo ul li:last-child{
+	height: auto;
+}
+.flowInfo .flow{
+	color:#bd0f10;
+	font-size:0.26rem;
+	height: 0.68rem;
+	line-height: 0.68rem;
+}
+.flowInfo .flow>span:nth-child(1){
+	padding-left:0.46rem;
+	background:url(../img/flow.png) no-repeat;
+	background-position: left;
+	background-size: 0.29rem 0.3rem;
+}
+.flowInfo .flow>span:nth-child(2){
+	position: relative;
+    right: -4.5rem;
+}
+.flowInfo .flow span:nth-child(3){
+	float:right;
+}
+.fStartTime span:nth-child(2),.fEndTime span:nth-child(2){
+	float:right;
+	color:#868997;
+	font-size:0.28rem;
+}
+.flowInfo b{
+	color:#bd0f10;
+}
+.flowInfo .flowDes p{
+	width: 100%;
+    height: auto;
+    border: none;
+    font-size: 0.28rem;
+    line-height: 0.4rem;
+    overflow: auto;
+}
+.flowInfo div ul li input{
+	float:right;
+	height: 0.86rem;
+	text-align: right;
+	font-size:0.28rem;
+}
+.addFlowInfo{
+	width: 100%;
+    height: auto;
+    font-size: 0.28rem;
+    margin-top: 0.88rem;
+}
+.addFlowInfo .flowDes{
+	height: 2.67rem;
+}
+.addFlowInfo .flowDes textarea{
+	width: 95%;
+    height: 1.7rem;
+    border: none;
+    background: #f4f4f4;
+    padding: 0.12rem 2.5%;
+    font-size: 0.28rem;
+}
+.addFlowInfo ul li:last-child{
+    padding-bottom: 0.3rem;
+}
+.save,.editFlow .editSave{
+	position: fixed;
+	width:50%;
+	height:0.88rem;
+	background: #1b1b1b;
+	line-height: 0.88rem;
+	text-align: center;
+	font-size: 0.3rem;
+	bottom:0;
+	right:0;
+	color:#fff;
+}
+.cancel,.editFlow .editCancel{
+	position: fixed;
+	width:50%;
+	height:0.88rem;
+	background: #1b1b1b;
+	line-height: 0.88rem;
+	text-align: center;
+	font-size: 0.3rem;
+	bottom:0;
+	left:0;
+	color:#fff;
+}
+.havaMeetFlow{
+	margin-top:0.88rem;
+}
+.havaMeetFlow .flowInfo .flow{
+	position: relative;
+}
+.havaMeetFlow .flowInfo .fInfoList .flow span:nth-child(2){
+	position: absolute;
+    right: 0.62rem;
+    display: inline-block;
+    width: 0.3rem;
+    height: 0.3rem;
+    background: url(../img/edit.png) no-repeat;
+    background-size: cover;
+    background-position: center;
+    margin-top: 0.19rem;
+}
+.havaMeetFlow .flowInfo .fInfoList .flow span:nth-child(3){
+	float:right;
+	width:0.3rem;
+	height:0.3rem;
+	display: inline-block;
+	background: url(../img/delete.png) no-repeat;
+	background-size: cover;
+	margin-top: 0.19rem;
+}
+.havaMeetFlow .flowInfo .fInfoList .flowDes .flowDesP{
+	max-height: 1.89rem;
+    line-height: 0.44rem;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 4;
+    overflow: hidden;
+    width:100%;
+    text-align: left;
+}
+/*删除遮罩*/
+.havaMeetFlow .delShade,.guestList .gueDelShade{
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    position: fixed;
+    z-index: 999;
+    background: rgba(0,0,0,.2);
+}
+.havaMeetFlow .delShade .delShadeCon,
+.guestList .gueDelShade .gueDelCon
+{
+	position: absolute;
+	top: 50%;
+	left: 50%;
+    z-index: 1000;
+    width: 5.57rem;
+    height: 3.7rem;
+    transform: translate(-50%,-50%);
+    border-radius: 0.1rem;
+    background: #fff;
+}
+.delShadeCon .top,.gueDelCon .top{
+	width: 5.57rem;
+    height: 0.9rem;
+    line-height: 0.9rem;
+    text-align: center;
+    background: #bd0f10;
+    font-size: 0.32rem;
+    color: #fff;
+    border-top-left-radius: 0.1rem;
+    border-top-right-radius: 0.1rem;
+}
+.delShadeCon .content p:nth-child(1),
+.gueDelCon .content p:nth-child(1){
+	font-size:0.28rem;
+	margin-top:0.5rem;
+	text-align: center;
+}
+.delShadeCon .content p:nth-child(2),
+.gueDelCon .content p:nth-child(2){
+	margin: 0.57rem auto 0;
+	width:4.7rem;
+	font-size: 0.3rem;
+}
+.delShadeCon .content p:nth-child(2)>.conCel,
+.gueDelCon .content p:nth-child(2)>.gueCel{
+	width:2.3rem;
+	height:0.68rem;
+	line-height: 0.68rem;
+	text-align: center;
+	float: left;
+	display: inline-block;
+	background: #1b1b1b;
+	color:#fff;
+	border-radius: 0.1rem;
+}
+.delShadeCon .content p:nth-child(2)>.conSure{
+	width:2.3rem;
+	height:0.68rem;
+	line-height: 0.68rem;
+	text-align: center;
+	float: right;
+	display: inline-block;
+	background: #bd0f10;
+	color:#fff;
+	border-radius: 0.1rem;
+}
+.gueDelCon .content p:nth-child(2)>.gueSure{
+	width:2.3rem;
+	height:0.68rem;
+	line-height: 0.68rem;
+	text-align: center;
+	float: right;
+	display: inline-block;
+	background: #bd0f10;
+	color:#fff;
+	border-radius: 0.1rem;
+}
+/*编辑会议流程*/
+.editFlow{
+	width: 100%;
+    height: auto;
+    font-size: 0.28rem;
+    margin-top: 0.88rem;
+}
+.editFlow li.flowDes{
+	padding-bottom:0.3rem;
+}
+.editFlow li.flowDes .flowDesTxt{
+	width: 95%;
+    height: 1.7rem;
+    border: none;
+    background: #f4f4f4;
+    padding: 0.12rem 2.5%;
+    font-size: 0.28rem;
+}
+
+/*meetGuest*/
+.guestBtn{
+	position: fixed;
+	width:100%;
+	bottom:0;
+	font-size: 0.3rem;
+	color: #fff;
+}
+.guestBtn .addGuest{
+    width: 50%;
+    height: 0.88rem;
+    line-height: 0.88rem;
+    text-align: center;
+    background: #bd0f10;
+	display:inline-block;
+	float:left;
+}
+.guestBtn .returnGuest{
+    width: 50%;
+    height: 0.88rem;
+    line-height: 0.88rem;
+    text-align: center;
+    background: #1b1b1b;
+	display:inline-block;    
+	float:left;
+}
+.guestList .unHaveGuest{
+	width: 100%;
+    text-align: center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+.guestList .unHaveGuest p{
+	font-size: 0.26rem;
+    color: #999cab;
+    margin-top: 0.4rem;
+}
+.guestInfo{
+	width: 100%;
+    height: auto;
+    font-size: 0.28rem;
+    margin-top: 0.88rem;
+}
+
+.guestInfo div{
+	width: 90%;
+    height: auto;
+    padding: 0 5% 5%;
+    background: #fff;
+    margin-bottom: 0.3rem;
+    box-shadow: 0 0.01rem 0.05rem #ccc;
+}
+.guestInfo div ul li{
+	position: relative;
+	width:100%;
+	height: 0.88rem;
+	line-height: 0.88rem;
+	border-bottom: 0.01rem solid #efefef;
+}
+.guestInfo .guestHonorInfo{
+	overflow: hidden;
+	text-overflow: ellipsis; 
+    -o-text-overflow: ellipsis;
+    white-space:nowrap;
+    width: 80%;
+    height: 0.88rem;
+    line-height: 0.88rem;
+    text-align: right;
+}
+#EperImgHead{width: 0.6rem;
+	height: 0.6rem;
+	position: absolute;
+	right: 0;
+	border-radius: 0.3rem;}
+
+.guePhoto .perImg{
+	width: 0.55rem;
+    height: auto;
+    float: right;
+    color: #83838b;
+    z-index: 1000;
+    margin-top: 0.11rem;
+    border: none;
+    padding:0;
+}
+.G_img img{
+	width: 0.6rem;
+	height: 0.6rem;
+	position: absolute;
+	right: 0;
+	border-radius: 0.3rem;
+}
+.guePhoto .perImg .guePhotoUp{
+	float: right;
+    position: absolute;
+    right: 0;
+    top:0;
+}
+.guePhoto .perImg #perImgHead{
+	width:0.6rem;
+	height:0.6rem;
+	position: absolute;
+	right:0;
+	border-radius: 0.3rem;
+}
+.guestInfo ul li.guest{
+	position: relative;
+	color:#bd0f10;
+	font-size:0.3rem
+}
+.guestInfo ul li.guest .gueInfo{
+	padding-left: 0.46rem;
+    background: url(../img/guestP.png) no-repeat;
+    background-position: left;
+    background-size: 0.29rem 0.3rem;
+}
+.guestInfo ul li.guest .guestEdit{
+	position: absolute;
+    right: 0.62rem;
+    display: inline-block;
+    width: 0.3rem;
+    height: 0.3rem;
+    background: url(../img/edit.png) no-repeat;
+    background-size: cover;
+    background-position: center;
+    margin-top: 0.29rem;
+}
+.guestInfo ul li:first-child .guestDel{
+    float: right;
+    width: 0.3rem;
+    height: 0.3rem;
+    display: inline-block;
+    background: url(../img/delete.png) no-repeat;
+    background-size: cover;
+    margin-top: 0.29rem;
+}
+.guestInfo div ul li input{
+	float:right;
+	height: 0.86rem;
+	text-align: right;
+	font-size:0.28rem;
+}
+.guestInfo .introduce{
+	height:3.2rem;
+	border-bottom:none;
+}
+.guestInfo .introduce textarea{
+	width:95%;
+	height:1.7rem;
+	border:none;
+	background: #f4f4f4;
+	padding:0.12rem 2.5%;
+	font-size:0.28rem;
+}
+.guestInfo .introduce .fontNum{
+	margin-top: -0.4rem;
+    display: block;
+    float: right;
+}
+.guestInfo b{
+	color:#bd0f10;
+}
+.guestInfo .guestPhoto{
+	width:100%;
+	position: absolute;
+	float:right;
+    opacity: 0;
+    display: inline-block;
+    right:0;
+    z-index: 1;
+}
+.haveGuest{
+	width: 100%;
+    height: auto;
+    box-shadow: 0 0.01rem 0.05rem #ccc;
+    font-size: 0.28rem;
+    margin-top: 0.88rem;
+    margin-bottom: 1.2rem;
+}
+.haveGuest .guestName .guestNameInfo,
+.haveGuest .guestHonor .guestHonorInfo{
+	float:right;
+}
+.haveGuest .introduce{
+	border-bottom: none;
+	height: auto;
+}
+.haveGuest .introduce p{
+	max-height: 1.89rem;
+    line-height: 0.44rem;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 4;
+    overflow: hidden;
+    width: 100%;
+    text-align: left;
+}
+
+/*addName*/
+.addName_content{
+	width: 100%;
+	height:auto;
+	background:#fff;
+	margin-top: 0.88rem;
+}
+.addName_content b{
+	color:#bd0f10;
+}
+
+.addName_content div{
+	width:90%;
+	height:auto;
+	margin:0 auto;
+}
+.addName_content div div{
+	position:relative;
+	width:100%;
+	height: 0.88rem;
+	line-height: 0.88rem;
+	border-bottom:0.01rem solid #efefef;
+}
+.addName_content div div input{
+	float: right;
+	height:0.86rem;
+	text-align:right;
+}
+
+/*隐藏内容*/
+.ifSignUp,.ifCheckIn{
+	position:absolute;
+    top:0;
+    bottom:0;
+    left:0;
+    right:0;
+    width:100%;
+    background:rgba(0, 0, 0, 0.2);
+    z-index:999;
+}
+.shade{
+	position:absolute;
+    top:0;
+    bottom:1.75rem;
+    left:0;
+    right:0;
+    width:100%;
+}
+.ifEnter{
+	position: fixed;
+	width:100%;
+	height:1.75rem;
+	bottom:0rem;
+	background: #fff;
+	font-size: 0.28rem;
+	z-index:1000;
+}
+.ifEnter div{
+	width:100%;
+	height:0.88rem;
+	line-height: 0.88rem;
+	text-align: center;
+	color:#5d5c5c;
+	border-bottom:0.01rem solid #efefef;
+}
+
+/*enternName页面*/
+/*enterName*/
+.enterName{
+	width:90%;
+	height:auto;
+	padding:0 5% 5%;
+	background:#fff;
+	margin-top:0.88rem;
+}
+.enterName b{
+	color:#bd0f10;
+}
+.enterName ul{
+	width:100%;
+}
+.nStartTime,.nEndTime{
+	width:100%;
+	height:0.88rem;
+	line-height: 0.88rem;
+	font-size:0.28rem;
+	border-bottom:0.01rem solid #efefef;
+}
+.nStartTime span:nth-child(2),.nEndTime span:nth-child(2){
+	float:right;
+	color:#c0c2cd;
+}
+.enterInfo{
+	width:100%;
+	height:auto;
+	font-size:0.28rem;
+}
+.enterInfo>span{
+	height:0.88rem;
+	line-height: 0.88rem;
+}
+.enterInfo .infoContent{
+	width:100%;
+	height:1.76rem;
+	padding-top:0.1rem;
+}
+.enterInfo .infoContent ul li{
+	position: relative;
+	width:1.36rem;
+	height:0.64rem;
+	line-height: 0.64rem;
+	text-align: center;
+	color:#bd0f10;
+	font-size:0.24rem;
+	float: left;
+	border-radius: 0.05rem;
+	margin-right:0.28rem;
+	margin-bottom: 0.32rem;
+	border:0.02rem solid #bd0f10;
+}
+.enterInfo .infoContent button{
+	position: absolute;
+	background: url(../img/minus.png) no-repeat;
+	background-size: cover;
+	right: -0.12rem;
+    top: -0.12rem;
+	width: 0.24rem;
+	height:0.24rem;
+	border:none;
+}
+.defind{
+	width:100%;
+	height:0.88rem;
+	margin-top: 0.5rem;
+}
+.defind ul li{
+	position: relative;
+	width: 1.36rem;
+    height: 0.64rem;
+    line-height: 0.64rem;
+    text-align: center;
+    color: #c0c2cd;
+    font-size: 0.24rem;
+    float:left;
+    border-radius: 0.05rem;
+    margin-right: 0.28rem;
+    margin-bottom: 0.32rem;
+    border: 0.02rem solid #c0c2cd;
+}
+.defind button{
+	position: absolute;
+	background: url(../img/add.png) no-repeat;
+	background-size: cover;
+	right: -0.12rem;
+    top: -0.12rem;
+	width: 0.24rem;
+	height:0.24rem;
+	border:none;
+}
+
+/*userDefined页面*/
+.userDefined{
+	width:90%;
+	height:1rem;
+	padding:0 5%;
+	margin-top: 1.12rem;
+	background: #fff;
+	font-size:0.26rem;
+}
+.userDefined input{
+	width:100%;
+	height: 1rem;
+	line-height:1rem;
+	border:none; 
+}
+/*meetDes addImg*/
+/*上传图片通用样式*/
+.meetDesImg{width:90%;margin:0.2rem auto 0.8rem;background: #fff;padding: 0.2rem 5%;overflow: auto;}
+.meetDesImg .uploadForm{width:100%;height:auto;}
+.meetDesImg .upload-ul{ position: relative;  display: inline-block;zoom:1; width:100%;height:auto;}
+.meetDesImg .upload-ul .upload-pick{ position: fixed;width:2rem;height:2rem;top:4rem; border: 0.02rem dashed #efefef;-moz-border-radius:0.1rem; -webkit-border-radius:0.1rem; border-radius:0.1rem; overflow: hidden; z-index:999;}
+.meetDesImg .upload-ul li.diyUploadHover{width:3rem;height:3rem;text-align: center;margin:0.15rem;float:left;display: block;z-index: 1;}
+.meetDesImg .upload-ul li.diyUploadHover:nth-child(2),.meetDesImg .upload-ul li.diyUploadHover:nth-child(3){margin-top:2rem;}
+.meetDesImg .upload-pick{position: fixed; background: url(../img/z_add.png) no-repeat  center center;}
+.webuploader-pick{position: relative;display: inline-block;vertical-align: top; width: 100%; height: 100%;}
+.webuploader-container{ position: relative; width: 100%; height: 100%; }
+.webuploader-container label{position: absolute;left: 0;top: 0;width: 100%;}
+.webuploader-element-invisible{opacity: 0;width: 100%;height: 100%;clip: rect(1px 1px 1px 1px);clip: rect(1px,1px,1px,1px);}
+.viewThumb{ position:relative;width: 100%;height: 100%;overflow:hidden;}
+.viewThumb img{ width: 100%;height: 100%}
+.diyBar{ position: absolute; display:none; top: 0;left: 0;width: 100%;height: 100%;background: url(../img/bgblack.png);z-index: 3;}
+.diyProgress{ position: absolute; left: 0;top: 33px;width: 100%;height: 24px;line-height:24px;font-size: 14px;text-align: center;color: #FFF;background:rgba(10,168,241,.7); z-index: 3;}
+.diyControl{ position: absolute; display:none; left: 0;bottom: 0;width: 100%;height: 24px;line-height:24px;font-size: 14px;background: url(../img/bgblack.png); z-index: 3; }
+.viewThumb:hover .diyControl{ display: block; }
+.diyControl span{ display: inline-block; padding: 6.5px 13px; width: 12px; height: 11px; }
+.diyControl span i{ display: block; width: 12px; height: 11px; opacity: .7; }
+.diyControl span i:hover{ opacity: 1; cursor: pointer; }
+.diyLeft{ margin-left: 3px; }
+.diyLeft{ margin-right: 3px; }
+.diyLeft i{ margin-left: 3px; background: url(../img/upload-icon1.png) no-repeat 0 0; }
+.diyCancel i{ background: url(../img/upload-icon1.png) no-repeat 0 -11px; }
+.diyRight i{ margin-right: 3px; background: url(../img/upload-icon1.png) no-repeat 0 -22px; }
+.goods-edit .upload-tip{ font: 12px/23px "Microsoft YaHei"; color: #a3a3a3;vertical-align: top; }
+
+.blankCompany ul li{overflow: hidden;}
+.blankCompany ul li span.xuhao{float: left;width: 10%;line-height: 0.68rem;border-top: 0.01rem solid #ddd;border-right: 0.01rem solid #ddd;box-sizing: border-box;text-align: center;}
+.blankCompany ul li span.user{float: left;width: 25%;line-height: 0.68rem;border-top: 0.01rem solid #ddd;border-right: 0.01rem solid #ddd;box-sizing: border-box;text-align: center;overflow: hidden;text-overflow:ellipsis;white-space: nowrap;}
+.blankCompany ul li span.user_title{float: left;width: 65%;line-height: 0.68rem;border-top: 0.01rem solid #ddd;box-sizing: border-box; text-align: left;padding: 0 0.2rem;overflow: hidden;text-overflow:ellipsis;white-space: nowrap;}
+
+.upload{width:0.6rem;height:0.4rem;background: url(../img/insImg.png) center center no-repeat;background-size: 0.6rem 0.4rem;margin-top: 0.2rem}
+
+/*图片剪裁*/		
+section{
+	padding-top: 0rem;
+	font-size: 0.9rem;
+}
+#headimg{
+	width: 7.5rem;
+	height: 3.2rem;
+	margin: auto;
+	background-size:100% 100% !important;
+	background-repeat:no-repeat;
+	background-position: center center;
+}
+.btn2{
+	position: relative;
+	z-index: 10;
+	height: 1.6rem;
+	line-height: 1.6rem;
+	margin: auto;
+	font-size: 0.8rem;
+	color: #fd1142!important;
+}
+.btn2 img{
+	/*display: inline-block;
+	width: 0.75rem;
+	margin-left: 0.1rem;*/
+	width:100%;
+	height:100%;
+}
+
+
+/*截图上传页面*/
+.clipbg{
+	position: fixed;
+	background: black;
+	top: 0;
+	z-index: 999;
+	width: 100%;
+	height: 100%;
+	left: 0;
+}
+.loading{
+	position: absolute;
+	top: 40%;
+	width: 38%;
+	left: 31%;
+	height: 1.6rem;
+	line-height: 1.6rem;
+	z-index: 99999;
+	text-align: center;
+	color: #ffffff;
+	border-radius:0.2rem ;
+	background: #9f9f9f;
+	font-size: 0.3rem;
+}
+.clipbg #clipArea{
+	width: 100%;
+	height: 80%;
+	margin: auto;
+
+}
+.clipbg .footer{
+	width: 90%;
+	position: fixed;
+	left: 5%;
+	bottom: 0px;
+	text-align: center;
+	font-size: 0.3rem;
+}
+.clipbg dl{
+	background: #ffffff;
+	border-radius: 0.1rem;
+	overflow: hidden;
+	margin-bottom: 0.6rem;
+}
+.clipbg dd{
+	position: relative;
+	height: 0.8rem;
+	line-height: 0.8rem;
+	border-bottom:1px solid #999999 ;
+}
+.clipbg .back{
+	height: 0.8rem;
+	line-height:0.8rem;
+	border-radius: 0.1rem;
+	margin-bottom: 0.4rem;
+	background: #ffffff;
+}
+.clipbg dd input{
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	top: 0;
+	left: 0;
+	z-index: 11;
+	filter:alpha(opacity=0);  
+  -moz-opacity:0;  
+  -khtml-opacity: 0;  
+  opacity: 0; 
+}
+
+.dytj_content .quslistbili{
+	float:right;
+	color:#bd0f10;
+}
+
+/*会议统计遮罩*/
+.staShade{
+	top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    position: fixed;
+    z-index: 999;
+    background: rgba(0,0,0,.2);
+}
+
+.staShade .staShadeCon{
+	    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: 1000;
+    width: 5.57rem;
+    height: 3.7rem;
+    transform: translate(-50%,-50%);
+    border-radius: 0.1rem;
+    background: #fff;
+    text-align: center;
+}
+.staShade .staShadeCon .top{
+	width: 5.57rem;
+    height: 0.9rem;
+    line-height: 0.9rem;
+    text-align: center;
+    background: #bd0f10;
+    font-size: 0.32rem;
+    color: #fff;
+    border-top-left-radius: 0.1rem;
+    border-top-right-radius: 0.1rem;
+}
+.staShade .staShadeCon .main{
+	font-size: 0.36rem;
+    margin-top: 0.5rem;
+    text-align: center;
+}
+.staShade .staShadeCon .close{
+	width: 2rem;
+    height: 0.68rem;
+    line-height: 0.68rem;
+    text-align: center;
+    display: inline-block;
+    color: #fff;
+    border-radius: 0.1rem;
+    font-size: 0.3rem;
+    background: #1b1b1b;
+    margin-top: 0.2rem;
+}

@@ -1,0 +1,159 @@
+@charset "utf-8";
+/* CSS Document */
+/**条形**/
+.preload-1 {
+  position: relative;
+  margin-bottom: 40px;
+}
+.preload-1 span {
+  display: block;
+  position: absolute;
+  bottom: 0px;
+  width: 9px;
+  height: 5px;
+  background: coral;
+  -webkit-animation: preload-1 1.5s infinite ease-in-out;
+          animation: preload-1 1.5s infinite ease-in-out;
+}
+.preload-1 span:nth-child(2) {
+  left: 11px;
+  -webkit-animation-delay: .2s;
+          animation-delay: .2s;
+}
+.preload-1 span:nth-child(3) {
+  left: 22px;
+  -webkit-animation-delay: .4s;
+          animation-delay: .4s;
+}
+.preload-1 span:nth-child(4) {
+  left: 33px;
+  -webkit-animation-delay: .6s;
+          animation-delay: .6s;
+}
+.preload-1 span:nth-child(5) {
+  left: 44px;
+  -webkit-animation-delay: .8s;
+          animation-delay: .8s;
+}
+@-webkit-keyframes preload-1 {
+  0% {
+    height: 5px;
+    -webkit-transform: translateY(0px);
+            transform: translateY(0px);
+    background: coral;
+  }
+  25% {
+    height: 30px;
+    -webkit-transform: translateY(15px);
+            transform: translateY(15px);
+    background: cornflowerblue;
+  }
+  50% {
+    height: 5px;
+    -webkit-transform: translateY(0px);
+            transform: translateY(0px);
+    background: cornflowerblue;
+  }
+  100% {
+    height: 5px;
+    -webkit-transform: translateY(0px);
+            transform: translateY(0px);
+    background: coral;
+  }
+}
+@keyframes preload-1 {
+  0% {
+    height: 5px;
+    -webkit-transform: translateY(0px);
+            transform: translateY(0px);
+    background: coral;
+  }
+  25% {
+    height: 30px;
+    -webkit-transform: translateY(15px);
+            transform: translateY(15px);
+    background: cornflowerblue;
+  }
+  50% {
+    height: 5px;
+    -webkit-transform: translateY(0px);
+            transform: translateY(0px);
+    background: cornflowerblue;
+  }
+  100% {
+    height: 5px;
+    -webkit-transform: translateY(0px);
+            transform: translateY(0px);
+    background: coral;
+  }
+}
+
+/**球形**/
+.cp-spinner {
+  width: 48px;
+  height: 48px;
+  display: inline-block;
+  box-sizing: border-box;
+  position: relative;
+}
+/*Balls Spinner*/
+.cp-balls {
+  animation: cp-balls-animate 1s linear infinite;
+}
+.cp-balls:before {
+  border-radius: 50%;
+  content: " ";
+  width: 24px;
+  height: 24px;
+  display: inline-block;
+  box-sizing: border-box;
+  background-color: #438cf8;/*blue*/
+  position: absolute;
+  top: 0;
+  left: 0;
+  animation: cp-balls-animate-before 1s ease-in-out infinite;
+}
+.cp-balls:after {
+  border-radius: 50%;
+  content: " ";
+  width: 24px;
+  height: 24px;
+  display: inline-block;
+  box-sizing: border-box;
+  background-color: #fc4ea0;/*pink*/
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  animation: cp-balls-animate-after 1s ease-in-out infinite;
+}
+/*Balls Spinner Animation*/
+@keyframes cp-balls-animate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+@keyframes cp-balls-animate-before {
+  0% {
+    transform: translate(-5px, -5px);
+  }
+  50% {
+    transform: translate(0px, 0px);
+  }
+  100% {
+    transform: translate(-5px, -5px);
+  }
+}
+@keyframes cp-balls-animate-after {
+  0% {
+    transform: translate(5px, 5px);
+  }
+  50% {
+    transform: translate(0px, 0px);
+  }
+  100% {
+    transform: translate(5px, 5px);
+  }
+}

@@ -1,0 +1,184 @@
+var page = 1;
+$(function(){
+    myself();
+
+    //清除旧密码input内容
+    $("#delOldPW").click(function(){
+        $(".oldPWPut").val('');
+    });
+    //清除新密码input内容
+    $("#delNewPW").click(function(){
+        $(".newPWPut").val('');
+    });
+    //清除确认新密码input内容
+    $("#delSureNP").click(function(){
+        $(".sureNewPWPut").val('');
+    });
+
+    //消息中心：上拉加载更多
+    $('.Content').scroll(function() {
+        //当滚动条离底部60px时开始加载下一页的内容
+        if (($(this)[0].scrollTop + $(this).height() + 260) >= $(this)[0].scrollHeight) {
+            clearTimeout(timers);
+            //这里还可以用 [ 延时执行 ] 来控制是否加载 （这样就解决了 当上页的条件满足时，一下子加载多次的问题啦）
+            timers = setTimeout(function() {
+                if(Page>=Pagetotal){
+                    return;
+                }else{
+                    Page++;
+                    console.log("第" + Page + "页");
+                }
+            }, 0);
+        }
+    });
+
+
+});
+
+
+//我的首页
+function myself(){
+    $.ajax({
+        type:'post',
+        url:Urlstr + 'userInfo.do',
+        data:{
+            token:Token
+        },
+        dataType:'json',
+        success:function(res){
+            if(res.error == 0){
+                console.log(res);
+                $("#showBank").html(res.row.organiz);
+                $("#headimg img").attr('src',Urlstr+'upload/'+res.row.headimg);
+                $(".myHead").attr("data-id",res.row.usersid);
+
+                var arr = res.row.organizlist;
+                var data = [];
+                if(arr.length != 0){
+                    for(var i=0;i<arr.length;i++){
+                        var obj = {
+                            id :arr[i].id,
+                            value : arr[i].name
+                        };
+                        data.push(obj);
+                    }
+
+                    console.log(data);
+                    $(".selName").append(data);
+
+                    var showBankDom = document.querySelector('#showBank');
+                    var bankIdDom = document.querySelector('#bankId');
+                    showBankDom.addEventListener('click', function () {
+                        var bankId = showBankDom.dataset['id'];
+                        var bankName = showBankDom.dataset['value'];
+
+                        var bankSelect = new IosSelect(1, 
+                            [data],
+                            {
+                                container: '.container',
+                                title: '请选择名称',
+                                itemHeight: 50,
+                                itemShowCount: 3,
+                                oneLevelId: bankId,
+                                callback: function (selectOneObj) {
+                                    bankIdDom.value = selectOneObj.id;
+                                    showBankDom.innerHTML = selectOneObj.value;
+                                    showBankDom.dataset['id'] = selectOneObj.id;
+                                    showBankDom.dataset['value'] = selectOneObj.value;
+                                }
+                        });
+
+                        // var id = $("#showBank").attr('data-id'); 
+                        // $.ajax({
+                        //         type:'post',
+                        //         url:Urlstr + 'adminUsers_web/update_info.do',
+                        //         data:{
+                        //             token:Token,
+                        //             usersid:id
+                        //         },
+                        //         dataType:'json',
+                        //         success:function(res){
+                        //             console.log(res);            
+                        //         }
+                        //     });
+
+
+
+                    });
+                }
+            }else if(res.error == 5){
+                ReqToken();
+                alert(res.msg);
+            }else{
+                alert(res.msg);
+            }
+        }
+    });
+}
+
+
+//修改名称
+function selected(){
+   // var id = $(".myHead").attr("data-id"); 
+    //var nid = $("select option:selected").attr("data-nid");
+    // var imgsrc = $("select option:selected").attr("data-src");
+    //var name = $("select option:selected").val();
+  
+    $.ajax({
+        type:'post',
+        url:Urlstr + 'adminUsers_web/update_info.do',
+        data:{
+            token:Token,
+            usersid:id,
+            organizstr:name,
+            organizid:nid
+        },
+        dataType:'json',
+        success:function(res){
+            console.log(res);
+
+            // $(".myselfImg").attr('src',Urlstr+'upload/'+imgsrc);
+            $(".myName").css('display','block');
+            $(".myName").html(name);
+            $(".selName").css('display','none'); 
+        }
+    });
+}
+
+//Token 过期 重新请求
+function ReqToken() {
+    $('#reqtoken').load("login2.html",function() {
+        $('#reqtoken').show();
+    });
+}
+//?usersid=5&headimg=80022425.jpg&deleteimg=80022425.jpg&organizid=2
+//修改名称
+function update_img(headimg){
+	alert("==22=="+Token);
+  var id = $(".myHead").attr("data-id"); 
+  alert("==39=="+id);
+  var deleteimg =  $(".myselfImg").attr("data-img");
+  alert("==deleteimg=="+deleteimg);
+  var nid = $("select option:selected").attr("data-nid");
+  alert("==nid=="+nid);
+  var name = $("select option:selected").val();
+  alert( 'adminUsers_web/update_info.do?id='+id+"=headimg="+headimg+"=myselfImg="+deleteimg);
+  //http://192.168.2.220:8080/conf/adminUsers_web/update_info.do?
+  //usersid=5&headimg=80022425.jpg&deleteimg=80022425.jpg&organizid=2
+  $.ajax({
+      type:'post',
+      url:Urlstr + 'adminUsers_web/update_info.do',
+      data:{
+          token:Token,
+          usersid:id,
+          headimg:headimg,
+          deleteimg:deleteimg
+      },
+      dataType:'json',
+      success:function(res){
+          console.log(res);
+          $(".myselfImg").attr("data-img",res.row.headimg);
+
+      }
+  });
+}

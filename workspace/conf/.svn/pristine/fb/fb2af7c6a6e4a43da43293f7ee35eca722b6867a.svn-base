@@ -1,0 +1,18 @@
+$(function(){
+	$(".editProblem>ul>li>button").click(function(){
+		$(this).parent().remove();
+		var num=$(".editProblem>ul>li").length;
+		for(var i=0;i<num;i++){
+			$(".editProblem>ul>li").eq(i).find('span:first-child').html("问题"+(i+1));
+		}
+	});
+
+
+	$("#addNewProblem").click(function(){
+		$(".addQuestion").show();
+	});
+	$("#cancle").click(function(){
+		$(".addQuestion").hide();
+	});
+});
+	

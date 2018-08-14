@@ -1,0 +1,173 @@
+<div class="logo">
+    <img src="img/login_logo.png" alt="">
+</div>
+<div class="heaer_info">
+
+    <div class="h_user">
+        <img src="" alt="" class="h_userimg">
+        <span class="h_username"></span>
+        <input type="file" onchange="userImage(this)" id="userImage" class="userImage">
+        <select id="userList" class="userList"
+                onchange="chioseName(this.options[this.options.selectedIndex].value,this.options[this.options.selectedIndex].text)">
+
+        </select>
+    </div>
+    <span class="h_sms"></span>
+    <!-- <span class="h_server"></span> -->
+    <span class="h_close"></span>
+</div>
+<div class="news_shade">
+    <div class="news_all">
+        <div class="news_left">
+            <ul class="news_list">
+            </ul>
+            <div class="news_more" onclick="getNews()">加载更多</div>
+        </div>
+        <div class="news_right">
+            <p class="news_tit"></p>
+            <p class="news_time"></p>
+            <div class="news_info"></div>
+        </div>
+        <i></i>
+    </div>
+</div>
+<script src="javascript/exif.js"></script>
+<script>
+    var newPage = 1,
+        newpages = 1;
+    $(function () {
+        getNews(newPage);
+        $('.h_sms').click(function () {
+            $('.news_shade').show();
+        })
+        $('.news_all>i').click(function () {
+            $('.news_shade').hide();
+        })
+        $('.h_close').click(function () {
+            sessionStorage.setItem('token', '');
+            window.location.href = 'login.html';
+        })
+        $.ajax({
+            type: 'post',
+            url: urlstr + 'userInfo.do',
+            data: {
+                token: Token
+            },
+            dataType: 'json',
+            success: function (res) {
+                $('.h_userimg').attr('src', urlstr + 'upload/' + res.row.headimg);
+                $('.h_userimg').attr('data-src', res.row.headimg);
+                $('.h_username').html(res.row.organiz);
+                $('.h_user').attr('data-id', res.row.usersid);
+                var arr = res.row.organizlist;
+                for (var i = 0, html = ''; i < arr.length; i++) {
+                    html += '<option value="' + arr[i].id + '">' + arr[i].name + '</option>'
+                }
+                $('#userList').html(html);
+                if (arr.length == 0) {
+                    $('.h_username').attr('data-xg', '0');
+                }
+            }
+        });
+        $('.h_username').click(function () {
+            if ($(this).attr('data-xg') == 0) {
+                alert('没有下级单位，无法修改')
+            } else {
+                $(this).hide();
+                $('#userList').show();
+            }
+        })
+    })
+
+    function chioseName(val, text) {
+        $.ajax({
+            type: 'post',
+            url: urlstr + 'adminUsers_web/update_info.do',
+            data: {
+                token: Token,
+                usersid: $('.h_user').attr('data-id'),
+                organizstr: text,
+                organizid: val
+            },
+            dataType: 'json',
+            success: function (res) {
+                if (res.error == 0) {
+                    alert('修改成功');
+                    $('.h_username').html(text);
+                    $('.h_username').show();
+                    $('#userList').hide();
+                } else if (res.error == 5) {
+                    alert(res.msg);
+                    ReqToken(1);
+                } else {
+                    alert(res.msg);
+                }
+            }
+        });
+    }
+
+    function getNews() {
+        $.ajax({
+            type: 'post',
+            url: urlstr + 'msg_web.do',
+            data: {
+                display: 10,
+                page: newPage,
+                token: Token
+            },
+            dataType: 'json',
+            success: function (res) {
+                if (res.error == 0) {
+                    if (res.row.length > 0) {
+                        newpages = res.pages;
+                        for (var i = 0, html = ''; i < res.row.length; i++) {
+                            var timer = formatDate(new Date(res.row[i].createtime));
+                            var id = "'" + res.row[i].msgid + "'";
+                            html += '<li onclick="newsInfo(' + id + ')">' +
+                                '<p>' + res.row[i].title + '</p>' +
+                                '<span>' + timer + '</span>' +
+                                '</li>'
+                        }
+                        $('.news_list').append(html);
+                        newsInfo(res.row[0].msgid);
+                        if(res.pages.page == 1 || newPage == newpages){
+                            $('.news_more').hide();
+                        }else{
+                            newPage++;
+                            $('.news_more').show();
+                        }
+                    }
+                } else if (res.error == 5) {
+                    alert(res.msg);
+                    ReqToken(1);
+                } else {
+                    alert(res.msg);
+                }
+            }
+        })
+    }
+
+    function newsInfo(id) {
+        $.ajax({
+            type: 'post',
+            url: urlstr + 'msg_web/get_info.do',
+            data: {
+                id: id,
+                token: Token
+            },
+            success: function (res) {
+                if (res.error == 0) {
+
+                    $('.news_tit').html(res.row.title);
+                    $('.news_time').html(formatDate(new Date(res.row.createtime)));
+                    $('.news_info').html(res.row.content);
+                } else if (res.error == 5) {
+                    alert(res.msg);
+                    ReqToken(1);
+                } else {
+                    alert(res.msg);
+                }
+            }
+        })
+    }
+</script>

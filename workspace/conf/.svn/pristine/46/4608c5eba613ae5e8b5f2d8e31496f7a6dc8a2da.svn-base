@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+    <title>微会议</title>
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="css/my.css">
+    <!--名字弹框-->
+    <link rel="stylesheet" href="css/iosSelect.css">
+        <!--图片剪裁-->
+    <link rel="stylesheet" href="css/aui.css"/>
+    <link rel="stylesheet" href="css/intial.css" />
+    <script src="js/jquery-2.1.4.min.js"></script>
+    <script src="js/rem.js"></script>
+    <script src="js/removeHeader.js"></script>
+    <script src="jscript/my.js"></script>
+    <script src="js/exif.js"></script>
+    <script src="js/uploadImg.js"></script>
+    <!--剪裁功能-->
+    <script src="js/hammer.min.js" ></script>
+    <script src="js/lrz.all.bundle.js" ></script>
+    <script src="js/iscroll-zoom-min.js" ></script>
+    <script src="js/PhotoClip.js" ></script>
+   	<!--名字弹框-->
+	<script src="js/iosSelect.js"></script>
+
+</head>
+<body>
+	<!--header-->
+	<div class="Header">
+    	<a href="javascript:history.go(-1);"></a>我的
+	</div>
+	<!--content-->
+	<div class="myHead" data-id="">
+		<!-- <span class="myPhoto"><img class="myselfImg" src=""></span> -->
+
+		<!--上传图片-->
+        <div class="UploadImg">
+        	<section class="aui-text-center">
+                <div id="headimg" class="btn2">
+                    <img src="img/man2.png">
+                </div>
+            </section>
+            <!--图片裁剪-->
+            <div class="clipbg displaynone">
+                <div id="clipArea"></div>
+                <div class="loading displaynone">正在载入图片...</div>
+                <div class="footer">
+                <dl>
+                    <dd style="background: #bd0f10; color: #ffffff;border: none;">
+                        打开相册
+                        <input type="file" id="file" accept="image/*" >
+                    </dd>
+                    <dd id="clipBtn">完成裁剪</dd>
+                </dl>
+                <div class="back">取消</div>
+                </div>
+            </div>
+
+        </div>
+
+		<!-- <span class="myName" style="display: block"></span> -->
+<!-- 		<select class="selName" onchange="selected()" style="display: none">
+			<option>测试机</option>
+			<option>果然够果然够</option>
+			<option>风光</option>
+		</select> -->
+
+
+		<!--选择名字-->
+		<div class="form-item item-line">                 
+		    <div class="pc-box">                     
+		        <input type="hidden" name="bank_id" id="bankId" value="">                     
+		        <span id="showBank" >请选择名称</span>  
+		    </div>             
+		</div>
+
+	</div>
+	<div class="myInfo">
+		<ul>
+			<li class="my_list1">
+				<!-- <a href="lostmeet.html"> -->
+					<span class="meetRecord">会议记录</span>
+					<span class="reMore"></span>
+				<!-- </a> -->
+
+			</li>
+			<li class="my_list2">
+				<!-- <a href="msgCenter.html"> -->
+					<span class="infoCenter">消息中心</span>
+					<span class="infoMore"></span>
+				<!-- </a> -->
+
+			</li>
+			<li class="my_list3">
+				<!-- <a href="modifyPW.html"> -->
+					<span class="modifyPW">修改密码</span>
+					<span class="moMore"></span>
+				<!-- </a> -->
+			</li>
+			<li class="my_list4">
+				<!-- <a href="login.html"> -->
+					<span class="exit">退出登录</span>
+				<!-- </a> -->
+			</li>
+		</ul>
+	</div>
+	
+	<div id="reqtoken" class="reqtoken"></div>
+
+	<!-- <script>
+		var ua = navigator.userAgent.toLowerCase();
+	　　var isWeixin = ua.indexOf('micromessenger') != -1;
+	　　if (isWeixin) {
+	        //我的
+	        $(".myHead").css('margin-top','0');
+	   　　 return true;
+	　　}else{
+	   　　 return false;      
+	　　}
+	</script> -->
+
+	<script>
+		$(function(){
+			//跳转到会议记录
+			$(".my_list1").click(function(){
+				window.location.href = 'lostmeet.html';
+	        	
+			});
+			//消息中心
+			$(".my_list2").click(function(){
+				window.location.href = 'msgCenter.html';
+	        	
+			});
+			//修改密码
+			$(".my_list3").click(function(){
+				window.location.href = 'modifyPW.html';
+	        	
+			});
+		});
+	</script>
+	<!--图片剪裁-->
+	<script>
+	    $(".btn2").click(function(){
+	        $(".clipbg").fadeIn()
+	    })
+	    var clipArea = new  PhotoClip("#clipArea", {
+	            size: [95, 95],//裁剪框大小
+	            outputSize:[0,0],//打开图片大小，[0,0]表示原图大小
+	            file: "#file",
+	            ok: "#clipBtn",
+	            loadStart: function() { //图片开始加载的回调函数。
+	                $(".loading").removeClass("displaynone");
+
+	            },
+	            loadComplete: function() {//图片加载完成的回调函数。
+	                $(".loading").addClass("displaynone");
+
+	            },
+	            done: function(dataURL) { //裁剪完成的回调函数。            
+	                console.log(dataURL);//dataURL裁剪后图片地址base64格式提交给后台处理
+	                var imgSrc = dataURL;
+	                $(".clipbg").fadeOut();
+
+	                $.ajax({
+	                    type : 'post',
+	                    url : Urlstr + 'imgbase.do',
+	                    data : {
+	                        imgStr :  imgSrc,
+	                        token : Token
+	                    },
+	                    dataType : 'json',
+	                    success : function (res) {
+	                        console.log(res);
+	                        if(res.error == 0){
+	                            $("#headimg img").attr('src',Urlstr+'upload/' + res.row.filename);
+	                            update_img(res.row.filename);
+	                        }else if(res.error == 5){
+	                            alert(res.msg);
+	                            ReqToken();
+	                        }else{
+	                            alert(res.msg);
+	                        }
+	                    }
+	                })
+
+
+
+
+
+	            }
+	        });
+	        $(".back").click(function(){
+	            $(".clipbg").fadeOut()
+	        })
+	</script>
+
+
+</body>
+</html>

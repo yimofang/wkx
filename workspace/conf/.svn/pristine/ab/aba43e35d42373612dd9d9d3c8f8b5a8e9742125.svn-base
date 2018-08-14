@@ -1,0 +1,30 @@
+$(function(){          
+   /*问卷说明字数*/  
+    var text=$("#detail").val();  
+    var counter=text.length;  
+    $("#detail_num").text(counter);  
+    $("#detail").on('blur keyup input',function(){  
+        var text=$("#detail").val();  
+        var counter=text.length;  
+        $("#detail_num").text(counter);  
+    });  
+
+    /*提交调研问卷*/
+	$("#surTitle").blur(function(){
+		if($("#surTitle").val()==''){
+			$(".sTitle").append("<span>调研问卷标题不能为空！</span>") 
+		}
+	});
+	$("#surTitle").focus(function(){
+		$('.sTitle>span').remove();
+	});
+
+	$("#surCreBtn").click(function(){
+
+    });
+
+   
+
+
+
+ });

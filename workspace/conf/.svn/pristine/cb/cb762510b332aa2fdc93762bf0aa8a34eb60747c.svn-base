@@ -1,0 +1,113 @@
+body{background: #fafafa;}
+.Ove{overflow: hidden;  text-overflow:ellipsis;white-space: nowrap;}
+.none{display: none;}
+.block{display: block;}
+/***********************header***********************************/
+.Header .HShare{float: right;width: 0.4rem;height: 0.4rem;margin-right:0.24rem;background: url(../img/share1.png) no-repeat;background-size: cover;background-position:right;margin-top: 0.24rem;}
+/********************************container**************************************/
+.Container{margin: 1.25rem 0.33rem 0;}
+.Container .BannerImg img{display:block;width:100%;border-radius: 0.08rem;}
+.meetPreview{-webkit-overflow-scrolling:touch;}
+/*PreviewTitle 会议标题*/
+.Container .PreviewTitle{background: #fff;padding: 0.24rem;box-shadow: 0px 3px 3.8px 0.2px rgba(231, 232, 234, 0.47);}
+.Container .PreviewTitle h2{font-weight: bold;font-size: 0.32rem;}
+.Container .PreviewTitle p{font-size: 0.24rem;color: #999cab;margin-top: 0.1rem;overflow: hidden;}
+.Container .PreviewTitle p .Icon{float: left;width: 0.24rem; margin-top: 0.1rem;margin-right: 0.15rem;}
+.Container .PreviewTitle p .Icon1{height:0.27rem;background: url(../img/Icon1.png) no-repeat;background-size: cover;}
+.Container .PreviewTitle p .Icon2{height:0.24rem;background: url(../img/Icon2.png) no-repeat;background-size: cover;}
+.Container .PreviewTitle p .Icon3{height:0.28rem;background: url(../img/Icon3.png) no-repeat;background-size: cover;}
+.Container .PreviewTitle p span{float: left;width: 90%;}
+/*PreviewContainer 会议内容*/
+.Container .PreviewContainer{margin-top: 0.32rem;margin-bottom: 0.85rem;box-shadow: 0px 3px 3.8px 0.2px rgba(231, 232, 234, 0.47);}
+/*PreviewContainer 会议内容--标题*/
+.Container .PreviewContainer .PreConTitle{overflow: hidden;}
+.Container .PreviewContainer .PreConTitle li{float: left;width: 25%;text-align: center;font-size: 0.28rem;color: rgb(134,137,151);background: transparent;}
+.Container .PreviewContainer .PreConTitle li.active{color: rgb(189,15,16);background: #fff;}
+.Container .PreviewContainer .PreConTitle li span{display: block;width: 100%;height: 0.4rem;line-height: 0.4rem;margin: 0.2rem 0;box-sizing: border-box; }
+.Container .PreviewContainer .PreConTitle li:nth-child(3) span{border-left:1px solid #e1e1e1;border-right:1px solid #e1e1e1;}
+/*PreConListAll 会议内容切换*/
+.Container .PreContainerALL{position: relative;}
+/*PreConListAll 会议内容--描述*/
+.PreDescribe p.miaoshu{font-size: 0.24rem;text-indent:0.48rem;margin-bottom: 0.2rem;line-height: 0.4rem;}
+.PreDescribe #Meetms img.miaoshuImg{display: block;width: 100%;margin-bottom: 0.16rem;}
+.PreDescribe .GuestList p.GuestListTitle,.GuestListTitle{font-size:0.24rem;margin:0.26rem 0;color: rgb(189,15,16);text-align: center;background: #fafafa;}
+.PreDescribe .GuestList ul li{margin-bottom: 0.3rem;}
+.PreDescribe .GuestList .GuestInfo{overflow: hidden;}
+.PreDescribe .GuestList .GuestInfo img{float: left;width: 1.7rem;}
+.PreDescribe .GuestList .GuestInfo h2{padding-left: 0.25rem;font-size: 0.28rem;font-weight: bold;line-height: 0.6rem;color: rgb(51,51,51);}
+.PreDescribe .GuestList .GuestInfo p{ padding-left: 0.25rem;font-size: 0.22rem;color:rgb(78,78,78);line-height: 0.33rem;overflow: hidden;}
+.PreDescribe .GuestList .InfoCon{font-size: 0.24rem; line-height: 0.35rem;color: rgb(153,156,171);margin-top: 0.15rem;text-align: justify;}
+/*PreConListAll 会议内容--流程*/
+.PreConListAll {background: #fff;padding: 0.52rem 0.24rem;display: none;}
+.PreContainerALL>div.block{display: block;}
+.PreProcess .PreConList{position: relative;    padding-bottom: 0.7rem;    padding-left: 0.28rem;}
+.PreProcess .PreConList .Instructions{display: block;width:0.14rem;height: 0.14rem;background: url(../img/Instructions2.png) no-repeat;background-size: cover;position: absolute;top: 0.12rem;left: -0.07rem; }
+.PreProcess .PreConList i.Active{background: url(../img/Instructions1.png) no-repeat;    background-size: cover;}
+.PreProcess .PreConList:before{content: '';  position: absolute; top: 0; bottom: 0; width: 1px;  background: #ececec;top: 0; left: 0; }
+.PreProcess .PreConList:first-child:before{top:0.12rem;}
+.PreProcess .PreConList:last-child:before{height: 0.12rem;}
+.PreProcess .PreConList .PreConListTime{overflow: hidden;}
+.PreProcess .PreConList .PreConListTime span{font-size: 0.24rem;color: rgb(134,137,151);}
+.PreProcess .PreConList .PreConListTime span.left{float: left;margin-left: -0.1rem;}
+.PreProcess .PreConList .PreConListTime span.right{float: right;}
+.PreProcess .PreConList .PreConListCon{text-align: justify;font-size: 0.26rem;color: rgb(51,51,51);}
+/*PreConListAll 会议内容--资料*/
+.PreData ul li,.PreData .DataInfo{overflow: hidden;margin-bottom: 0.25rem;}
+.PreData ul li img{float: left;width: 1.6rem;}
+.PreData .DataInfo p{padding-left:0.25rem; margin-top: 0.15rem;line-height: 0.3rem;font-size: 0.24rem;color: rgb(153,156,171);}
+.PreData .DataInfo .DataTitle{font-size: 0.26rem;line-height: 0.42rem;color: rgb(51,51,51); }
+.PreData .DataInfo .DataNum span{float: left;margin-right: 0.1rem;}
+.PreData .DataInfo .DataNum .DataLook{width: 0.29rem;height: 0.2rem;    margin-top: 0.05rem;background: url(../img/look.png) no-repeat;background-size: cover;}
+.PreData .DataInfo .DataNum .DataShare{width: 0.24rem;height: 0.24rem;background: url(../img/share.png);margin-top: 0.04rem;margin-left: 0.2rem;background-size: cover;}
+/*PreConListAll 会议内容--调查*/
+.previewContent{width:90%;height:auto;background:#fff;}
+.previewContent .comName{ width: 92%;height: 0.3rem;line-height: 0.3rem;padding: 0.15rem 4%;background: #f4f4f4;border: none;font-size: 0.28rem;}
+.previewContent ul li{width:90%;height:auto;padding:5% 0;border-bottom:0.01rem solid #efefef;}
+.previewContent ul li p{font-size:0.26rem;line-height: 0.64rem;}
+.previewContent ul li p:first-child{font-size:0.28rem;}
+.previewContent input{width:0.32rem;height:0.32rem;line-height: 0.32rem;margin-right: 0.13rem;}
+.previewContent .btn{display:none;width:100%;height:0.88rem;background:rgb(27, 27, 27);font-size:0.3rem;line-height: 0.88rem;color:#fff;text-align:center;border-radius: 0.1rem;}
+/*nextmeet 下期预告*/
+.nextmeetinfo{font-size: 0.24rem;text-indent: 0.48rem;margin-bottom: 0.2rem;line-height: 0.4rem;}
+.nextmeetimg img{display: block;width: 100%;margin-bottom: 0.16rem;}
+/*contact 联系报名*/
+.PhoneAndName{overflow: hidden;position: fixed;width: 100%;bottom: 0;left: 0;}
+.PhoneAndName p{float: left;width: 50%;height: 0.88rem;line-height: 0.88rem;font-size:0.3rem;color: #fff;text-align: center;}
+.PhoneAndName .Phone{background: rgb(27,27,27);}
+.PhoneAndName .Name{background: rgb(189,15,16);}
+
+/*主办方弹框*/
+.hostBg{width: 100%;top: 0;bottom: 0;left: 0;right: 0;position: fixed;z-index: 999;background: rgba(0,0,0,.2);z-index:1;}
+.hostInfo{position: fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index: 1000;width: 5.6rem;height: 4.3rem;text-align: center;border-radius: 0.1rem;background: #fff;}
+ .hostInfo p:nth-child(1){width:100%;height: 0.9rem;line-height: 0.9rem;text-align: center;background: #bd0f10;font-size: 0.32rem;color: #fff;border-top-left-radius: 0.1rem;border-top-right-radius: 0.1rem;}
+ .hostInfo p:nth-child(2) a{font-size: 0.38rem;margin: 0.4rem 0;display: block;font-weight: 600;}
+ .hostInfo p:nth-child(3){font-size: 0.28rem;font-weight: 600;}
+ /*.hostInfo p:nth-child(4){width: 3.22rem;height: 0.68rem;line-height: 0.68rem;background: #1b1b1b;color: #fff;font-size: 0.3rem;margin-top: 0.4rem;margin-bottom: 0.16rem;padding-left: 0.1rem;border-radius: 1rem;text-align: center;margin: 0 auto;margin: 0.4rem auto 0;}*/
+.hostSure {overflow: hidden;margin-top: 0.3rem;}
+.hostSure span{float: left;width: 40%;height: 0.68rem;line-height: 0.68rem;font-size: 0.3rem;color: #fff;border-radius: 0.1rem;}
+.hostSure span#close_phone{background:#1b1b1b;margin: 0 3% 0 7%;}
+.hostSure span#sure_phoe{background:#bd0f10;margin: 0 7% 0 3%;}
+.hostSure span#sure_phoe a{color: #fff;font-size: 0.3rem;}
+/*报名*/
+.addName_content{width: 100%;height:auto;background:#fff;margin-top: 0.88rem;font-size:0.28rem;}
+.addName_content b{color:#bd0f10;}
+.addName_content div{width:90%;height:auto;margin:0 auto;}
+.addName_content div div{display:none;position:relative;width:100%;height: 0.88rem;line-height: 0.88rem;border-bottom:0.01rem solid #efefef;}
+.addName_content div div input{float: right;height: 0.35rem;padding: 0.25rem 0;text-align: right;font-size: 0.28rem;}
+.addName_content div div input.inputYes{padding-right:0.5rem;background:url(../img/yes.png) no-repeat;background-position:right;background-size: 0.32rem 0.22rem;} 
+.nameBtn{position:fixed;bottom:0;width:100%;height:0.88rem;}
+.nameBtn div{float: left;width: 50%;height: 0.88rem;line-height:0.88rem;font-size: 0.3rem;text-align: center;color: #fff;}
+.nameBtn .back_btn{background: #1b1b1b}
+.nameBtn .succ_btn{background: #bd0f10}
+
+/*问卷调查弹框*/
+.phoneBg{width: 100%;top: 0; bottom: 0;left: 0;right: 0;position: fixed;z-index: 999;background: rgba(0,0,0,.2);}
+.phoneBg .phoneInfo{position: fixed;top: 50%;left: 50%;transform: translate(-50%,-50%);z-index: 1000;width: 5.6rem;height: 4.3rem;text-align: center;border-radius: 0.1rem;background: #fff;}
+.phoneBg .pNum{width:80%;margin:0 auto;}
+.phoneBg .pNum span{height:0.68rem;line-height: 0.68rem;margin-top:0.8rem;display: inline-block;float:left;}
+.phoneBg .pNum input{width:69%;height:0.68rem;line-height: 0.68rem;padding-left: 0.1rem;margin-top:0.8rem;font-size:0.28rem;border:0.01rem solid #efefef;float:left;}
+.phoneBg .phoneInfo .item{width: 100%;height: 0.9rem;line-height: 0.9rem;text-align: center;background: #bd0f10;font-size: 0.32rem;color: #fff;border-top-left-radius: 0.1rem;border-top-right-radius: 0.1rem;}
+.phoneBg .pInfo{width:80%;margin:2rem auto 0;}
+.phoneBg .pInfo span{width:40%;height:0.68rem;line-height: 0.68rem;border-radius: 0.1rem;font-size: 0.3rem;text-align: center;color: #fff;}
+.phoneBg .pInfo .pClose{background: #1b1b1b;float:left;}
+.phoneBg .pInfo .pSure{background: #bd0f10;float:right;}

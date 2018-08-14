@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+    <title>会议发布</title>
+    <script src="js/rem.js"></script>
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" type="text/css" href="css/meetChoice.css">
+</head>
+<body>
+<div class="choiceBtn">
+    <ul>
+        <li class="item itemss" data-url="meetModify.html?states=2">
+            <p class="choiceTit" >基本信息</p>
+            <p class="choiceBz"><span>必填</span><span class="isok" data-state="0">(已填写)</span></p>
+        </li>
+        <li class="item item0" data-url="meetDescribe.html?states=2">
+            <p class="choiceTit" >会议描述</p>
+            <p class="choiceBz"><span>必填</span><span class="isok" data-state="0"></span></p>
+        </li>
+        <li class="item item1" data-url="meetNamed.html?states=2">
+            <p class="choiceTit" >报名设置</p>
+            <p class="choiceBz"><span>必填</span><span class="isok" data-state="0"></span></p>
+        </li>
+        <li class="item item2" data-url="meetFlow.html?states=2">
+            <p class="choiceTit">会议流程</p>
+            <p class="choiceBz"><span class="bzXuan">选填</span><span class="isok" data-state="0"></span></p>
+        </li>
+        <li class="item item3" data-url="meetGuest.html?states=2">
+            <p class="choiceTit">会议嘉宾</p>
+            <p class="choiceBz"><span class="bzXuan">选填</span><span class="isok" data-state="0"></span></p>
+        </li>
+        <li class="item item4" data-url="meetReport.html?states=2">
+            <p class="choiceTit">下期预告</p>
+            <p class="choiceBz"><span class="bzXuan">选填</span><span class="isok" data-state="0"></span></p>
+        </li>
+        <li class="item item5" data-url="survey2.html?states=2">
+            <p class="choiceTit">问卷调研</p>
+            <p class="choiceBz"><span class="bzXuan">选填</span><span class="isok" data-state="0"></span></p>
+        </li>
+    </ul>
+</div>
+<div id="reqtoken" class="reqtoken"></div>
+<script src="js/jquery-2.1.4.min.js"></script>
+<script src="jscript/meetChoice.js"></script>
+<script type="text/javascript">
+    pushHistory();
+    window.addEventListener("popstate", function(e) {
+        window.location.href = 'mmmm.html?confsid='+NumAll.confsid;
+    }, false);
+    function pushHistory() {
+        var state = {
+            title: "title",
+            url: "#"
+        };
+        window.history.pushState(state, "title", "#");
+    }
+</script>
+</body>
+</html>

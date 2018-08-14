@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+    <title>会议描述</title>
+    <script src="js/jquery-2.1.4.min.js"></script>
+    <script src="js/rem.js"></script>
+
+    <!--图文混排-->
+    <script src="js/index.min.js"></script>
+    <script src="js/index.js"></script>
+
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" type="text/css" href="css/iosSelect.css"><!--插件-->
+    <link rel="stylesheet" type="text/css" href="css/meetChoice.css">
+</head>
+<body>
+<div class="descriptLook" style="display: none;">
+    <p class="miaoshuTit">会议描述：</p>
+    <div class="descriptLookInfo">
+
+    </div>
+</div>
+<!--descript-->
+<div class="descript deleteHeader" style="display: none;">
+    <ul>
+        <li class="desD_content">
+            <div style="width:100%;margin: 0 auto;">
+                <div class="publish-article-content">
+                    <div class="title-tips">正文</div>
+                    <input type="hidden" id="target">
+                    <div class="article-content" id="content2" contenteditable="true">
+                        <div class="placeholader" style="pointer-events: none;">请输入文章正文内容</div>
+                    </div>
+                    <div class="footer-btn g-image-upload-box">
+                        <div class="upload-button">
+                                <span class="upload" style="display: block;line-height: 0.78rem;">
+                                    <i class="upload-img"></i>
+                                </span>
+                            <input class="input-file" id="imageUpload2" type="file" name="fileInput" accept="image/*"
+                                   style="position:absolute;left:0;top:0;opacity:0;width:100%;height: 0.78rem;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </li>
+    </ul>
+</div>
+<!--submit-->
+<div class="desBtn" id="save" onclick="meetDes()" style="display: none;">保存</div>
+<div class="desBtn" id="xiugai" onclick="meetDesXiu()">修改</div>
+
+<div id="reqtoken" class="reqtoken"></div>
+<script>
+    $(function () {
+        getMDesc();
+    });
+
+    function meetDesXiu() {
+        $('#xiugai').hide();
+        $('.descriptLook').hide();
+        $('#save').show();
+        $('.descript').show();
+    }
+
+    //保存会议描述
+    function meetDes() {
+        var imgstr = '';
+        var inpVal = $("#target").val();
+
+        if (inpVal == '') {
+            alert('请填写会议描述');
+        } else {
+            $.ajax({
+                type: 'post',
+                url: Urlstr + 'confs_web/addIntrod.do',
+                data: {
+                    id: NumAll.confsid,
+                    introd: inpVal,
+                    imgs: imgstr,
+                    token: Token
+                },
+                dataType: 'json',
+                success: function (res) {
+                    if (res.error == 0) {
+                        alert('保存成功');
+                        if (NumAll.states == 1) {
+                            window.location.href = 'meetChoice.html?confsid=' + NumAll.confsid;
+                        } else {
+                            window.location.href = 'meetChoice2.html?confsid=' + NumAll.confsid;
+                        }
+
+                    } else if (res.error == 5) {
+                        alert(res.msg);
+                        ReqToken();
+                    } else {
+                        alert(res.msg);
+                    }
+                }
+            });
+        }
+    }
+
+    //获取描述内容
+    function getMDesc() {
+        $.ajax({
+            type: 'post',
+            url: Urlstr + 'confs_web/confRim.do',
+            data: {
+                conftoken: NumAll.confsid,
+                type: 1,
+                token: Token
+            },
+            dataType: 'json',
+            success: function (res) {
+                console.log(res);
+                if (res.error == 0) {
+                    if (res.row != null) {
+                        $('.descriptLook').show();
+                        $('#target').val(res.row.introd);
+                        $('.descriptLookInfo').html(res.row.introd);
+                        $('.descript').hide();
+                        $("#content2").html(res.row.introd);
+                    } else {
+                        $('.descriptLook').hide();
+                        $('.descript').show();
+                        $('#xiugai').hide();
+                        $('#save').show();
+                    }
+                } else if (res.error == 5) {
+                    alert(res.msg);
+                    ReqToken();
+                } else {
+                    // alert(res.msg);
+                }
+            }
+        });
+    }
+
+</script>
+
+</body>
+</html>

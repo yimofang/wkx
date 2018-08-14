@@ -1,0 +1,130 @@
+package net.emof.building.web.controller;
+
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import net.emof.building.admin.customEXC.EhCacheSessiconException;
+import net.emof.building.util.DataMap;
+import net.emof.building.web.service.QnrTitle_web_Service;
+
+/**
+ * 问卷问题
+ * @author xilongfei
+ * @creation 2017年12月16日
+ */
+@Controller
+@RequestMapping("/qnrTitle_web")
+public class QnrTitle_web_Controller {
+	
+	@Autowired
+	private QnrTitle_web_Service qnrTitleService;
+	
+	
+	/**
+	 * 添加问题与问题选项
+	 * @author xilongfei
+	 * @creation 2017年12月16日
+	 * @param token		用户识别标识	
+	 * @param name		问题名称
+	 * @param tstate	问题类型  1单选 2多选  3填空
+	 * @param qnrid		问卷id
+	 * @param confid	会议id
+	 * @param qnrmin	最少选项(多选使用)
+	 * @param qnrmax	最多选项(多选使用)
+	 * @param isitem	是否必答 1必答, 2选答
+	 * @param options	问题选项信息,多个已","相隔
+	 * @return
+	 * @throws Exception 
+	 */
+	@ResponseBody
+	@RequestMapping("/addTitleInfo")
+	public Map<String, Object> addTitleInfo(@RequestParam(value = "token", required = false) String token,
+			@RequestParam(value = "name", required = false) String name,
+			@RequestParam(value = "tstate", required = false) Integer tstate,
+			@RequestParam(value = "qnrid", required = false) String qnrid,
+			@RequestParam(value = "confid", required = false) String confid,
+			@RequestParam(value = "qnrmin", defaultValue="0") Integer qnrmin, 
+			@RequestParam(value = "qnrmax", defaultValue="0") Integer qnrmax, 
+			@RequestParam(value = "isitem", defaultValue="2") Integer isitem,
+			@RequestParam(value = "options", required = false) String options) {
+		DataMap dataMap = new DataMap();
+		try {
+			dataMap = qnrTitleService.addTitleInfo(token, name, tstate, qnrid, confid, qnrmin, qnrmax, isitem, options);
+		} catch (EhCacheSessiconException e){
+			e.printStackTrace();
+			dataMap.addMsg_diy_list(null, 5, "登录超时，请重新登录");
+	        return dataMap.data;
+		} catch (Exception e) {
+			e.printStackTrace();
+			dataMap.addMsg_diy_list(null, 6, "创建问题失败,请重试");
+	        return dataMap.data;
+		}
+		return dataMap.data;
+	}
+	
+	/**
+	 * 查询问题与问题选项信息
+	 * @author xilongfei
+	 * @creation 2017年12月19日
+	 * @param titleid	问题id
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("/getTitleInfo")
+	public Map<String, Object> addTitleInfo(@RequestParam(value = "titleid", required = false) String titleid) {
+		DataMap dataMap = qnrTitleService.getTitleInfo(titleid);
+		return dataMap.data;
+	}
+	
+	/**
+	 * 修改问题与问题选项信息
+	 * @author xilongfei
+	 * @creation 2017年12月22日
+	 * @param titleid	问题ID
+	 * @param name		问题名称
+	 * @param tstate	问题类型 1单选, 2多选, 3填空
+	 * @param qnrmin	最少选项(多选使用)
+	 * @param qnrmax	最多选项(多选使用)
+	 * @param isitem	是否必答 1必答, 2选答
+	 * @param options	问题选项信息,多个已","相隔
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("/alterTitleInfo")
+	public Map<String, Object> alterTitleInfo(@RequestParam(value = "titleid", required = false) String titleid,
+			@RequestParam(value = "name", required = false) String name,
+			@RequestParam(value = "tstate", required = false) Integer tstate,
+			@RequestParam(value = "qnrmin", defaultValue="0") Integer qnrmin, 
+			@RequestParam(value = "qnrmax", defaultValue="0") Integer qnrmax, 
+			@RequestParam(value = "isitem", defaultValue="2") Integer isitem,
+			@RequestParam(value = "options", required = false) String options) {
+		DataMap dataMap = new DataMap();
+		try {
+			dataMap = qnrTitleService.updateTitleInfo(titleid, name, tstate, qnrmin, qnrmax, isitem, options);
+		} catch (Exception e) {
+			e.printStackTrace();
+			dataMap.addMsg_diy_obj(null, 6, "修改失败,请重试");
+            return dataMap.data;
+		}
+		return dataMap.data;
+	}
+	
+	/**
+	 * 删除问题信息
+	 * @author xilongfei
+	 * @creation 2017年12月22日
+	 * @param titleid	问题ID
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("/deleteTitleDetails")
+	public Map<String, Object> deleteTitleDetails(@RequestParam(value = "titleid", required = false) String titleid) {
+		DataMap dataMap = qnrTitleService.deleteTitleDetails(titleid);
+		return dataMap.data;
+	}
+}

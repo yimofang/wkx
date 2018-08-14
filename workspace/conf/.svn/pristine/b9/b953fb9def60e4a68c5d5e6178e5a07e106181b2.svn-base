@@ -1,0 +1,14 @@
+$(document).ready(function(e){
+	$("#signIn").click(function(e){
+		$("#codeSignIn").show();
+		$("#codeCheckOn").hide();
+		$("#signIn").addClass("current");
+		$("#checkOn").removeClass("current");
+	});
+	$("#checkOn").click(function(e){
+		$("#codeCheckOn").show();
+		$("#codeSignIn").hide();
+		$("#checkOn").addClass("current");
+		$("#signIn").removeClass("current");
+	});
+});

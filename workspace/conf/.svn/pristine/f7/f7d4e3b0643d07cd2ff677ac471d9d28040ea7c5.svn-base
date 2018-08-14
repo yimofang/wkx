@@ -1,0 +1,152 @@
+package net.emof.building.web.service;
+
+import java.security.DigestException;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import net.emof.building.dao.ConfsMapper;
+import net.emof.building.dao.WechatMapper;
+import net.emof.building.model.Wechat;
+import net.emof.building.util.DataMap;
+import net.emof.building.web.wechat.SHA1util;
+import net.emof.building.web.wechat.WechatSendRequest;
+
+@Service
+public class WechatService {
+	
+	@Autowired
+	private WechatMapper wechatMapper;
+	@Autowired
+	private ConfsMapper confsMapper;
+	
+	
+	/**
+	 * 查询微信配置信息
+	 * @author xilongfei
+	 * @creation 2018年1月23日
+	 * @return
+	 */
+	public Wechat getWechatInfo() {
+		return wechatMapper.selectByPrimaryKey(1);
+	}
+	
+	/**
+	 * 获取微信配置信息
+	 * @author wkx
+	 * @creation 2018年1月23日
+	 * @param wechat  微信配置信息
+	 * @return
+	 */
+	public String updateWechatInfo() {
+		Wechat wechat=new Wechat();
+		String url=WechatSendRequest.getTokenUrl("wxe312829209ca53af", "ef6a8066f06e25e6e14460fa9511a46f");
+		JSONObject json = WechatSendRequest.getReturmParam(url);//errcode
+		String fh="";
+		try {
+			String access_token = json.get("access_token").toString();
+			System.out.println("access_token="+access_token);
+			wechat.setId(1);
+			wechat.setAccesstoken(access_token);
+			String ticketurl = WechatSendRequest.getApiTicket(access_token);
+			JSONObject ticketjson = WechatSendRequest.getReturmParam(ticketurl);
+			String jsapi_ticket = ticketjson.get("ticket").toString();
+			wechat.setTicket(jsapi_ticket);
+			int i = wechatMapper.updateByPrimaryKeySelective(wechat);
+			if(i==1) {
+				fh = wechat.getAccesstoken();
+			}
+		} catch (Exception e) {
+			fh="";
+		}
+		return fh;
+	}
+	
+	
+	
+	
+	
+	/**
+	 * 获取微信信息
+	 * @author wkx
+	 * @creation 2018年1月24日
+	 * @param url
+	 * @return
+	 */
+	public DataMap getWechatShare(String url) {
+		DataMap dataMap = new DataMap();
+		if (url == null || url.trim().equals("")) {
+			dataMap.addMsg_diy_obj(null, 6, "未找到要分享的信息");
+			return dataMap;
+		}
+		Wechat wechat = wechatMapper.selectByPrimaryKey(1);
+		if(wechat==null || wechat.getTicket()==null || wechat.getTicket().trim().equals("")) {
+			dataMap.addMsg_diy_obj(null, 6, "暂不支持分享功能");
+			return dataMap;
+		}
+		String timeStamp = WechatSendRequest.getTimeStamp(); //时间戳
+		String noncestr = WechatSendRequest.getNoncestr(24); //随机字符串
+		String signStr =  WechatSendRequest.getSignstr(wechat.getTicket().trim(), noncestr, timeStamp, url); //签名字符串
+		String sign = ""; //签名
+		try {
+			sign = SHA1util.SHA1(signStr.trim());
+			System.err.println("签名1-----"+sign);
+			sign = SHA1util.getSha1(signStr.trim());
+			System.err.println("签名2-----"+sign);
+		} catch (DigestException e) {
+			e.printStackTrace();
+		}
+		Map<String, Object> map = new HashMap<>();
+		map.put("appid", wechat.getAppid());
+		map.put("timeStamp", timeStamp);
+		map.put("noncestr", noncestr);
+		map.put("sign", sign);
+		dataMap.addMsg_diy_obj(map, 0, "获取成功！");
+		return dataMap;
+	}
+	/**
+	 * 
+	 * @author wkx
+	 * @creation 2018年7月11日
+	 * @param url
+	 * @return
+	 */
+	public DataMap getWechatSign(String url) {
+		DataMap dataMap = new DataMap();
+		if (url == null || url.trim().equals("")) {
+			dataMap.addMsg_diy_obj(null, 6, "未找到要分享的信息");
+			return dataMap;
+		}
+		Wechat wechat = wechatMapper.selectByPrimaryKey(1);
+		
+		
+		if(wechat==null ) {//|| wechat.getTicket()==null || wechat.getTicket().trim().equals("")
+			dataMap.addMsg_diy_obj(null, 6, "暂不支持分享功能2");
+			return dataMap;
+		}
+		String timeStamp = WechatSendRequest.getTimeStamp(); //时间戳
+		String noncestr = WechatSendRequest.getNoncestr(24); //随机字符串
+		String signStr =  WechatSendRequest.getSignstr(wechat.getTicket(), noncestr, timeStamp, url); //签名字符串
+		String sign = ""; //签名
+		try {
+			sign = SHA1util.SHA1(signStr.trim());
+			System.err.println(signStr.trim()+"=签名1-----"+sign);
+			sign = SHA1util.getSha1(signStr.trim());
+			System.err.println(signStr.trim()+"=签名2-----"+sign);
+		} catch (DigestException e) {
+			e.printStackTrace();
+		}
+		Map<String, Object> map = new HashMap<>();
+		map.put("appid", wechat.getAppid());
+		map.put("timeStamp", timeStamp);
+		map.put("noncestr", noncestr);
+		map.put("signStr", signStr.trim());
+		map.put("sign", sign);
+		dataMap.addMsg_diy_obj(map, 0, "获取成功！");
+		return dataMap;
+	}
+	
+}

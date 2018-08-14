@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+	<title>简报管理</title>
+	<link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/brief.css">
+    <script src="js/jquery-2.1.4.min.js"></script>
+	<script src="js/rem.js"></script>
+	<script src="js/removeHeader.js"></script>
+	<script src="jscript/brief.js"></script>
+</head>
+<body>
+	<!--header-->
+	<div class="Header briefManage">
+    	<a href="javascript:history.go(-1);"></a>简报管理
+	</div>
+	<!--媒体推广-->
+	<div class="Header mediaSpread" style="display: none">
+    	<a href="javascript:void(0);" onclick="back()"></a>媒体推广
+	</div>
+	<!--unArticle-->
+	<div class="unArticle" style="display: none">
+		<img src="img/survey.png">
+		<p class="imgTit">您还没有创建简报</p>
+		<p class="creBrief" id="creBrief" onclick="createBrief()">创建简报</p>
+	</div>
+
+	<!--article-->
+	<div class="article deleteHeader">
+		<!--articleChoice-->
+		<div class="articleChoice" style="display: none">
+			<p>选择您需要推广的文章，可多选</p>
+		</div>
+		<div class="artList">
+			<!-- <div class="artContent" id="">
+                <span class="listLeft" style="display:none">
+                    <input type="checkbox">
+                </span>
+                <span class="listRight">
+                    <p class="title">题目</p>
+                    <p class="content">描述信息息描述信息描述息</p>
+                    <p class="time">2018-1-16</p>
+                </span>
+            </div> -->
+		</div>
+		<!--submit-->
+		<div class="submit">
+			<div class="addBrief" onclick="createBrief()">创建简报</div>
+			<div class="mediaBro" onclick="mediaBro()">媒体推广</div>
+		</div>
+		<div class="articleNext" onclick="artChoice()" style="display: none">下一步</div>
+	</div>
+
+	<div id="reqtoken" class="reqtoken"></div>
+
+	<!--监听事件返回-->
+	<script type="text/javascript">
+	    pushHistory();
+	    window.addEventListener("popstate", function(e) {
+	        // alert('mmmm.html?confsid='+NumAll.confsid);
+	        // alert("我监听到了浏览器的返回按钮事件啦");//根据自己的需求实现自己的功能
+	        window.location.href = 'mmmm.html?confsid='+NumAll.confsid;
+	    }, false);
+	    function pushHistory() {
+	        var state = {
+	            title: "title",
+	            url: "#"
+	        };
+	        window.history.pushState(state, "title", "#");
+	    }
+	</script>
+</body>
+</html>

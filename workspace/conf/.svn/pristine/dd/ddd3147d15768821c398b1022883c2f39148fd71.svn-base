@@ -1,0 +1,271 @@
+package net.emof.building.web.service;
+
+import net.emof.building.admin.customEXC.EhCacheSessiconException;
+import net.emof.building.admin.service.SqlToolseService;
+import net.emof.building.dao.ConfsDatumMapper;
+import net.emof.building.ehcache.EhSessicon;
+import net.emof.building.model.ConfsDatum;
+import net.emof.building.model.Users;
+import net.emof.building.util.DataMap;
+import net.emof.building.util.ToolsUtil;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * Copyright (C), 2015-2017, 易魔方有限公司
+ * FileName: ConfsDatum_web_Service
+ * Author:   anshiyuan
+ * Date:     2017/12/14 下午3:25
+ * Description:会议资料数据处理
+ * History:
+ */
+@Service
+public class ConfsDatum_web_Service extends SqlToolseService {
+
+    @Autowired
+    private ConfsDatumMapper confsDatumMapper;
+
+    // log4j日志
+    private final Logger logger = Logger.getLogger(this.getClass());
+
+    /**
+     * 获取会议资料列表
+     *
+     * @param confsid 会议ID
+     * @param type    类型 1资料列表 2会议详情
+     * @return
+     */
+    public DataMap listpage(String confsid, int type) {
+        DataMap dataMap = new DataMap();
+        if (confsid == null || confsid.trim().equals("")) {
+            dataMap.addMsg_diy_obj(null, 6, "未找到会议");
+        }
+
+        StringBuffer table_name = new StringBuffer(" confs_datum obj");
+        StringBuffer find = new StringBuffer();
+        if (type == 2) {
+            find.append(" obj.id,obj.dname,obj.file");
+        } else {
+            find.append(" obj.id,obj.dname,obj.brief,obj.path,obj.file");
+        }
+        StringBuffer where = new StringBuffer(" 1=1 AND obj.isdelete=1 AND obj.confsid= '"+ confsid+"'");
+        StringBuffer order = new StringBuffer("ORDER BY obj.createtime");
+
+        List<Map<String, Object>> maps = this.selectAll(table_name.toString(), find.toString(), where.toString(), order.toString());
+
+        dataMap.addMsg_obj(maps, 0);
+
+        return dataMap;
+    }
+
+
+    /**
+     * 会议资料详情
+     *
+     * @param dtaumid
+     * @return
+     */
+    public DataMap detailConfsDatum(String dtaumid) {
+        DataMap dataMap = new DataMap();
+        if (dtaumid == null || dtaumid.trim().equals("")) {
+            dataMap.addMsg_diy_obj(null, 6, "未找到会议资料");
+        }
+
+        StringBuffer table_name = new StringBuffer(" confs_datum obj");
+        StringBuffer find = new StringBuffer(" obj.id,obj.dname,obj.brief,obj.path,obj.file");
+        StringBuffer where = new StringBuffer(" 1=1 AND obj.isdelete=1 AND obj.id='" + dtaumid+"'");
+
+        Map<String, Object> map = this.selectMap(table_name.toString(), find.toString(), where.toString());
+
+        dataMap.addMsg_obj(map, 0);
+
+        return dataMap;
+    }
+
+    /**
+     * 删除会议资料Pc
+     *
+     * @param datumid 会议资料ID
+     * @return
+     */
+    public DataMap deleteConfsDatumPc(String dname,String datumid) {
+        DataMap dataMap = new DataMap();
+
+        if (datumid == null || datumid.trim().equals("")) {
+            dataMap.addMsg_diy_obj(null, 6, "未找到会议资料");
+            return dataMap;
+        }
+
+        int result = this.confsDatumMapper.deleteByPrimaryKey(datumid);
+        if (result < 1) {
+            logger.error("【会议资料列表 信息异常】执行会议资料删除失败,信息位置" + this.getClass().getName()
+                    + Thread.currentThread().getStackTrace()[1].getMethodName());
+            dataMap.addMsg_diy_obj(null, 6, "删除失败,请重试");
+            return dataMap;
+        }
+
+        dataMap.addMsg_obj(null, 0);
+
+        return dataMap;
+    }
+    
+    /**
+     * 添加会议资料Pc   wkx
+     * @param token   用户ID
+     * @param confsid 会议ID
+     * @param dname   资料名称
+     * @param brief   资料描述
+     * @param path    文件地址
+     * @param file    文件名称
+     * @return
+     */
+    public DataMap addConfsDatumPc(String token, String confsid, String dname, String brief, String path, String file) {
+        DataMap dataMap = new DataMap();
+        Users users;
+        if (confsid == null || confsid.trim().equals("")) {
+            dataMap.addMsg_diy_list(null, 6, "未找到会议");
+            return dataMap;
+        }
+        if (token == null || token.trim().equals("") || token.trim().length() < 32) {
+            dataMap.addMsg_diy_list(null, 6, "未识别标识");
+            return dataMap;
+        }
+        try {
+            users = EhSessicon.getTokenInfo(token);
+            if (users == null) {
+                dataMap.addMsg_diy_list(null, 5, "登录超时，请重新登录");
+                return dataMap;
+            }
+        } catch (EhCacheSessiconException e) {
+            logger.error("【会议资料列表 信息异常】执行会议资料添加失败,信息位置" + this.getClass().getName()
+                    + Thread.currentThread().getStackTrace()[1].getMethodName());
+            dataMap.addMsg_diy_list(null, 5, "登录超时，请重新登录");
+            return dataMap;
+        }
+        if (dname == null || dname.trim().equals("")) {
+            dataMap.addMsg_diy_obj(null, 6, "请输入会议资料名称");
+            return dataMap;
+        }
+        if (path == null || path.trim().equals("") || file == null || file.trim().equals("")) {
+            dataMap.addMsg_diy_obj(null, 6, "请选择需要上传的会议资料");
+            return dataMap;
+        }
+        Date createtime = new Date(System.currentTimeMillis());
+        String id = ToolsUtil.get_diy_ID(); // 主键
+        Integer userid = users.getId();
+        String codes = users.getCodes();
+        ConfsDatum confsDatum = new ConfsDatum(id, dname, brief, path, file, 1, createtime, userid, codes, confsid);
+        int result = this.confsDatumMapper.insertSelective(confsDatum);
+        if (result < 1) {
+            logger.error("【会议资料列表 信息异常】执行会议资料添加失败,信息位置" + this.getClass().getName()
+                    + Thread.currentThread().getStackTrace()[1].getMethodName());
+            dataMap.addMsg_diy_obj(null, 6, "添加失败,请重试");
+            return dataMap;
+        }
+        dataMap.addMsg_diy_obj(confsDatum, 0, "添加成功");
+        return dataMap;
+    }
+
+    /**
+     * 添加会议资料
+     *
+     * @param token   用户ID
+     * @param confsid 会议ID
+     * @param dname   资料名称
+     * @param brief   资料描述
+     * @param path    文件地址
+     * @param file    文件名称
+     * @return
+     */
+    public DataMap addConfsDatum(String token, String confsid, String dname, String brief, String path, String file) {
+        DataMap dataMap = new DataMap();
+        Users users;
+        if (confsid == null || confsid.trim().equals("")) {
+            dataMap.addMsg_diy_list(null, 6, "未找到会议");
+            return dataMap;
+        }
+        if (token == null || token.trim().equals("") || token.trim().length() < 32) {
+            dataMap.addMsg_diy_list(null, 6, "未识别标识");
+            return dataMap;
+        }
+        try {
+            users = EhSessicon.getTokenInfo(token);
+            if (users == null) {
+                dataMap.addMsg_diy_list(null, 5, "登录超时，请重新登录");
+                return dataMap;
+            }
+        } catch (EhCacheSessiconException e) {
+            logger.error("【会议资料列表 信息异常】执行会议资料添加失败,信息位置" + this.getClass().getName()
+                    + Thread.currentThread().getStackTrace()[1].getMethodName());
+            dataMap.addMsg_diy_list(null, 5, "登录超时，请重新登录");
+            return dataMap;
+        }
+        if (dname == null || dname.trim().equals("")) {
+            dataMap.addMsg_diy_obj(null, 6, "请输入会议资料名称");
+            return dataMap;
+        }
+        if (path == null || path.trim().equals("") || file == null || file.trim().equals("")) {
+            dataMap.addMsg_diy_obj(null, 6, "请选择需要上传的会议资料");
+            return dataMap;
+        }
+
+        StringBuffer table_name = new StringBuffer(" confs_datum obj");
+        StringBuffer find = new StringBuffer(" obj.id");
+        StringBuffer where = new StringBuffer(" 1=1 AND obj.isdelete=1 AND obj.confsid='" + confsid
+                + "' AND  obj.dname='" + dname + "' OR obj.path='" + path+"'");
+
+        Map<String, Object> map = this.selectMap(table_name.toString(), find.toString(), where.toString());
+        if (map != null) {
+            dataMap.addMsg_diy_obj(null, 6, "该资料已存在，请勿重复提交");
+            return dataMap;
+        }
+
+        Date createtime = new Date(System.currentTimeMillis());
+        String id = ToolsUtil.get_diy_ID(); // 主键
+        Integer userid = users.getId();
+        String codes = users.getCodes();
+        ConfsDatum confsDatum = new ConfsDatum(id, dname, brief, path, file, 1, createtime, userid, codes, confsid);
+        int result = this.confsDatumMapper.insertSelective(confsDatum);
+        if (result < 1) {
+            logger.error("【会议资料列表 信息异常】执行会议资料添加失败,信息位置" + this.getClass().getName()
+                    + Thread.currentThread().getStackTrace()[1].getMethodName());
+            dataMap.addMsg_diy_obj(null, 6, "添加失败,请重试");
+            return dataMap;
+        }
+        dataMap.addMsg_diy_obj(id, 0, "添加成功");
+        return dataMap;
+    }
+
+    /**
+     * 删除会议资料
+     *
+     * @param datumid 会议资料ID
+     * @return
+     */
+    public DataMap deleteConfsDatum(String datumid) {
+        DataMap dataMap = new DataMap();
+
+        if (datumid == null || datumid.trim().equals("")) {
+            dataMap.addMsg_diy_obj(null, 6, "未找到会议资料");
+            return dataMap;
+        }
+
+        int result = this.confsDatumMapper.deleteByPrimaryKey(datumid);
+        if (result < 1) {
+            logger.error("【会议资料列表 信息异常】执行会议资料删除失败,信息位置" + this.getClass().getName()
+                    + Thread.currentThread().getStackTrace()[1].getMethodName());
+            dataMap.addMsg_diy_obj(null, 6, "删除失败,请重试");
+            return dataMap;
+        }
+
+        dataMap.addMsg_obj(null, 0);
+
+        return dataMap;
+    }
+
+}

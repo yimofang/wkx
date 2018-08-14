@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>会议预览</title>
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/meet_preview.css">
+    <script src="js/rem.js"></script>
+    <script src="js/jquery-2.1.4.min.js"></script>
+    <script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+    <script src="jscript/meet_preview.js"></script>
+
+</head>
+<body style="margin: 0; height: 100%; width: 100%; position: absolute; overflow: hidden; ">
+<!--会议预览-->
+<div class="meetPreview">
+
+    <!--container-->
+    <div class="Container deleteHeader">
+        <!--banner-->
+        <div class="BannerImg">
+            <img src="" alt="" id="meetbanner">
+        </div>
+        <!--title-->
+        <div class="PreviewTitle">
+        
+        </div>
+        <!--preview-->
+        <div class="PreviewContainer">
+            <ul class="PreConTitle" id="PreConTitle">
+                <li class="active"><span>会议描述</span></li>
+                <li><span>会议资料</span></li>
+                <li><span>问卷调查</span></li>
+                <li><span>下期预告</span></li>
+            </ul>
+            <div class="PreContainerALL">
+                <!--描述-->
+                <div class="PreConListAll block PreDescribe">
+                    <div id="Meetms">
+                        <div class="miaoshu"></div>
+
+                    </div>
+                    <div class="GuestList">
+                        <p class="GuestListTitle">会议嘉宾</p>
+                        <ul>
+
+                        </ul>
+                    </div>
+                    <div>
+                        <p class="GuestListTitle">会议流程</p>
+                        <div class="PreProcess"></div>
+                    </div>
+                </div>
+                <!--资料-->
+                <div class="PreConListAll PreData">
+                    <ul>
+
+                    </ul>
+                </div>
+                <!--调查-->
+                <div class="PreConListAll previewContent" data-surId="" style="    overflow-y: scroll;">
+                    <div class="surMessage">
+                        <p class="surTit"></p>
+                        <p class="surMsg"></p>
+                    </div>
+                    <ul>
+
+                    </ul>
+                    <div class="btn" id="pShow">提交</div>
+
+
+                </div>
+                <!--下期预告-->
+                <div class="PreConListAll nextmeet">
+                    <div>
+                        <p class="nextmeetinfo"></p>
+                        <div class="nextmeetimg"></div>
+                    </div>
+                </div>
+                <div style="height: 1rem"></div>
+            </div>
+        </div>
+        <!--button-->
+
+    </div>
+</div>
+<!--输入手机号弹框-->
+<div class="phoneBg" style="display: none">
+    <div class="phoneInfo">
+        <p class="item">温馨提示</p>
+        <p class="pNum">
+            <span>手机号：</span>
+            <input id="mobileNum" type="phone" placeholder="请输入手机号"></p>
+        <p class="pInfo">
+            <span class="pClose" id="pClose">取消</span>
+            <span class="pSure" onclick="surSubmit()">确定</span>
+        </p>
+    </div>
+</div>
+<!--主办方-->
+<div class="hostBg" style="display: none">
+    <div class="hostInfo">
+        <p>温馨提示</p>
+        <p><a href="tel:83118888">83118888</a></p>
+        <p>您确定拨打主办方电话吗？</p>
+        <p class="hostSure">
+            <span id="close_phone">取消</span>
+            <span id="sure_phoe">
+                    <a href="tel:83118888">确定</a>
+                </span>
+        </p>
+    </div>
+</div>
+<!--报名-->
+<div id="addName" style="display: none">
+
+    <!--addName_content-->
+    <div class="addName_content deleteHeader">
+        <div id="AddNameList">
+            <div class="name">
+                <span>姓名<b>*</b></span>
+                <input type="text" id="name" placeholder="请填写参会者姓名">
+            </div>
+            <div class="mobile">
+                <span>手机号码<b>*</b></span>
+                <input type="text" id="phone" placeholder="请填写参会者手机号码">
+            </div>
+            <div class="email">
+                <span>邮箱<b>*</b></span>
+                <input type="text" id="mail" placeholder="请填写参会者邮箱">
+            </div>
+            <div class="company">
+                <span>公司<b>*</b></span>
+                <input type="text" id="company" placeholder="请填写参会者公司">
+            </div>
+            <div class="job">
+                <span>职位<b>*</b></span>
+                <input type="text" id="job" placeholder="请填写参会者职位">
+            </div>
+        </div>
+    </div>
+    <div class="nameBtn">
+        <div class="back_btn" onclick="goback()">取消</div>
+        <div class="succ_btn">完成</div>
+    </div>
+</div>
+<div class="PhoneAndName">
+    <p class="Phone">联系主办方</p>
+    <p class="Name" onclick=""></p>
+</div>
+
+<div id="reqtoken" class="reqtoken"></div>
+
+
+<script type="text/javascript">
+    pushHistory();
+    window.addEventListener("popstate", function (e) {
+        // alert('mmmm.html?confsid='+NumAll.confsid);
+        // alert("我监听到了浏览器的返回按钮事件啦");//根据自己的需求实现自己的功能
+        window.location.href = 'mmmm.html?confsid=' + NumAll.confsid;
+    }, false);
+
+    function pushHistory() {
+        var state = {
+            title: "title",
+            url: "#"
+        };
+        window.history.pushState(state, "title", "#");
+    }
+</script>
+<script>
+    $(function () {
+    	alert("url:"+window.location.href);
+        $.ajax({
+            type:'post',
+            url:Urlstr + 'wechat_web/getWechatSign.do',
+            data:{
+                url:window.location.href,
+            },
+            dataType:'json',
+            success:function (res) {
+                console.log(res);
+                wx.config({
+                    debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+                    appId: res.row.appid, // 必填，公众号的唯一标识
+                    timestamp: res.row.timeStamp, // 必填，生成签名的时间戳
+                    nonceStr: res.row.noncestr, // 必填，生成签名的随机串
+                    signature: res.row.sign,// 必填，签名
+                    jsApiList: [
+                        'onMenuShareTimeline',
+                        'onMenuShareAppMessage',
+                        'onMenuShareQQ',
+                        'onMenuShareWeibo',
+                        'onMenuShareQZone'
+                    ] // 必填，需要使用的JS接口列表
+                });
+                wx.ready(function () {
+                    wx.checkJsApi({
+                        jsApiList: [
+                            'openLocation',
+                            'getLocation'
+                        ],
+                        success: function (res) {
+                            alert(JSON.stringify(res));
+                        }
+                    });
+                    alert("111");
+                    $('.PreviewTitle').on('click','.preMap',function () {
+                        var lat = $('.preMap').attr('data-lat')*1;
+                        var lng = $('.preMap').attr('data-lng')*1;
+                        var name = $(this).children('.ditu').html();
+                        alert("==lat=="+lat);
+                        alert("==lng=="+lng);
+                        alert("==name=="+name);
+                        wx.openLocation({
+                            latitude: lat, // 纬度，浮点数，范围为90 ~ -90
+                            longitude: lng, // 经度，浮点数，范围为180 ~ -180。
+                            name: name, // 位置名
+                            address: name, // 地址详情说明
+                            scale: 9, // 地图缩放级别,整形值,范围从1~28。默认为最大
+                            infoUrl: 'http://weixin.qq.com' // 在查看位置界面底部显示的超链接,可点击跳转
+                        });
+                    })
+                })
+            }
+            
+            
+            
+        })
+    })
+</script>
+</body>
+</html>

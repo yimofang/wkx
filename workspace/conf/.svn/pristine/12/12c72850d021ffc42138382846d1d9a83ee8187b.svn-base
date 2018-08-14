@@ -1,0 +1,304 @@
+    //发布会议时间
+    var meetStartTime = $('#meetStartTime');
+    var showMeetSTime = $('#mStartTime');
+    var meetEndTime = $('#meetEndTime');
+    var showMeetETime = $('#mEndTime');
+    
+    //会议流程
+    var meetFlowSTime = $('#meetFlowSTime');
+    var showMeetFlowStime = $('#flowStartTime');
+    var meetFlowETime = $('#meetFlowETime');
+    var showMeetFlowEtime = $('#flowEndTime');
+
+    //会议报名时间
+    var nStartTime = $('#nStartTime');
+    var nameStartTime = $('#nameStartTime');
+    var nEndTime = $('#nEndTime');
+    var nameEndTime = $('#nameEndTime');
+
+
+    // 初始化时间
+    var now = new Date();
+    var nowYear = now.getFullYear();
+    var nowMonth = now.getMonth() + 1;
+    var nowDate = now.getDate();
+    /*发布会议*/
+    showMeetSTime.attr('data-year', nowYear);
+    showMeetSTime.attr('data-month', nowMonth);
+    showMeetSTime.attr('data-date', nowDate);
+    showMeetETime.attr('data-year', nowYear);
+    showMeetETime.attr('data-month', nowMonth);
+    showMeetETime.attr('data-date', nowDate);
+    /*会议流程*/
+    showMeetFlowStime.attr('data-year', nowYear);
+    showMeetFlowStime.attr('data-month', nowMonth);
+    showMeetFlowStime.attr('data-date', nowDate);
+    showMeetFlowEtime.attr('data-year', nowYear);
+    showMeetFlowEtime.attr('data-month', nowMonth);
+    showMeetFlowEtime.attr('data-date', nowDate);
+    /*报名*/
+    nameStartTime.attr('data-year', nowYear);
+    nameStartTime.attr('data-month', nowMonth);
+    nameStartTime.attr('data-date', nowDate);
+    nameEndTime.attr('data-year', nowYear);
+    nameEndTime.attr('data-month', nowMonth);
+    nameEndTime.attr('data-date', nowDate);
+
+    // 数据初始化
+    function formatYear (nowYear) {
+        var arr = [];
+        for (var i = nowYear - 5; i <= nowYear + 5; i++) {
+            arr.push({
+                id: i + '',
+                value: i + '年'
+            });
+        }
+        return arr;
+    }
+    function formatMonth () {
+        var arr = [];
+        for (var i = 1; i <= 12; i++) {
+            arr.push({
+                id: i + '',
+                value: i + '月'
+            });
+        }
+        return arr;
+    }
+    function formatDate (count) {
+        var arr = [];
+        for (var i = 1; i <= count; i++) {
+            arr.push({
+                id: i + '',
+                value: i + '日'
+            });
+        }
+        return arr;
+    }
+    var yearData = function(callback) {
+        callback(formatYear(nowYear))
+    }
+    var monthData = function (year, callback) {
+        callback(formatMonth());
+    };
+    var dateData = function (year, month, callback) {
+        if (/^(1|3|5|7|8|10|12)$/.test(month)) {
+            callback(formatDate(31));
+        }
+        else if (/^(4|6|9|11)$/.test(month)) {
+            callback(formatDate(30));
+        }
+        else if (/^2$/.test(month)) {
+            if (year % 4 === 0 && year % 100 !==0 || year % 400 === 0) {
+                callback(formatDate(29));
+            }
+            else {
+                callback(formatDate(28));
+            }
+        }
+        else {
+            throw new Error('month is illegal');
+        }
+    };
+    var hourData = function(one, two, three, callback) {
+        var hours = [];
+        for (var i = 0,len = 24; i < len; i++) {
+            hours.push({
+                id: i,
+                value: i + '时'
+            });
+        }
+        callback(hours);
+    };
+    var minuteData = function(one, two, three, four, callback) {
+        var minutes = [];
+        for (var i = 0, len = 60; i < len; i++) {
+            minutes.push({
+                id: i,
+                value: i + '分'
+            });
+        }
+        callback(minutes);
+    };
+    var secondsData = function(one, two, three, four, five, callback) {
+        var seconds = [];
+        for (var i = 0, len = 60; i < len; i++) {
+            seconds.push({
+                id: i,
+                value: i + '秒'
+            });
+        }
+        callback(seconds);
+    };
+    /*发布会议*/
+    meetStartTime.bind('click', function () {
+        var oneLevelId = showMeetSTime.attr('data-year');
+        var twoLevelId = showMeetSTime.attr('data-month');
+        var threeLevelId = showMeetSTime.attr('data-date');
+        var fourLevelId = showMeetSTime.attr('data-hour');
+        var fiveLevelId = showMeetSTime.attr('data-minute');
+        var iosSelect = new IosSelect(5, 
+            [yearData, monthData, dateData, hourData, minuteData],
+            {
+                title: '请选择',
+                itemHeight: 35,
+                itemShowCount: 9,
+                oneLevelId: oneLevelId,
+                twoLevelId: twoLevelId,
+                threeLevelId: threeLevelId,
+                fourLevelId: fourLevelId,
+                fiveLevelId: fiveLevelId,
+                callback: function (selectOneObj, selectTwoObj, selectThreeObj, selectFourObj, selectFiveObj) {
+                    showMeetSTime.attr('data-year', selectOneObj.id);
+                    showMeetSTime.attr('data-month', selectTwoObj.id);
+                    showMeetSTime.attr('data-date', selectThreeObj.id);
+                    showMeetSTime.attr('data-hour', selectFourObj.id);
+                    showMeetSTime.attr('data-minute', selectFiveObj.id);
+                    showMeetSTime.html(selectOneObj.value + ' ' + selectTwoObj.value + ' ' + selectThreeObj.value + ' ' + selectFourObj.value + ' ' + selectFiveObj.value);
+                }
+        });
+    });
+
+    meetEndTime.bind('click', function () {
+        var oneLevelId = showMeetETime.attr('data-year');
+        var twoLevelId = showMeetETime.attr('data-month');
+        var threeLevelId = showMeetETime.attr('data-date');
+        var fourLevelId = showMeetETime.attr('data-hour');
+        var fiveLevelId = showMeetETime.attr('data-minute');
+        var iosSelect = new IosSelect(5, 
+            [yearData, monthData, dateData, hourData, minuteData],
+            {
+                title: '请选择',
+                itemHeight: 35,
+                itemShowCount: 9,
+                oneLevelId: oneLevelId,
+                twoLevelId: twoLevelId,
+                threeLevelId: threeLevelId,
+                fourLevelId: fourLevelId,
+                fiveLevelId: fiveLevelId,
+                callback: function (selectOneObj, selectTwoObj, selectThreeObj, selectFourObj, selectFiveObj) {
+                    showMeetETime.attr('data-year', selectOneObj.id);
+                    showMeetETime.attr('data-month', selectTwoObj.id);
+                    showMeetETime.attr('data-date', selectThreeObj.id);
+                    showMeetETime.attr('data-hour', selectFourObj.id);
+                    showMeetETime.attr('data-minute', selectFiveObj.id);
+                    showMeetETime.html(selectOneObj.value + ' ' + selectTwoObj.value + ' ' + selectThreeObj.value + ' ' + selectFourObj.value + ' ' + selectFiveObj.value);
+                }
+        });
+    });
+
+    /*会议流程*/
+    meetFlowSTime.bind('click', function () {
+        var oneLevelId = showMeetFlowStime.attr('data-year');
+        var twoLevelId = showMeetFlowStime.attr('data-month');
+        var threeLevelId = showMeetFlowStime.attr('data-date');
+        var fourLevelId = showMeetFlowStime.attr('data-hour');
+        var fiveLevelId = showMeetFlowStime.attr('data-minute');
+        var iosSelect = new IosSelect(5, 
+            [yearData, monthData, dateData, hourData, minuteData],
+            {
+                title: '请选择',
+                itemHeight: 35,
+                itemShowCount: 9,
+                oneLevelId: oneLevelId,
+                twoLevelId: twoLevelId,
+                threeLevelId: threeLevelId,
+                fourLevelId: fourLevelId,
+                fiveLevelId: fiveLevelId,
+                callback: function (selectOneObj, selectTwoObj, selectThreeObj, selectFourObj, selectFiveObj) {
+                    showMeetFlowStime.attr('data-year', selectOneObj.id);
+                    showMeetFlowStime.attr('data-month', selectTwoObj.id);
+                    showMeetFlowStime.attr('data-date', selectThreeObj.id);
+                    showMeetFlowStime.attr('data-hour', selectFourObj.id);
+                    showMeetFlowStime.attr('data-minute', selectFiveObj.id);
+                    showMeetFlowStime.html(selectOneObj.value + ' ' + selectTwoObj.value + ' ' + selectThreeObj.value + ' ' + selectFourObj.value + ' ' + selectFiveObj.value);
+                }
+        });
+    });
+
+    meetFlowETime.bind('click', function () {
+        var oneLevelId = showMeetFlowEtime.attr('data-year');
+        var twoLevelId = showMeetFlowEtime.attr('data-month');
+        var threeLevelId = showMeetFlowEtime.attr('data-date');
+        var fourLevelId = showMeetFlowEtime.attr('data-hour');
+        var fiveLevelId = showMeetFlowEtime.attr('data-minute');
+        var iosSelect = new IosSelect(5, 
+            [yearData, monthData, dateData, hourData, minuteData],
+            {
+                title: '请选择',
+                itemHeight: 35,
+                itemShowCount: 9,
+                oneLevelId: oneLevelId,
+                twoLevelId: twoLevelId,
+                threeLevelId: threeLevelId,
+                fourLevelId: fourLevelId,
+                fiveLevelId: fiveLevelId,
+                callback: function (selectOneObj, selectTwoObj, selectThreeObj, selectFourObj, selectFiveObj) {
+                    showMeetFlowEtime.attr('data-year', selectOneObj.id);
+                    showMeetFlowEtime.attr('data-month', selectTwoObj.id);
+                    showMeetFlowEtime.attr('data-date', selectThreeObj.id);
+                    showMeetFlowEtime.attr('data-hour', selectFourObj.id);
+                    showMeetFlowEtime.attr('data-minute', selectFiveObj.id);
+                    showMeetFlowEtime.html(selectOneObj.value + ' ' + selectTwoObj.value + ' ' + selectThreeObj.value + ' ' + selectFourObj.value + ' ' + selectFiveObj.value);
+                }
+        });
+    });
+
+    /*报名*/
+    nStartTime.bind('click', function () {
+        var oneLevelId = nameStartTime.attr('data-year');
+        var twoLevelId = nameStartTime.attr('data-month');
+        var threeLevelId = nameStartTime.attr('data-date');
+        var fourLevelId = nameStartTime.attr('data-hour');
+        var fiveLevelId = nameStartTime.attr('data-minute');
+        var iosSelect = new IosSelect(5, 
+            [yearData, monthData, dateData, hourData, minuteData],
+            {
+                title: '请选择',
+                itemHeight: 35,
+                itemShowCount: 9,
+                oneLevelId: oneLevelId,
+                twoLevelId: twoLevelId,
+                threeLevelId: threeLevelId,
+                fourLevelId: fourLevelId,
+                fiveLevelId: fiveLevelId,
+                callback: function (selectOneObj, selectTwoObj, selectThreeObj, selectFourObj, selectFiveObj) {
+                    nameStartTime.attr('data-year', selectOneObj.id);
+                    nameStartTime.attr('data-month', selectTwoObj.id);
+                    nameStartTime.attr('data-date', selectThreeObj.id);
+                    nameStartTime.attr('data-hour', selectFourObj.id);
+                    nameStartTime.attr('data-minute', selectFiveObj.id);
+                    nameStartTime.html(selectOneObj.value + ' ' + selectTwoObj.value + ' ' + selectThreeObj.value + ' ' + selectFourObj.value + ' ' + selectFiveObj.value);
+                }
+        });
+    });
+
+    nEndTime.bind('click', function () {
+        var oneLevelId = nameEndTime.attr('data-year');
+        var twoLevelId = nameEndTime.attr('data-month');
+        var threeLevelId = nameEndTime.attr('data-date');
+        var fourLevelId = nameEndTime.attr('data-hour');
+        var fiveLevelId = nameEndTime.attr('data-minute');
+        var iosSelect = new IosSelect(5, 
+            [yearData, monthData, dateData, hourData, minuteData],
+            {
+                title: '请选择',
+                itemHeight: 35,
+                itemShowCount: 9,
+                oneLevelId: oneLevelId,
+                twoLevelId: twoLevelId,
+                threeLevelId: threeLevelId,
+                fourLevelId: fourLevelId,
+                fiveLevelId: fiveLevelId,
+                callback: function (selectOneObj, selectTwoObj, selectThreeObj, selectFourObj, selectFiveObj) {
+                    nameEndTime.attr('data-year', selectOneObj.id);
+                    nameEndTime.attr('data-month', selectTwoObj.id);
+                    nameEndTime.attr('data-date', selectThreeObj.id);
+                    nameEndTime.attr('data-hour', selectFourObj.id);
+                    nameEndTime.attr('data-minute', selectFiveObj.id);
+                    nameEndTime.html(selectOneObj.value + ' ' + selectTwoObj.value + ' ' + selectThreeObj.value + ' ' + selectFourObj.value + ' ' + selectFiveObj.value);
+                }
+        });
+    });
+
+   

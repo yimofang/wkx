@@ -1,0 +1,6 @@
+#js版本号
+JS_VERSION_X=js.version.1.0.003
+#excel文件上传路径
+#EXCEL_UPLOAD_PATH=/home/wxjj/uploadfile/
+FORCE_DOWNLOAD_CONTENT_TYPE=application/force-download
+TEMPLATE.LOADER_PATH=WEB-INF/views/

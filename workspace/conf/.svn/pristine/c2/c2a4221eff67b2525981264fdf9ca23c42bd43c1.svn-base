@@ -1,0 +1,231 @@
+package net.emof.building.web.service;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import net.emof.building.admin.customEXC.EhCacheSessiconException;
+import net.emof.building.admin.service.SqlToolseService;
+import net.emof.building.dao.ConfsMapper;
+import net.emof.building.ehcache.EhSessicon;
+import net.emof.building.model.Confs;
+import net.emof.building.model.Users;
+import net.emof.building.util.DataMap;
+
+/**
+ * 会议业务处理层
+ * @author xilongfei
+ * @creation 2017年11月10日
+ */
+@Service
+public class Confs_web_Service extends SqlToolseService {
+	
+	// log4j日志
+	private final Logger logger = Logger.getLogger(this.getClass());
+	
+	@Autowired
+	private ConfsMapper confsMapper;
+	
+	
+	
+	
+	/**
+     * 会议列表
+     *
+     * @param token   用户token
+     * @param state   状态 0 全部，1正在进行 2 已过期
+     * @param select  模糊查询
+     * @param page    第几页
+     * @param display 显示的几条数据
+     * @return
+     * @author anshiyuan
+     */
+    public DataMap getConfsList(String token, Integer state, String select, Integer page, Integer display) {
+        DataMap dataMap = new DataMap();
+        Users users;
+        if (token == null || token.trim().equals("")) {
+            dataMap.addMsg_diy_obj(null, 6, "登录超时，请重新登录");
+            return dataMap;
+        }
+        try {
+            users = EhSessicon.getTokenInfo(token);
+            if (users == null) {
+                dataMap.addMsg_diy_list(null, 6, "登录超时，请重新登录");
+                return dataMap;
+            }
+        } catch (EhCacheSessiconException e) {
+            logger.error("【会议列表 信息异常】执行会议列表获取会议信息失败,信息位置" + this.getClass().getName()
+                    + Thread.currentThread().getStackTrace()[1].getMethodName());
+            dataMap.addMsg_diy_list(null, 6, "登录超时，请重新登录");
+            return dataMap;
+        }
+
+        Integer userid = users.getId();
+
+        StringBuffer table_name = new StringBuffer("confs obj ");
+        table_name.append("LEFT JOIN confs_type ct ON obj.type = ct.id ");
+        table_name.append("LEFT JOIN province p ON obj.sheng = p.id ");
+        table_name.append("LEFT JOIN city c ON obj.shi = c.id ");
+        table_name.append("LEFT JOIN district d ON obj.qu = d.id ");
+
+        StringBuffer find = new StringBuffer("obj.id,obj.cname,obj.brief,obj.addr,obj.cimg,obj.createtime,obj.bhstart," +
+                "obj.bhend,obj.shstart,obj.shend,obj.state");
+        find.append(",ct.tname AS type, p.name AS sheng, c.name AS shi, d.name AS qu ");
+
+        StringBuffer where = new StringBuffer("1=1 AND obj.state=1 and obj.isdelete=1 AND obj.userid=" + userid);
+        if (state != null && state != 0) {//查询全部的时候不差筛选此字段
+            where.append(" AND obj.sign=" + state);
+        }
+
+        if (select != null && select.trim().equals("")) {
+
+        }
+        StringBuffer order = new StringBuffer("ORDER BY obj.createtime DESC");
+        Map<String, Object> map = this.getListAllPage(table_name.toString(), find.toString(),
+                where.toString(), order.toString(), page, display);
+
+        map.put("error", 0);
+        map.put("msg", "操作成功");
+        dataMap.data = map;
+        return dataMap;
+    }
+	
+	
+	/**
+	 * 添加会议基本信息
+	 * @author xilongfei
+	 * @creation 2017年11月10日
+	 * @param confs		会议信息
+	 * @return
+	 */
+	public DataMap addConfsInfo(Confs confs){
+		DataMap dataMap = new DataMap();
+		int num = confsMapper.insertSelective(confs);
+		if(num < 1){
+			dataMap.addMsg_diy_obj(null, 6, "创建信息失败,请重试");
+			return dataMap;
+		}
+		dataMap.addMsg_obj(confs.getId(), 0); //存入数据
+		return dataMap;
+	}
+	
+	/**
+	 * 保存(修改)会议基本信息
+	 * @author xilongfei
+	 * @creation 2017年11月10日
+	 * @param confs		会议信息
+	 * @param msg		返回信息
+	 * @return
+	 */
+	public DataMap alterConfsInfo(Confs confs, String msg ){
+		DataMap dataMap = new DataMap();
+		int num = confsMapper.updateByPrimaryKeySelective(confs);
+		if(num < 1){
+			dataMap.addMsg_diy_obj(null, 6, "保存信息失败,请重试");
+			return dataMap;
+		}
+		dataMap.addMsg_diy_obj(confs.getId(), 0, msg);
+		return dataMap;
+	}
+	
+	/**
+	 * 查询会议信息(单表),根据会议id
+	 * @author xilongfei
+	 * @creation 2017年12月13日
+	 * @param id	会议id
+	 * @return 会议信息
+	 */
+	public Confs selectConfs(String id){
+		return confsMapper.selectByPrimaryKey(id);
+	}
+	
+	/**
+	 * 查询会议报名填写选项
+	 * @author xilongfei
+	 * @creation 2017年12月13日
+	 * @param enlist 会议报名填写选项
+	 * @param type 类型  1已添加  2未添加
+	 * @return
+	 */
+	public List<Map<String, Object>> selctEnlistInfo(String enlist , int type) {
+		String table_name = " confs_enlist as obj  "; // 表名
+		String find = " obj.id, obj.ename "; // 显示字段
+		String where = " obj.id in("+enlist+") "; // 条件
+		if(type==2){
+			where = " not obj.id in("+enlist+") ";
+		}
+		List<Map<String, Object>> list = this.selectAll(table_name, find, where, null);
+		return list;
+	}
+	
+	/**
+	 * 会议报名甚设置
+	 * @author xilongfei
+	 * @creation 2017年12月14日
+	 * @param id		会议id
+	 * @param enlist	报名填选id 多个已","相隔
+	 * @param shstart	开始时间
+	 * @param shend		结束时间
+	 * @return
+	 * @throws ParseException 
+	 */
+	public DataMap addConfsSystem(String id ,String enlist, String shstart, String shend) throws ParseException {
+		DataMap dataMap = new DataMap();
+		if (id == null || id.trim().equals("")) {
+			dataMap.addMsg_diy_obj(null, 6, "未找到会议信息");
+			return dataMap;
+		}
+		if (enlist == null || enlist.trim().equals("")) {
+			dataMap.addMsg_diy_obj(null, 6, "报名填写未确认");
+			return dataMap;
+		}
+		if (shstart == null || shstart.trim().equals("")) {
+			dataMap.addMsg_diy_obj(null, 6, "请设置报名开始时间");
+			return dataMap;
+		}
+		if (enlist == null || enlist.trim().equals("")) {
+			dataMap.addMsg_diy_obj(null, 6, "请设置报名截止时间");
+			return dataMap;
+		}
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+		Confs confs = new Confs(id, sdf.parse(shstart), sdf.parse(shend), enlist);
+		dataMap = this.alterConfsInfo(confs, "以保存");
+		return dataMap;
+	}
+	
+	/**
+	 * 会议详情-基本信息,描述信息
+	 * @author xilongfei
+	 * @creation 2017年12月14日
+	 * @param id 会议id
+	 * @return
+	 */
+    public DataMap getConfs(String id ,int type) {
+        DataMap dataMap = new DataMap();
+        if(id==null || id.trim().equals("")){
+        	dataMap.addMsg_diy_obj(null, 6, "未找到该会议");
+        	return dataMap;
+        }
+        String table_name = " confs as obj  "; // 表名
+        StringBuilder find = new StringBuilder(); // 显示字段
+        if(type==2){
+        	find.append(" obj.introd, obj.imgs"); 
+        }else{
+        	find.append(" obj.id, obj.cname, obj.cimg, obj.addr, obj.brief,").
+        		append(" DATE_FORMAT(obj.bhstart,'%Y-%m-%d')AS days, DATE_FORMAT(obj.bhstart,'%h:%m') as statime, DATE_FORMAT(obj.bhend,'%h:%m') as endtime");
+        }
+        String where = " obj.id='"+id+"' and obj.isdelete=1"; // 条件
+        Map<String, Object> map = this.selectMap(table_name, find.toString(), where);
+        if(map==null){
+        	dataMap.addMsg_diy_obj(null, 6, "该会议已不存在");
+        }else{
+        	dataMap.addMsg_map(map, 0);
+        }
+        return dataMap;
+    }
+}

@@ -1,0 +1,98 @@
+package net.emof.building.web.service;
+
+import java.util.Map;
+
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import net.emof.building.admin.customEXC.EhCacheSessiconException;
+import net.emof.building.admin.service.SqlToolseService;
+import net.emof.building.dao.ConfsTrailerMapper;
+import net.emof.building.ehcache.EhSessicon;
+import net.emof.building.model.ConfsTrailer;
+import net.emof.building.model.Users;
+import net.emof.building.util.DataMap;
+import net.emof.building.util.ToolsUtil;
+
+@Service
+public class ConfsTrailer_web_Service extends SqlToolseService{
+	
+	// log4j日志
+	private final Logger logger = Logger.getLogger(this.getClass());
+	
+	@Autowired
+	private ConfsTrailerMapper trailerMapper;
+	
+	/**
+	 * 添加会议-下期预告
+	 * @author xilongfei
+	 * @creation 2017年12月29日
+	 * @param confid	会议ID
+	 * @param token		登陆者识别标识
+	 * @param introd	预告信息
+	 * @param imgs		预告配图
+	 * @return
+	 * @throws EhCacheSessiconException
+	 */
+	public DataMap insertTrailerInfo(String confid, String token, String introd, String imgs ) throws EhCacheSessiconException{
+		DataMap dataMap = new DataMap();
+		if (confid == null || confid.trim().equals("")) {
+			dataMap.addMsg_diy_obj(null, 6, "未找到会议信息");
+			return dataMap;
+		}
+		if (token == null || token.trim().equals("")) {
+			dataMap.addMsg_diy_obj(null, 6, "未使用标识");
+			return dataMap;
+		}
+		Users users = EhSessicon.getTokenInfo(token);
+		if (users == null) {
+			dataMap.addMsg_diy_list(null, 5, "登录超时，请重新登录");
+			return dataMap;
+		}
+		if (introd == null || introd.trim().equals("")) {
+			dataMap.addMsg_diy_obj(null, 6, "请填写下期预告信息");
+			return dataMap;
+		}
+		Map<String, Object> map = (Map<String, Object>) selectTrailer(confid).data.get("row");
+		int num = 0;
+		if(map != null) {
+			num = trailerMapper.deleteByPrimaryKey(map.get("id").toString());
+			if(num < 1) {
+				dataMap.addMsg_diy_obj(null, 6, "添加失败,请重试");
+				return dataMap;
+			}
+		}
+		ConfsTrailer trailer = new ConfsTrailer(ToolsUtil.get_diy_ID(), users.getId(), users.getCodes(), 
+				confid, imgs==null ? "":imgs, introd);
+		num = trailerMapper.insertSelective(trailer);		
+		if(num < 1) {
+			dataMap.addMsg_diy_obj(null, 6, "添加失败,请重试");
+			return dataMap;
+		}
+		dataMap.addMsg_obj(trailer.getId(), 0);
+		return dataMap;
+	}
+	
+	/**
+	 * 查询会议-下期预告
+	 * @author xilongfei
+	 * @creation 2017年12月29日
+	 * @param confid	会议ID
+	 * @return
+	 */
+	public DataMap selectTrailer(String confid) {
+		DataMap dataMap = new DataMap();
+		if (confid == null || confid.trim().equals("")) {
+			dataMap.addMsg_diy_obj(null, 6, "未找到会议信息");
+			return dataMap;
+		}
+		String table_name = " confs_trailer "; // 表名
+		String find = " id, introd, imgs "; // 显示字段
+		String where = " confsid = '"+confid+"'"; // 条件
+		Map<String, Object> map = this.selectMap(table_name, find, where);
+		dataMap.addMsg_obj(map, 0);
+		return dataMap;
+	}
+	
+}

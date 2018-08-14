@@ -1,0 +1,129 @@
+$(function(){
+    var top=0;
+    $(".Phone").click(function(){
+        $(".hostBg").show();
+        top=$(window).scrollTop();
+        $(".meetPreview").css("top",-top+"px");
+        $(".meetPreview").addClass("add");
+
+        $(".hostSure").click(function(){
+            $(".hostBg").hide();
+            $('.meetPreview').removeClass('add');
+            $(window).scrollTop(top);
+        });
+    });
+
+    /*会议描述*/
+    $("#mDes").click(function(){
+    	$("#pubMeet").hide();
+    	$("#meetDes").show();
+    });
+    $("#mDesHeader").click(function(){
+    	$("#pubMeet").show();
+    	$("#meetDes").hide();
+    });
+
+	/*会议流程*/
+	$("#mFlow").click(function(){
+		$("#pubMeet").hide();
+		$("#meetFlow").show();
+	});
+	$("#mFlowHeader").click(function(){
+		$("#pubMeet").show();
+		$("#meetFlow").hide();
+	});
+	$("#flowBtn").click(function(){
+		$("#pubMeet").show();
+		$("#meetFlow").hide();
+	});
+    //
+	// $("#addFlow").click(function(){
+	// 	var num = $(".flowInfo>div").length+1;
+	// 	var txt="<div class='fInfoList'><ul><li class='flow' id='flow' style='height: 0.68rem;line-height: 0.68rem;'><span>流程<span class='num'>"+num+"</span></span><button></button></li><li class='fStartTime'><span>开始时间<b>*</b></span><span class='flowStartTime'>请选择</span></li><li class='fEndTime'><span>结束时间<b>*</b></span><span class='flowEndTime'>请选择</span></li><li class='flowDes' style='height: 2.67rem'><span>流程描述<b>*</b></span><textarea placeholder='请填写会议描述'></textarea></li></ul></div>";
+	// 	$(".flowInfo").append(txt);
+	// 	num++;
+    //
+	// 	$(".fInfoList>ul>li>button").click(function(){
+	// 		// $(this).parent().parent().parent().addClass("animate");
+	// 		$(this).parent().parent().parent().remove();
+	// 		var num2 = $(".fInfoList").length;
+	// 		for(var i=0;i<num2;i++){
+	// 			$(".fInfoList>ul>li:first-child").eq(i).find($(".num")).html(i+1);
+	// 		}
+	// 	});
+	// });
+	//
+	// /*提交会议流程*/
+	// $("#flowBtn").click(function(){
+	// 	/*时间比较*/
+	//     var tim1=$("#flowStartTime").attr('data-year')+$("#flowStartTime").attr('data-month')+$("#flowStartTime").attr('data-hour')+$("#flowStartTime").attr('data-minute');
+	//     var tim2=$("#flowEndTime").attr('data-year')+$("#flowEndTime").attr('data-month')+$("#flowEndTime").attr('data-hour')+$("#flowEndTime").attr('data-minute');
+	//     if(tim2-tim1<0){
+	//         alert("结束时间不能小于开始时间");
+	//     }
+	// });
+    //
+    //
+	// /*显示会议嘉宾*/
+	$("#mGuest").click(function(){
+		$("#pubMeet").hide();
+		$("#meetGuest").show();
+	});
+	$("#mGueHeader").click(function(){
+		$("#meetGuest").hide();
+		$("#pubMeet").show();
+	});
+	$("#guestBtn").click(function(){
+		$("#meetGuest").hide();
+		$("#pubMeet").show();
+	});
+	//
+	// $("#addGuest").click(function(){
+	// 	var num = $(".guestInfo > div").length+1;
+	// 	var txt = "<div><ul><li class='guest'><img src='img/guestP.png'><span>嘉宾<span class='num'>"+num+"</span></span><button></button></li><li><span>嘉宾名称<b>*</b></span><input type='text' placeholder='请填写嘉宾名称'></li><li><span>嘉宾头衔<b>*</b></span><input type='text' placeholder='请填写嘉宾头衔'></li><li id='personImg'><span>嘉宾照片<b>*</b></span><input class='guestPhoto' id='prePersonImg' type='file' onchange='previewImage(this)'><div id='perImg'><p>请上传</p><img src='img/tm.png' id='perImgHead' onclick='$('#prePersonImg').click();'></div></li><li class='introduce' style='height: 2.67rem'><span>嘉宾简介</span><textarea placeholder='选填'></textarea></li></ul></div>";
+	// 	$(".guestInfo").append(txt);
+	// 	num++;
+	// 	$("button").click(function(){
+	// 		$(this).parent().parent().parent().remove();
+	// 		var sy=$(".guestInfo>div").length;
+	// 		for(var i=0;i<sy;i++){
+	// 			$(".guestInfo>div>ul>li:first-child").eq(i).find($('.num')).html(i+1);
+	// 		}
+	// 	});
+	// });
+
+
+	/*显示报名设置*/
+	$("#mAddName").click(function(){
+		$("#pubMeet").hide();
+		$("#addName").show();
+	});
+	$("#mEnName").click(function(){
+		$("#addName").hide();
+		$("#pubMeet").show();
+	});
+
+	$(".defind button").click(function(){
+		var txt=$(this).prev('span').text();
+		$(".infoContent ul").append("<li><span>"+txt+"</span><button></button></li>");
+		$(this).parent().remove();
+
+		$(".infoContent button").click(function(){
+			var txt2=$(this).prev('span').text();
+			$(".defind>ul").append("<li><span>"+txt2+"</span><button></button></li>");
+			$(this).parent().remove();
+		});	
+	});
+
+	/*提交*/
+	$("#meetSub").click(function(){
+		/*时间比较*/
+	    var str1=$("#mStartTime").attr('data-year')+$("#mStartTime").attr('data-month')+$("#mStartTime").attr('data-hour')+$("#mStartTime").attr('data-minute');
+	    var str2=$("#mEndTime").attr('data-year')+$("#mEndTime").attr('data-month')+$("#mEndTime").attr('data-hour')+$("#mEndTime").attr('data-minute');
+	    if(str2-str1<0){
+	        alert("结束时间不能小于开始时间");
+	    }
+	});
+	
+
+});

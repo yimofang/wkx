@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+    <title>发布会议</title>
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/publishMeet.css">
+    <link rel="stylesheet" href="css/meet.css">
+    <link rel="stylesheet" href="css/iosSelect.css">
+    <script src="js/jquery-2.1.4.min.js"></script>
+    <script src="js/rem.js"></script>
+    <script src="js/iosSelect.js"></script>
+    <script src="js/removeHeader.js"></script>
+    <script src="jscript/publishMeet.js"></script>
+    <!--会议描述图片上传-->
+    <script src="js/exif.js"></script>
+    <!--上传封面和头像-->
+    <script src="js/uploadImg.js"></script>
+        <!--地图选址-->
+    <link rel="stylesheet" href="http://cache.amap.com/lbs/static/main.css?v=1.0?v=1.0" />
+    <script type="text/javascript" src="http://webapi.amap.com/maps?v=1.4.3&key=9b7bdc963a3b447ef43283bef0b6f1c5"></script>
+    <!--ui组件库-->
+    <script src="//webapi.amap.com/ui/1.0/main.js"></script>
+    <style type="text/css">
+    .publish-article-content{
+        padding:15px; 
+        background: #fff;
+        position: relative;
+    }
+    .article-content{
+        min-height: 3rem;
+        background: #f5f5f5;
+        padding:0.1rem;
+        border-radius: 0.08rem;
+        user-select: text;
+        overflow-y: auto;
+        outline: none;
+        cursor: text;
+    }
+    .publish-article-content .footer-btn{
+        position: absolute;
+        top: 0;
+        right: 15px;
+        text-align: center;
+    }
+    .upload-button{
+        margin-top: 15px
+    }
+    .title-tips{
+        line-height: 0.78rem
+    }
+       
+</style>
+
+</head>
+<body>
+    <div id="pubMeet" >
+        <!--header-->
+        <div class="Header">
+            <a href="javascript:history.go(-1);"></a>发布会议
+        </div>
+        <!--content-->
+        <div class="Content Release MarginTop deleteHeaderPM">
+            <!--上传图片-->
+            <div class="UploadImg" >
+                <div id="preview">
+                    <img id="imghead" border="none" src="img/bgmeet.png" width="90" height="90" onclick="$('#previewImg').click();">
+                </div>
+                <input type="file" onchange="previewImage(this)" style="display: none;" id="previewImg">
+            </div>
+            <!--填写信息-->
+            <div class="MeetingInfo">
+                <ul>
+                    <li id="meetType">
+                        <span>会议类型<b>*</b></span>
+                        <span id="typeId">请选择</span>
+                    </li>
+                    <li>
+                        <span>会议名称<b>*</b></span>
+                        <input type="text" placeholder="请填写会议名称" id="Mname">
+                    </li>
+                    <li class="box" id="meetStartTime">
+                        <span>开始时间<b>*</b></span>
+                        <span data-year="" data-month="" data-date="" id="mStartTime">请选择</span>
+                    </li>
+                    <li class="box" id="meetEndTime">
+                        <span>结束时间<b>*</b></span>
+                        <span data-year="" data-month="" data-date="" id="mEndTime">请选择</span>
+                    </li>
+                    <li class="map">
+                        <span>地图选址<b>*</b></span>
+                        <span class="mapShow" style="float: right;width: 0.5rem;" id="getmap" onclick="pubMap()"></span>
+                        <input type="text" class="mapShow" id="mapShow" style="background-image:none;" >
+                    </li>
+                    <li>
+                        <span>详细地址<b>*</b></span>
+                        <input type="text" placeholder="请填写会议地点" id="Maddr">
+                    </li>
+                    <li>
+                        <span>主办方<b>*</b></span>
+                        <input type="text" placeholder="请填写主办方" id="Mzbf">
+                    </li>
+                    <li>
+                        <span>联系电话<b>*</b></span>
+                        <input type="text" placeholder="请填写联系电话" id="Mphone">
+                    </li>
+                </ul>
+                <!-- <div class="Jiange"></div> -->
+                <ul>
+                    <li id="mDes" onclick="mdes()">
+                        <span>会议描述</span>
+                        <p>请填写会议描述 <s></s></p>
+                    </li>
+                    <li id="mFlow" onclick="mFlow()">
+                        <span>会议流程</span>
+                        <p>请填写会议流程 <s></s></p>
+                    </li>
+                    <li id="mGuest" onclick="mGuest()">
+                        <span>会议嘉宾</span>
+                        <p>请填写会议嘉宾 <s></s></p>
+                    </li>
+                    <li id="mNext" onclick="mNext()">
+                        <span>下期预告</span>
+                        <p>请填写下期预告 <s></s></p>
+                    </li>
+                </ul>
+                <div class="Jiange"></div>
+                <ul>
+                    <li id="mAddName" onclick="mAddName()">
+                        <span>报名设置</span>
+                        <p><s></s></p>
+                    </li>
+                </ul>
+            </div>
+            <!--提交-->
+            <div class="submit" id="meetSub" onclick="PostMeet()">发布</div>
+        </div>
+    </div>
+    <!--会议类型弹出-->
+    <div class="container"></div>
+
+    <!--隐藏会议描述-->
+    <div id="meetDes" style="display: none">
+        <!--header-->
+        <div class="Header">
+            <a id="mDesHeader" href="javascript:void(0);" onclick="meetDes_back()"></a>会议描述
+        </div>
+        <!--descript-->
+        <div class="descript deleteHeader">
+            <ul>
+                <li class="desD">会议内容</li>
+                <li class="desD_content">
+                    <!-- <textarea class="editDetail" id="detail" placeholder="请填写会议描述"></textarea>  -->
+                    <div style="width:100%;margin: 0 auto;">
+                    <div class="publish-article-content">
+                        <div class="title-tips">正文:</div>
+                        <input type="hidden" id="target">
+                        <div class="article-content" id="content3" contenteditable="true">
+                            <div class="placeholader" style="pointer-events: none;">请输入文章正文内容</div>
+                        </div>
+                        <div class="footer-btn g-image-upload-box">
+                            <div class="upload-button">
+                                <span class="upload" style="display: block;line-height: 0.78rem;"><i class="upload-img"></i>插入图片</span>
+                                <input class="input-file" id="imageUpload3" type="file" name="fileInput" accept="image/*" style="position:absolute;left:0;top:0;opacity:0;width:100%;height: 0.78rem;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </li>
+            </ul>
+        </div>
+        <!--addImg-->
+      <!--   <div class="meetDesImg">
+            <div style="width:1.2rem;height:1.2rem;border: 0.01rem solid #ddd;margin-left: 2.5%;">
+                <img id="imgheada" border="none" src="img/addimg.png" onclick="$('#Mdesimg').click();" style="width: 0.8rem;height:0.8rem;margin: 0.2rem 0 0 0.2rem; ">
+            </div>
+            <input type="file" onchange="DesImage(this)" style="display: none;" id="Mdesimg">
+            <div id="addimg">
+
+            </div>
+            <input type="hidden" value="" id="desimgall">
+        </div>
+         -->
+        <!--submit-->
+        <div class="flowBtn">
+            <span class="return" onclick="meetDes_back()">返回</span>
+            <span class="addFlow" onclick="meetDes()">保存</span>
+        </div>
+        <!--<div class="btn" style="margin-top: 0.66rem" onclick="meetDes()">保存</div>-->
+    </div>
+
+    <!--隐藏会议流程-->
+    <div id="meetFlow" style="display: none">
+        <!--会议列表-->
+        <div class="flowList deleteHeader">
+            <!--header-->
+            <div class="Header">
+                <a id="mFlowHeader" class="return" href="javascript:void(0)" onclick="addflow_back()"></a>会议流程
+            </div>
+            <!--未添加-->
+            <div class="unHave">
+                <img src="img/survey.png">
+                <p>你还没有添加会议流程</p>
+            </div>
+            <!--已添加-->
+            <div class="havaMeetFlow" style="display: none">
+                <div class="flowInfo" id="flow_list_all">
+                </div>
+                <!--遮罩-->
+                <div class="delShade" style="display: none">
+                    <div class="delShadeCon">
+                        <div class="top"><p>温馨提示</p></div>
+                        <div class="content">
+                            <p>确定删除此项会议流程吗？</p>
+                            <p><span class="conCel" id="conCel">取消</span><span class="conSure" id="conSure">确定</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="flowBtn">
+                <span class="return" onclick="addflow_back()">返回</span>
+                <span class="addFlow" id="addFlow" onclick="AddFlow()">添加会议流程</span>
+            </div>
+        </div>
+        <!--添加流程-->
+        <div class="addFlowInfo deleteHeader" style="display: none"> 
+            <!--header-->
+            <div class="Header">
+                <a id="aFlowHeader" class="cancel" onclick="clearFlow()" href="javascript:void(0)"></a>会议流程
+            </div>
+            <div class="flowInfo deleteHeader">
+                <div class="fInfoList">
+                    <ul>
+                        <li class="flow" id="Addflowlist">
+                            <span>流程</span>
+                        </li>
+                        <li class="fStartTime" id="meetFlowSTime">
+                            <span>开始时间<b>*</b></span>
+                            <span class="flowStartTime" id="flowStartTime" data-year="" data-month="" data-date="">请选择</span>                            
+                        </li>
+                        <li class="fEndTime" id="meetFlowETime">
+                            <span>结束时间<b>*</b></span>
+                            <span class="flowEndTime" id="flowEndTime" data-year="" data-month="" data-date="">请选择</span>
+                        </li>
+                        <li class="flowDes">
+                            <span>流程描述<b>*</b></span>
+                            <textarea placeholder="请填写会议描述" class="flowDesTxt" id="flowDesTxt"></textarea>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <!--submit-->
+            <div class="cancel" id="flowCancel" onclick="clearFlow()">返回</div>
+            <div class="save" id="flowSave" onclick="AddFlowList()">保存</div>
+
+        </div> 
+        <!--编辑流程-->
+        <div class="editFlow deleteHeader" style="display: none">
+            <!--header-->
+            <div class="Header">
+                <a id="eFlowHeader" class="editCancel"  href="javascript:void(0)" onclick="liuchengback()"></a>会议流程
+            </div>
+            <div class="flowInfo deleteHeader">
+                <div class="fInfoList">
+                    <ul>
+                        <li class="flow" id="editFlow">
+                            <span>流程<span id="editNumber"></span></span>
+                        </li>
+                        <li class="fStartTime" id="editFlowStartTime">
+                            <span>开始时间<b>*</b></span>
+                            <span class="flowStartTime" id="editFlowSTime" data-year="" data-month="" data-date="">请选择</span>                            
+                        </li>
+                        <li class="fEndTime" id="editFlowEndTime">
+                            <span>结束时间<b>*</b></span>
+                            <span class="flowEndTime" id="editFlowETime" data-year="" data-month="" data-date="">请选择</span>
+                        </li>
+                        <li class="flowDes">
+                            <span>流程描述<b>*</b></span>
+                            <textarea placeholder="请填写会议描述" class="flowDesTxt" id="editFlowTxt"></textarea>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <!--submit-->
+            <div class="editSave" id="editSave">保存编辑信息</div>
+            <div class="editCancel" id="editCancel" onclick="liuchengback()">返回</div>
+        </div> 
+    </div>
+
+    <!--隐藏会议嘉宾-->
+    <div id="meetGuest" style="display: none">
+        <!--嘉宾列表-->
+        <div class="guestList deleteHeader">
+            <!--header-->
+            <div class="Header">
+                <a id="mGueHeader" class="returnGuest" href="javascript:void(0);"></a>会议嘉宾
+            </div>
+            <!--未添加-->
+            <div class="unHaveGuest">
+                <img src="img/survey.png">
+                <p>您还没有添加嘉宾</p>
+            </div>
+            <!--已添加-->
+            <div class="haveGuest" style="display: none">
+                <div class="guestInfo">
+                    <!-- <div></div> -->
+                </div>
+            </div>
+            <!--遮罩-->
+            <div class="gueDelShade" style="display: none">
+                <div class="gueDelCon">
+                    <div class="top"><p>温馨提示</p></div>
+                    <div class="content">
+                        <p>确定删除此项会议嘉宾吗？</p>
+                        <p><span class="gueCel" id="gueCel">取消</span><span class="gueSure" id="gueSure">确定</span></p>
+                    </div>
+                </div>
+            </div>
+            <div class="guestBtn">
+                <span class="returnGuest" id="returnGuest" onclick="GuestBack()">返回</span>
+                <span class="addGuest" id="addGuest" onclick="AddGuest()">添加会议嘉宾</span>
+
+            </div>
+        </div> 
+        <!--添加嘉宾-->
+        <div class="addGuestInfo deleteHeader" style="display: none">
+            <!--header-->
+            <div class="Header">
+                <a id="addGueHeader" onclick="guestReturn()" href="javascript:viod(0)"></a>会议嘉宾
+            </div>
+            <div class="guestInfo">
+                <div class="gInfoList">
+                    <ul>
+                        <li class="guest" id="addguestlist">
+                            <span class="gueInfo">嘉宾<span id="gueInfonum" ></span></span>
+                        </li>
+                        <li>
+                            <span>嘉宾名称<b>*</b></span>
+                            <input id="addguestName" type="text" placeholder="请填写嘉宾名称">
+                        </li>
+                        <li>
+                            <span>嘉宾头衔<b>*</b></span>
+                            <input id="addguestHonor" type="text" placeholder="请填写嘉宾头衔">
+                        </li>
+                        <li class="guePhoto">
+                            <span>嘉宾照片<b>*</b></span>
+                            <input class="guestPhoto" id="addprePersonImg" type="file" onchange="guestImage(this)">
+                            <div id="addperImg" class="perImg ">
+                                <p class="guePhotoUp">请上传</p>
+                                <img src="img/tm.png" id="perImgHead" class="perImgHead" onclick="$('#prePersonImg').click();">
+                            </div>
+                        </li>
+                        <li class="introduce" style="height: 2.67rem">
+                            <span>嘉宾简介</span>
+                            <textarea placeholder="选填" class="guestDesTxt" id="addguestDesTxt"></textarea>
+                        </li>
+                    </ul>
+                </div> 
+            </div> 
+            <!--submit-->
+            <div class="save" id="addGuestSave" onclick="AddGuestSave()">保存</div>
+            <div class="cancel" id="addGuestCancel" onclick="guestReturn()">取消填写</div> 
+        </div>
+        <!--编辑嘉宾-->
+        <div class="editGuest deleteHeader" style="display: none">
+            <!--header-->
+            <div class="Header">
+                <a id="editGueHeader" onclick="editReturn()" href="javascript:viod(0)"></a>会议嘉宾
+            </div>
+            <div class="guestInfo">
+                <div class="gInfoList">
+                    <ul>
+                        <li class="guest" id="guest">
+                            <span class="gueInfo">嘉宾<span class="guestNum"></span></span>
+                        </li>
+                        <li>
+                            <span>嘉宾名称<b>*</b></span>
+                            <input id="guestName" type="text" placeholder="请填写嘉宾名称">
+                        </li>
+                        <li>
+                            <span>嘉宾头衔<b>*</b></span>
+                            <input id="guestHonor" type="text" placeholder="请填写嘉宾头衔">
+                        </li>
+                        <li class="guePhoto">
+                            <span>嘉宾照片<b>*</b></span>
+                            <input class="guestPhoto" id="EprePersonImg" type="file" onchange="EguestImage(this)">
+                            <div id="EaddperImg" class="perImg">
+                                <!--<p class="guePhotoUp">请上传</p>-->
+                                <img src="img/tm.png" id="EperImgHead" class="perImgHead" onclick="$('#EprePersonImg').click();">
+                            </div>
+                        </li>
+                        <li class="introduce" style="height: 2.67rem">
+                            <span>嘉宾简介</span>
+                            <textarea placeholder="选填" class="guestDesTxt"></textarea>
+                        </li>
+                    </ul>
+                </div> 
+            </div> 
+            <!--submit-->
+            <div class="save" id="editGuestSave">保存编辑信息</div>
+            <div class="cancel" id="editGuestCancel" onclick="editReturn()">取消</div> 
+        </div>
+    </div>
+
+    <!--隐藏报名设置-->
+    <div id="addName" style="display: none">
+        <!--header-->
+        <div class="Header">
+            <a id="mEnName" href="javascript:void(0);"></a>报名设置
+        </div>
+        <!--enterName-->
+        <div class="enterName deleteHeader">
+            <ul>
+                <li class="nStartTime" id="nStartTime">
+                    <span>开始时间<b>*</b></span>
+                    <span class="enterTime" id="nameStartTime">请选择</span>
+                </li>
+                <li class="nEndTime" id="nEndTime">
+                    <span>结束时间<b>*</b></span>
+                    <span class="enterTime" id="nameEndTime">请选择</span>
+                </li>
+                <li class="enterInfo">
+                    <span>报名填写</span>
+                    <div class="infoContent">
+                        <ul>
+                            <li><span data-id="1">姓名</span><button style="display: none"></button></li>
+                            <li><span data-id="2">手机</span><button style="display: none"></button></li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="defind">
+                    <ul>
+                        <li><span data-id="3">邮箱</span><button></button></li>
+                        <li><span data-id="4">单位</span><button></button></li>
+                        <li><span data-id="5">职位</span><button></button></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        <!--submit-->
+        <!--<div class="btn">保存</div>-->
+        <div class="save" id="bmsave" onclick="BMsave()">保存</div>
+        <div class="cancel" id="bmback" >取消</div>
+    </div>
+
+    <!--下期预告-->
+    <div id="meetNext" style="display: none">
+        <!--header-->
+        <div class="Header">
+            <a id="mNextHeader" href="javascript:void(0);" onclick="meetNext_back()"></a>下期预告
+        </div>
+        <!--descript-->
+        <div class="descript deleteHeader">
+            <ul>
+                <li class="desD">下期预告内容</li>
+                <li class="desD_content">
+                    <!-- <textarea class="editDetail" id="nextdetail" placeholder="请填写下期预告内容"></textarea> -->
+
+                    <div style="width:100%;margin: 0 auto;">
+                    <div class="publish-article-content">
+                        <div class="title-tips">正文:</div>
+                        <input type="hidden" id="target">
+                        <div class="article-content" id="content4" contenteditable="true">
+                            <div class="placeholader" style="pointer-events: none;">请输入文章正文内容</div>
+                        </div>
+                        <div class="footer-btn g-image-upload-box">
+                            <div class="upload-button">
+                                <span class="upload" style="display: block;line-height: 0.78rem;"><i class="upload-img"></i>插入图片</span>
+                                <input class="input-file" id="imageUpload4" type="file" name="fileInput" accept="image/*" style="position:absolute;left:0;top:0;opacity:0;width:100%;height: 0.78rem;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </li>
+            </ul>
+        </div>
+        <!--addImg-->
+        <!-- <div class="meetDesImg">
+            <div style="width:1.2rem;height:1.2rem;border: 0.01rem solid #ddd;margin-left: 2.5%;">
+                <img id="nextimgheada" border="none" src="img/addimg.png" onclick="$('#MNextimg').click();" style="width: 0.8rem;height:0.8rem;margin: 0.2rem 0 0 0.2rem; ">
+            </div>
+            <input type="file" onchange="NextImage(this)" style="display: none;" id="MNextimg">
+            <div id="nextaddimg">
+             
+            </div>
+            <input type="hidden" value="" id="nextdesimgall">
+        </div> -->
+
+        <!--submit-->
+        <div class="flowBtn">
+            <span class="return" onclick="meetNext_back()">返回</span>
+            <span class="addFlow" onclick="meetNextSave()">保存</span>
+        </div>
+        <!--<div class="btn" style="margin-top: 0.66rem" onclick="meetDes()">保存</div>-->
+    </div>
+    <div id='container2' style="display: none"></div>
+    <div id="tip" style="display: none"></div>
+    <!--地图选址-->
+    <iframe id="pubMap" style="display: none;border: 0;" data-name="" data-loca=""  src="https://m.amap.com/picker/?center=116.3972,39.9696&key=9b7bdc963a3b447ef43283bef0b6f1c5"></iframe>
+
+    <div id="reqtoken" class="reqtoken"></div>
+
+    <script src="jscript/time1.js"></script>
+
+
+    <!--地图-->
+<script>
+    function pubMap(){
+        $('#pubMeet').hide();
+        $("#pubMap").show();
+
+    }
+
+    (function(){
+        // $(".mapShow").css('background-image','none');
+        // $("#map").show();
+        var iframe = document.getElementById('pubMap').contentWindow;
+        document.getElementById('pubMap').onload = function(){
+          iframe.postMessage('hello','https://m.amap.com/picker/');
+        };
+        window.addEventListener("message", function(e){
+          // alert('您选择了:' + e.data.name + ',' + e.data.location);
+          $("iframe").attr('data-name',e.data.name);
+          $("iframe").attr('data-loca',e.data.location);
+          // $(".mapShow").css('background-image','none');
+          $(".mapShow").val(e.data.name);
+          $("iframe").hide();
+          $('#pubMeet').show();
+          
+        }, false);
+   }());
+</script>
+    <script type="text/javascript">
+        /***************************************
+         由于Chrome、IOS10等已不再支持非安全域的浏览器定位请求，为保证定位成功率和精度，请尽快升级您的站点到HTTPS。
+         ***************************************/
+        var map, geolocation;
+        //加载地图，调用浏览器定位服务
+        map = new AMap.Map('container2', {
+            resizeEnable: true
+        });
+        map.plugin('AMap.Geolocation', function() {
+            geolocation = new AMap.Geolocation({
+                enableHighAccuracy: true,//是否使用高精度定位，默认:true
+                timeout: 10000,          //超过10秒后停止定位，默认：无穷大
+                buttonOffset: new AMap.Pixel(10, 20),//定位按钮与设置的停靠位置的偏移量，默认：Pixel(10, 20)
+                zoomToAccuracy: true,      //定位成功后调整地图视野范围使定位位置及精度范围视野内可见，默认：false
+                buttonPosition:'RB'
+            });
+            map.addControl(geolocation);
+            geolocation.getCurrentPosition();
+            AMap.event.addListener(geolocation, 'complete', onComplete);//返回定位信息
+            AMap.event.addListener(geolocation, 'error', onError);      //返回定位出错信息
+        });
+        //解析定位结果
+        function onComplete(data) {
+            var str=['定位成功'];
+            //alert(111);
+            str.push('经度：' + data.position.getLng());
+            str.push('纬度：' + data.position.getLat());
+            if(data.accuracy){
+                str.push('精度：' + data.accuracy + ' 米');
+            }//如为IP精确定位结果则没有精度信息
+            str.push('是否经过偏移：' + (data.isConverted ? '是' : '否'));
+            document.getElementById('tip').innerHTML = str.join('<br>');
+            $('#pubMap').attr('src','https://m.amap.com/picker/?center='+data.position.getLng()+','+data.position.getLat()+'&key=9b7bdc963a3b447ef43283bef0b6f1c5')
+        }
+        //解析定位错误信息
+        function onError(data) {
+            document.getElementById('tip').innerHTML = '定位失败';
+            $('#pubMap').attr('src','https://m.amap.com/picker/?center=116.398024,39.909207&key=9b7bdc963a3b447ef43283bef0b6f1c5');
+        }
+    </script>
+    
+    <script src="js/index.min.js"></script>
+    <script src="js/index.js"></script>
+</body>
+</html>

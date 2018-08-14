@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>微会议</title>
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/meetData.css">
+</head>
+
+<body>
+<div class="topLine"></div>
+<div class="header"></div>
+
+<div class="left_nav">
+    <ul class="nav_one">
+        <li class="nav_manage active">
+            <a href="meetList.html">
+                <b class="active"></b>
+                <span>会议管理</span>
+            </a>
+        </li>
+        <li class="nav_release">
+            <a href="meetPublish.html">
+                <b ></b>
+                <span>发布会议</span>
+            </a>
+        </li>
+        <li class="nav_pwd">
+            <a href="password.html">
+                <b></b>
+                <span>修改密码</span>
+            </a>
+        </li>
+    </ul>
+    <ul class="nav_two" style="display: block;">
+        <li >
+            <a href="javascript:void(0)" data-url="meetModify.html">会议修改</a>
+        </li>
+        <li>
+            <a href="javascript:void(0)" data-url="meetCode.html">二维码 </a>
+        </li>
+        <li>
+            <a href="javascript:void(0)" data-url="meetName.html">名单管理 </a>
+        </li>
+        <li  class="on">
+            <a href="javascript:void(0)" data-url="meetData.html">资料管理 </a>
+        </li>
+        <li >
+            <a href="javascript:void(0)" data-url="meetCount.html">会议统计 </a>
+        </li>
+        <li>
+            <a href="javascript:void(0)" data-url="meetSurvey.html">调研问卷 </a>
+        </li>
+        <li>
+            <a href="javascript:void(0)" data-url="meetBriefing.html">简报管理 </a>
+        </li>
+        <li>
+            <a href="javascript:void(0)" data-url="meetSign.html">上传签到表 </a>
+        </li>
+    </ul>
+</div>
+<div class="right_wrapper">
+    <div class="top">
+        <span>会议管理 / 资料管理</span>
+    </div>
+    <div class="wrapper">
+        <div class="data_all">
+            <ul class="data_list">
+                <!--<li class="item">-->
+                    <!--<span class="item_tit"><b>*</b>资料标题</span>-->
+                    <!--<div class="item_info">-->
+                        <!--<a href="#">中国谎报方针政策</a>-->
+                        <!--<p>文档附件上传成功</p>-->
+                    <!--</div>-->
+                    <!--<div class="item_det">删除</div>-->
+                <!--</li>-->
+
+            </ul>
+            <div class="up_data">
+                <img src="img/upimg.png" alt="">
+                <form id="forms">
+                    <input type="file" class="data_file" id="upload" onchange="getInfo(this)" name="myfiles">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="footer">
+</div>
+<div class="shade"></div>
+<div class="data_shade">
+    <div class="maskInfo">
+        <h3>温馨提示</h3>
+        <p class="message">您确定要删除此资料吗？</p>
+        <p class="btns">
+            <span class="no_btn" onclick="goback()">取消</span>
+            <span class="yes_btn" onclick="deletguest(this)" data-id="" data-index="">确定</span>
+        </p>
+    </div>
+</div>
+
+<script src="javascript/jquery-2.1.4.min.js"></script>
+<script src="javascript/common.js"></script>
+<script src="js/meetData.js"></script>
+</body>
+
+</html>

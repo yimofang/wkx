@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en-US">
+<head>
+    <meta charset="UTF-8" />
+    <title>A date range picker for Bootstrap</title>
+    <!--cdn上面的地址-->
+    <link href="http://netdna.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.bootcss.com/bootstrap-daterangepicker/2.1.25/daterangepicker.css" rel="stylesheet">
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script type="text/javascript" src="http://netdna.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap-daterangepicker/2.1.25/moment.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap-daterangepicker/2.1.25/daterangepicker.js"></script>
+</head>
+<body style="margin: 60px 0">
+<!--<div class="row">-->
+    <div class="c demo">
+        <h4>Your Date Range Picker</h4>
+        <input type="text" id="config-demo" class="form-control">
+        <!--<i class="glyphicon glyphicon-calendar fa fa-calendar"></i>-->
+    </div>
+    <div class="tiamjia">添加</div>
+<!--</div>-->
+<style type="text/css">
+    .demo {
+        position: relative;
+    }
+
+    .demo i {
+        position: absolute;
+        bottom: 10px;
+        right: 24px;
+        top: auto;
+        cursor: pointer;
+    }
+</style>
+
+<script type="text/javascript">
+    var i=0;
+    $(function () {
+        $('.tiamjia').click(function () {
+            i++;
+            var html = '<input type="text" id="config-demo'+i+'" class="form-control">'
+            $('.demo').append(html);
+            $('#config-demo'+i).daterangepicker({
+                "timePicker": true,
+                "timePicker24Hour": true,
+                "linkedCalendars": false,
+                "autoUpdateInput": false,
+                "locale": {
+                    format: 'YYYY-MM-DD hh:mm:ss',
+                    separator: ' ~ ',
+                    applyLabel: "应用",
+                    cancelLabel: "取消",
+                    resetLabel: "重置",
+                }
+            }, function(start, end, label) {
+                beginTimeStore = start;
+                endTimeStore = end;
+                console.log(this.startDate.format(this.locale.format));
+                console.log(this.endDate.format(this.locale.format));
+                if(!this.startDate){
+                    this.element.val('');
+                }else{
+                    this.element.val(this.startDate.format(this.locale.format) + this.locale.separator + this.endDate.format(this.locale.format));
+                }
+            });
+        })
+    })
+    var beginTimeStore = '';
+    var endTimeStore = '';
+    $('#config-demo').daterangepicker({
+        "timePicker": true,
+        "timePicker24Hour": true,
+        "linkedCalendars": false,
+        "autoUpdateInput": false,
+        "locale": {
+            format: 'YYYY-MM-DD',
+            separator: ' ~ ',
+            applyLabel: "应用",
+            cancelLabel: "取消",
+            resetLabel: "重置",
+        }
+    }, function(start, end, label) {
+        beginTimeStore = start;
+        endTimeStore = end;
+        console.log(this.startDate.format(this.locale.format));
+        console.log(this.endDate.format(this.locale.format));
+        if(!this.startDate){
+        this.element.val('');
+    }else{
+        this.element.val(this.startDate.format(this.locale.format) + this.locale.separator + this.endDate.format(this.locale.format));
+    }
+    });
+</script>
+</body>
+</html>

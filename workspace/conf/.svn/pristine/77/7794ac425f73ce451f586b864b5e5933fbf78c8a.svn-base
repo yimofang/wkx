@@ -1,0 +1,83 @@
+@charset "utf-8";
+
+/*遮罩层*/
+.zhezhao{
+    display: none;
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background: rgba(0,0,0,.2);
+}
+.zhezhao .tishi{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    width: 80%;
+    background: #fff;
+    border-radius: 0.1rem;
+}
+.zhezhao .tishi .tishitit{
+    background: #bd0f10;
+    line-height: 0.8rem;
+    color: #fff;
+    text-align: center;
+    border-top-left-radius: 0.1rem;
+    border-top-right-radius: 0.1rem;
+    font-size:0.32rem;
+}
+.zhezhao .tishi .tishiinfo{
+    line-height: 1.6rem;
+    text-align: center;
+    font-size:0.28rem;
+}
+.zhezhao .tishi div{
+    overflow: hidden;
+    padding-bottom: 0.5rem;
+}
+.zhezhao .tishi div span{
+    float: left;
+    width: 2.3rem;
+    height: 0.68rem;
+    line-height: 0.68rem;
+    border-radius: 0.1rem;
+    background: #bd0f10;
+    color: #fff;
+    text-align: center;
+    margin: 0 8% 0 2%;
+    font-size:0.3rem;
+}
+.zhezhao .tishi div span.none{
+    background: #1b1b1b;
+    margin: 0 2% 0 8%;
+}
+
+.miaoshuing {
+    padding: 0.2rem 0;
+    position: relative;
+}
+
+.miaoshuing img {
+    display: block;
+    width: 90%;
+    margin: 0 auto;
+}
+
+.miaoshuing span {
+    position: absolute;
+    top: 0.2rem;
+    right: 5%;
+    color: #fff;
+    width: 0.6rem;
+    height: 0.6rem;
+    background: url(../img/close.png)#000 no-repeat;
+    background-size: 0.6rem;
+    border-radius: 100%;
+}
+
+.meetDesImg {
+    margin: 0.2rem 0;
+    padding: 0.3rem 0 1rem;
+}

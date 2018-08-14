@@ -1,0 +1,20 @@
+$(function(){
+	//判断是否是微信浏览器
+    var ua = window.navigator.userAgent.toLowerCase();  
+    if(ua.match(/MicroMessenger/i) == 'micromessenger'){  
+        $('.Header').remove();
+        $('.nameHeader').remove();
+        $('.meetStatistics>.Header').remove();
+        $('.deleteHeader').css('margin-top','0.2rem');
+        $('.meetStatistics>.nav').css('margin-top','0.2rem');
+        $('.deleteHeaderPM').css('margin-top','0');
+        $(".Nav").css('top','0');//首页
+        $(".IndexContent").css('top','1.72rem');
+        $(".havaMeetFlow").css('margin-top','0.2rem');//流程
+        $(".haveGuest").css('margin-top','0.2rem');//嘉宾
+        $(".guestInfo").css('margin-top','0');
+        $(".meetDesImg").css('margin-top','0');//上传签到
+
+
+    } 
+});

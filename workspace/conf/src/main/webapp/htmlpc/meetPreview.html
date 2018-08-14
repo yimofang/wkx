@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>微会议</title>
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/meetPreview.css">
+</head>
+<body>
+    <div class="banner">
+        <img src="img/preBg.png" alt="">
+        <p class="p1">微会议-专业会议服务平台</p>
+        <p class="p2">创建、统计、管理、您的专属定制工具</p>
+    </div>
+    <div class="content">
+        <div class="con_info">
+            <div class="info1">
+                <img src="" alt="">
+            </div>
+            <div class="info2">
+                <p class="title"></p>
+                <p class="type">
+                    <span class="tImg">类&nbsp;&nbsp;&nbsp;型：</span>
+                    <span class="tName"></span>
+                    <span class="tPost"></span>
+                </p>
+                <p class="host">
+                    <span class="hImg">主办方：</span>
+                    <span class="hostVal"></span>
+                </p>
+                <p class="address">
+                    <span class="aImg">地&nbsp;&nbsp;&nbsp;点：</span>
+                    <span class="addVal"></span>
+                </p>
+                <p class="time">
+                    <span class="tImg">时&nbsp;&nbsp;&nbsp;间：</span>
+                    <span class="t_start"></span>&nbsp;&nbsp;
+                    <span class="t_end"></span>
+                </p>
+                <div class="preBtn">
+                    <span class="btnHost">联系主办方</span>
+                    <span class="btnName" onclick="baoming()">我要报名</span>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- 4项切换和二维码 -->
+        <div class="con_cont">
+            <!--切换-->
+            <div class="cont_four">
+                <div class="msgTop">
+                    <span class="active">会议描述</span>
+                    <span>会议资料</span>
+                    <span>问卷查阅</span>
+                    <span>下期预告</span>
+                </div>
+                <!--描述-->
+                <div class="cont1" style="display:block;">
+                    <div class="contDes">
+
+                    </div>
+                    <!--嘉宾-->
+                    <div class="contGuest">
+                        <p class="gTitle">会议嘉宾</p>
+                        <ul>
+
+
+                        </ul>
+                        <div style="clear:both"></div>
+                    </div>
+                    <!--流程-->
+                    <div class="contFlow">
+                        <p class="fTitle">会议流程</p>
+                        <ul>
+
+
+                        </ul>
+                    </div>
+                </div>
+                <!--资料-->
+                <div class="cont2" style="display: none;">
+                    <ul>
+
+                    </ul>
+                </div>
+                <!--问卷-->
+                <div class="cont3" style="display: none;">
+                    <p class="tishi">为了给您提供更好的服务，希望您能抽出几分钟时间，给我们一些建议，我们将非常感谢！</p>
+                    <ul>
+
+                    </ul>
+                    <div class="breBtn">提交</div>
+                </div>
+                <!--下期预告-->
+                <div class="cont4" style="display: none">
+                 </div>
+            </div>
+            <!--二维码-->
+            <div class="cont_code">
+                <p class="codeTit">扫描二维码</p>
+                <div class="codeImg">
+                    <div class="imgInner">
+                        <ul>
+                            <li class="postName">
+                                <img src="" alt="">
+                                <p class="p1">参会者扫描此二维码</p>
+                                <p class="p2">查看活动详情并进行活动报名</p>
+                            </li>
+                            <li class="signUp">
+                                <img src="" alt="">
+                                <p class="p1">参会者扫描此二维码</p>
+                                <p class="p2">进行签到</p>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+       
+
+    </div>
+
+    <!--bottom-->
+    <div class="bottom">Copyright © 2014-2018 北京易魔方科技集团有限公司.  京ICP备13046454号-4</div>
+    <!--联系主办方-->
+    <div class="shade" style="display: none">
+        <div class="shadeCont">
+            <div class="link">
+                <p>联系主办方</p>
+                <span class="close"></span>
+            </div>
+            <div class="tel">
+                <img src="img/tel.png" alt="">
+                <span class="telImg">主办方电话：</span>
+                <span class="telNum"></span>
+            </div>
+        </div>
+    </div>
+
+    <!--我要报名-->
+    <div class="shade2" style="display:none">
+        <div class="nameCont">
+            <p>我要报名</p>
+            <ul>
+                <li>
+                    <span><i>*</i>姓名：</span>
+                    <input type="text" class="name" placeholder="请输入您的姓名">
+                </li>
+                <li>
+                    <span><i>*</i>手机号码：</span>
+                    <input type="text" class="mobile" placeholder="请输入您的手机号">
+                </li>
+                <li>
+                    <span>邮箱：</span>
+                    <input type="text" class="mail" placeholder="请输入您的邮箱">
+                </li>
+            </ul>
+            <div class="nameBtn">
+                <span class="btnCel">取消</span>
+                <span class="btnSure" onclick="postNamed()">确定</span>
+            </div>
+        </div>
+    </div>
+
+    <!--问卷手机号-->
+    <div class="shade3" style="display:none;">
+        <div class="brCont">
+            <p>提交问卷</p>
+            <input type="text" placeholder="请输入手机号">
+
+            <div class="breBtns">
+                <span class="breCel" onclick="gobacks()">取消</span>
+                <span class="breSure" onclick="postBrief()">确定</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="javascript/jquery-2.1.4.min.js"></script>
+    <script src="javascript/common.js"></script>
+    <script src="js/meetPreview.js"></script>
+</body>
+</html>

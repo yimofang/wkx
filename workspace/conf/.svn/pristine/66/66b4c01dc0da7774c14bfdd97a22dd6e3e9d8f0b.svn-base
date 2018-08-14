@@ -1,0 +1,33 @@
+$(function(){
+	$("#addNameHeader").click(function(){
+		$("#addName").hide();
+		$(".meetPreview").show();
+	});
+
+	/*是否报名*/
+	var data = [
+		{'id': '10001', 'value': '报名'},
+    	{'id': '10002', 'value': '未报名'}
+	];
+	var showSignUp = document.querySelector('#signUp');
+    var signUpId = document.querySelector('#choiceSignUp');
+    showSignUp.addEventListener('click', function () {
+        var bankId = showSignUp.dataset['id'];
+        var bankName = showSignUp.dataset['value'];
+        var bankSelect = new IosSelect(1, 
+            [data],
+            {
+                container: '.container',
+                title: '是否报名',
+                itemHeight: 50,
+                itemShowCount: 3,
+                oneLevelId: bankId,
+                showAnimate:true,
+                callback: function (selectOneObj) {
+                    signUpId.innerHTML = selectOneObj.value;
+                }
+        });
+    });
+
+    
+});

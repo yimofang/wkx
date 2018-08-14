@@ -1,0 +1,27 @@
+package net.emof.building.dao;
+
+import java.util.List;
+import java.util.Map;
+
+import org.apache.ibatis.annotations.Select;
+import org.springframework.stereotype.Repository;
+
+/**
+ * 通用sql动态查询语句
+ * @author baikun
+ * @creation 2017年7月31日
+ */
+@Repository
+public interface SqlToolsMapper {
+	
+	   /**
+     * 查询sql语句
+     * @author baikun
+     * @creation 2017年7月31日
+     * @param sqlstr  数据库语句
+     * @return
+     */
+    @Select("${_parameter}")
+	List<Map<String,Object>>executeSql(String sqlstr);
+
+}

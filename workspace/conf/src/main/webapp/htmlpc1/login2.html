@@ -1,0 +1,53 @@
+
+<div class="shade">
+    <div class="login">
+        <img src="img/login_logos.png" alt="" class="login_logo">
+        <div class="login_form">
+            <h2>用户登录</h2>
+            <ul>
+                <li class="item_login">
+                    <p>账号：</p>
+                    <input type="text" placeholder="请输入你的账号" id="userName">
+                </li>
+                <li class="item_login">
+                    <p>密码：</p>
+                    <input type="password" placeholder="请输入你的密码" id="userPwd">
+                </li>
+            </ul>
+            <button class="login_btn">登录</button>
+        </div>
+    </div>
+    <script>
+        $(function() {
+            $('.login_btn').click(function() {
+                $(this).attr('disabled', true);
+                var user_name = $('#userName').val(),
+                    user_pwd = $('#userPwd').val();
+                $.ajax({
+                    type: 'post',
+                    url: urlstr + 'login_web.do',
+                    data: {
+                        name: user_name,
+                        pass: user_pwd
+                    },
+                    dataType: 'json',
+                    success: function(res) {
+                        console.log(res);
+                        if (res.error == 0) {
+                            sessionStorage.setItem('token', res.token);
+                            Token = res.token;
+                            $('.shade').hide();
+                            var isup = $('.shade').attr('data-isup');
+                            if(isup == 0){
+                                window.location.reload();
+                            }
+                        } else {
+                            alert(res.msg);
+                            $('.login_btn').attr('disabled', false);
+                        }
+                    }
+                })
+            })
+        })
+    </script>
+</div>

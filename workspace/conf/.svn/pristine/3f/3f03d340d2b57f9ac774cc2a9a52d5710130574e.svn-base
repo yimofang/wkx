@@ -1,0 +1,242 @@
+package net.emof.building.web.service;
+
+import net.emof.building.admin.customEXC.EhCacheSessiconException;
+import net.emof.building.admin.service.SqlToolseService;
+import net.emof.building.dao.ConfsMapper;
+import net.emof.building.dao.ConfsSubuserMapper;
+import net.emof.building.ehcache.EhSessicon;
+import net.emof.building.model.Confs;
+import net.emof.building.model.ConfsSubuser;
+import net.emof.building.model.Users;
+import net.emof.building.util.DataMap;
+import net.emof.building.util.PinYinTool;
+import net.emof.building.util.ToolsUtil;
+import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombination;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.Date;
+import java.util.Map;
+
+/**
+ * Copyright (C), 2015-2017, 易魔方有限公司
+ * FileName: ConfsSubuser_web_Service
+ * Author:   anshiyuan
+ * Date:     2017/12/16 上午9:59
+ * Description:
+ * History:
+ */
+@Service
+public class ConfsSubuser_web_Service extends SqlToolseService {
+
+    @Autowired
+    private ConfsSubuserMapper confsSubuserMapper;
+    @Autowired
+    private ConfsMapper confsMapper;
+
+    // log4j日志
+    private final Logger logger = Logger.getLogger(this.getClass());
+
+    /**
+     * 签到列表
+     *
+     * @param confsid 会议ID
+     * @param state   0 全部 1 签到 2上传名单
+     * @param select  模糊查询 手机号 名字
+     * @param page    页数
+     * @param display 显示几条
+     * @return
+     */
+    public DataMap getSginList(String confsid, Integer state, String select, Integer page, Integer display) {
+        DataMap dataMap = new DataMap();
+        StringBuffer table_name = new StringBuffer("confs_subuser");
+        StringBuffer find = new StringBuffer("confs_subuser.*");
+        StringBuffer where = new StringBuffer("isdelete=1 AND confsid=" + confsid);
+        if (state != null && state == 1) {
+            where.append(" AND arrive=" + state);
+        } else if (state != null && state == 2) {
+            where.append(" AND issign=" + state);
+        }
+
+        if (select != null && !select.trim().equals("")) {
+            where.append(" AND (confs_subuser.phone LIKE '%" + select + "%' OR confs_subuser.realname LIKE '%" + select + "%')");
+        }
+        Map<String, Object> map = this.getListAllPage(table_name.toString(), find.toString(),
+                where.toString(), null, page, display);
+        map.put("error", 0);
+        map.put("msg", "操作成功");
+        dataMap.addMsg_map(map, 0);
+        return dataMap;
+    }
+
+    /**
+     * 添加报名
+     *
+     * @param confsid  会议ID
+     * @param arrive   是否签到 默认 未签到
+     * @param type     报名类型 默认 1 自己报名 2 组织者添加
+     * @param realname 用户名
+     * @param phone    手机号
+     * @param email    邮箱
+     * @param units    公司
+     * @param job      职位
+     * @return
+     */
+    public DataMap addConfsSubuer(String confsid, Integer arrive, Integer type, String realname, String phone, String email,
+                                  String units, String job) {
+
+        DataMap dataMap = new DataMap();
+        if (confsid == null || confsid.trim().equals("")) {
+            dataMap.addMsg_diy_obj(null, 6, "未找到会议");
+            return dataMap;
+        }
+        if (realname == null || realname.trim().equals("")) {
+            dataMap.addMsg_diy_obj(null, 6, "请输入姓名");
+            return dataMap;
+        }
+        if (phone == null || phone.trim().equals("")) {
+            dataMap.addMsg_diy_obj(null, 6, "请输入手机号");
+            return dataMap;
+        }
+        StringBuffer table_name = new StringBuffer(" confs_subuser obj");
+        StringBuffer find = new StringBuffer(" obj.id");
+        StringBuffer where = new StringBuffer(" 1=1 AND obj.isdelete=1 AND obj.confsid='" + confsid
+                + "' AND  obj.realname='" + realname + "' AND obj.phone='" + phone + "'");
+
+        Map<String, Object> map = this.selectMap(table_name.toString(), find.toString(), where.toString());
+        if (map != null) {
+            dataMap.addMsg_diy_obj(null, 6, "您已经报过名了，请勿重复报名");
+            return dataMap;
+        }
+        Date createtime = new Date(System.currentTimeMillis());
+        String id = ToolsUtil.get_diy_ID(); //主键
+        String csletter;
+        try {
+            PinYinTool pinYinTool = new PinYinTool();
+            String pinYin = pinYinTool.toPinYin(realname);
+            csletter = pinYin.substring(0, 1);
+        } catch (BadHanyuPinyinOutputFormatCombination badHanyuPinyinOutputFormatCombination) {
+            logger.error("【报名名单列表 信息异常】执行报名人拼音转换失败,信息位置" + this.getClass().getName()
+                    + Thread.currentThread().getStackTrace()[1].getMethodName() + "转换参数：" + realname);
+            dataMap.addMsg_diy_list(null, 6, "添加出错，请重试");
+            return dataMap;
+        }
+        ConfsSubuser confsSubuser = new ConfsSubuser(id, null, confsid, 1, createtime, arrive, 2, realname
+                , phone, csletter, type);
+        Confs confs = this.confsMapper.selectByPrimaryKey(confsid);
+        String enlist = confs.getEnlist();
+
+        if (enlist.contains("3")) {
+            if (email == null || email.trim().equals("")) {
+                dataMap.addMsg_diy_obj(null, 6, "请输入手机号");
+                return dataMap;
+            }
+            confsSubuser.setEmail(email);
+        } else if (enlist.contains("4")) {
+            if (units == null || units.trim().equals("")) {
+                dataMap.addMsg_diy_obj(null, 6, "请输入单位名称");
+                return dataMap;
+            }
+            confsSubuser.setUnits(units);
+        } else if (enlist.contains("5")) {
+            if (job == null || job.trim().equals("")) {
+                dataMap.addMsg_diy_obj(null, 6, "请输入职位名称");
+                return dataMap;
+            }
+            confsSubuser.setJob(job);
+        }
+
+        int result = this.confsSubuserMapper.insertSelective(confsSubuser);
+        if (result < 1) {
+            logger.error("【添加名单报名 信息异常】执行添加报名失败,信息位置" + this.getClass().getName() + " "
+                    + Thread.currentThread().getStackTrace()[1].getMethodName());
+            dataMap.addMsg_diy_list(null, 6, "报名失败，请重试");
+        }
+        dataMap.addMsg_diy_obj(id, 0, "报名成功");
+
+        return dataMap;
+    }
+
+
+    /**
+     * 签到
+     *
+     * @param confsid 会议ID
+     * @param realname 用户名
+     * @param phone 手机号
+     * @return
+     */
+    public DataMap signinConfsSubuser(String confsid, String realname, String phone) {
+        DataMap dataMap = new DataMap();
+        if (confsid == null || confsid.trim().equals("")) {
+            dataMap.addMsg_diy_obj(null, 6, "未找到会议");
+            return dataMap;
+        }
+        if (realname == null || realname.trim().equals("")) {
+            dataMap.addMsg_diy_obj(null, 6, "请输入姓名");
+            return dataMap;
+        }
+        if (phone == null || phone.trim().equals("")) {
+            dataMap.addMsg_diy_obj(null, 6, "请输入手机号");
+            return dataMap;
+        }
+
+        StringBuffer table_name = new StringBuffer(" confs_subuser obj");
+        StringBuffer find = new StringBuffer(" *");
+        StringBuffer where = new StringBuffer("1=1 AND obj.isdelete=1 AND confsid='" + confsid);
+        where.append("' AND obj.relname='" + realname);
+        where.append("' AND obj.phone='" + phone + "'");
+        Map<String, Object> map = this.selectMap(table_name.toString(), find.toString(), where.toString());
+        if (map == null) {
+            dataMap.addMsg_diy_obj(null, 6, "签到失败，未找到您的报名信息");
+            return dataMap;
+        }
+        ConfsSubuser confsSubuser = new ConfsSubuser();
+        if (confsSubuser.getArrive()==1){
+            dataMap.addMsg_diy_obj(null, 6, "签到失败，您已经签过到了");
+            return dataMap;
+        };
+        confsSubuser.mapsetInfo(map);
+        confsSubuser.setArrive(1);
+        int result = this.confsSubuserMapper.updateByPrimaryKeySelective(confsSubuser);
+        if (result < 1) {
+            dataMap.addMsg_diy_obj(null, 6, "签到失败，请重试");
+            return dataMap;
+        }
+        dataMap.addMsg_diy_obj(null, 0, "签到成功");
+        return dataMap;
+    }
+
+    /**
+     * 签到统计
+     *
+     * @param confsid 会议ID
+     * @return
+     */
+    public DataMap getSignCount(String confsid) {
+        DataMap dataMap = new DataMap();
+
+        if (confsid == null || confsid.trim().equals("")) {
+            dataMap.addMsg_diy_obj(null, 6, "未找到会议信息");
+            return dataMap;
+        }
+
+        StringBuffer table_name = new StringBuffer("confs_subuser");
+        StringBuffer find = new StringBuffer("count(*) as total");
+        find.append("," +
+                "  (SELECT count(*)" +
+                "   FROM confs_subuser" +
+                "   WHERE isdelete = 1 AND confsid = " + confsid + " AND arrive = 1) AS sgin," +
+                "  (SELECT count(*)" +
+                "   FROM confs_subuser" +
+                "   WHERE isdelete = 1 AND confsid = " + confsid + " AND arrive = 2) AS unsgin");
+        StringBuffer where = new StringBuffer("isdelete=1 AND confsid=" + confsid);
+
+        Map<String, Object> map = this.selectMap(table_name.toString(), find.toString(), where.toString());
+
+        dataMap.addMsg_map(map, 0);
+        return dataMap;
+
+    }
+}

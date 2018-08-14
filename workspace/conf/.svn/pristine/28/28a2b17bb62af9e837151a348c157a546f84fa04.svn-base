@@ -1,0 +1,91 @@
+package net.emof.building.web.controller;
+
+import net.emof.building.util.DataMap;
+import net.emof.building.web.service.ConfsDatum_web_Service;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.Map;
+
+/**
+ * Copyright (C), 2015-2017, 易魔方有限公司
+ * FileName: ConfsDatum_web_Controller
+ * Author:   anshiyuan
+ * Date:     2017/12/14 下午3:23
+ * Description:会议资料管理 会议资料列表  添加会议资料 删除会议资料
+ * History:
+ */
+@Controller
+@RequestMapping("/confsDatum_web")
+public class ConfsDatum_web_Controller {
+
+    @Autowired
+    private ConfsDatum_web_Service confsDatumService;
+
+    /**
+     * 获取会议资料列表
+     *
+     * @param confsid 会议ID
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "/listpage", method = RequestMethod.POST)
+    public Map<String, Object> listpage(@RequestParam(value = "confsid", required = true) String confsid) {
+        DataMap dataMap = this.confsDatumService.listpage(confsid,1);
+        return dataMap.data;
+    }
+
+    /**
+     * 会议资料详情
+     *
+     * @param dtaumid
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "/detail_datum")
+    public Map<String, Object> detailConfsDatum(@RequestParam(value = "datumid", required = true) String dtaumid) {
+        DataMap dataMap = this.confsDatumService.detailConfsDatum(dtaumid);
+        return dataMap.data;
+    }
+
+    /**
+     * 添加会议资料
+     *
+     * @param token   用户ID
+     * @param confsid 会议ID
+     * @param dname   资料名称
+     * @param brief   资料描述
+     * @param path    文件地址
+     * @param file    文件名称
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "/add_datum", method = RequestMethod.POST)
+    public Map<String, Object> addConfsDatum(@RequestParam(value = "token", required = true) String token,
+                                             @RequestParam(value = "confsid", required = true) String confsid,
+                                             @RequestParam(value = "dname", required = false) String dname,
+                                             @RequestParam(value = "brief", required = false) String brief,
+                                             @RequestParam(value = "path", required = false) String path,
+                                             @RequestParam(value = "file", required = false) String file) {
+        DataMap dataMap = this.confsDatumService.addConfsDatum(token, confsid, dname, brief, path, file);
+        return dataMap.data;
+    }
+
+
+    /**
+     * 删除会议资料
+     *
+     * @param datumid 会议资料ID
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "/delete_datum", method = RequestMethod.POST)
+    public Map<String, Object> deleteConfsDatum(@RequestParam(value = "datumid", required = true) String datumid) {
+        DataMap dataMap = this.confsDatumService.deleteConfsDatum(datumid);
+        return dataMap.data;
+    }
+}

@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+    <title>上传签到表</title>
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/uploadForm.css">
+    <script src="js/jquery-2.1.4.min.js"></script>
+    <script src="js/rem.js"></script>
+    <script src="js/removeHeader.js"></script>
+    <script src="js/exif.js"></script>
+    <style>
+        .miaoshuing{padding: 0.2rem 0;}
+        .miaoshuing img {
+            display: block;
+            width: 90%;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+    <!--header-->
+  	<div class="Header">
+      	<a href="javascript:history.go(-1);"></a>上传签到表
+  	</div>
+
+    <!--addImg-->
+    <div class="meetDesImg" style="margin-top: 0.88rem;margin-bottom: 0.88rem;padding-top: 0.3rem;">
+        <div style="width:90%;height:3.8rem;margin: 0 auto;background: url(img/upimg.png) center center no-repeat;background-size: cover;border-radius: 0.1rem" onclick="$('#Mdesimg').click();">
+            <!-- <img id="imgheada" border="none" src="img/upimg.png" onclick="$('#Mdesimg').click();" width="100%" style="border-radius: 0.1rem"> -->
+        </div>
+        <input type="file" onchange="DesImage(this)" style="display: none;" id="Mdesimg">
+        <div id="addimg">
+
+        </div>
+        <input type="hidden" value="" id="desimgall">
+    </div>
+    <div class="zhezhao">
+        <div class="tishi">
+            <p class="tishitit">温馨提示</p>
+            <p class="tishiinfo">您确定要删除这张图片吗？</p>
+            <div>
+                <span class="none">取消</span>
+                <span class="sure">确定</span>
+            </div>
+        </div>
+    </div>
+  	<!--隐藏递交-->
+    <div class="footer_btn">
+        <!-- <a href="javascript:history.go(-1);" class="upBack">取消</a> -->
+        <div class="upBtn">完成</div>
+    </div>
+    <div id="reqtoken" class="reqtoken"></div>
+    <script>
+        var Desimgid = 0;
+        $(function () {
+             GetImgList();
+            $('#addimg').on('click','.miaoshuing',function () {
+                $('.sure').attr('data-index',$(this).index())
+                $('.zhezhao').show();
+            })
+            $('.sure').click(function () {
+                var index = $(this).attr('data-index');
+                $('#addimg .miaoshuing:eq('+index+')').remove();
+                $('.zhezhao').hide();
+                $(this).attr('data-index','');
+            })
+            $('.none').click(function () {
+                $('.zhezhao').hide();
+            })
+            $('.upBtn').click(function () {
+                var imgstr = '';
+                if ($('.miaoshuing').length > 0) {
+                    for (var i = 0; i < $('.miaoshuing img').length; i++) {
+                        imgstr += $('.miaoshuing img')[i].getAttribute("data-img") + ','
+                    }
+                    $.ajax({
+                        type: 'post',
+                        url: Urlstr + 'back_web/add_back.do',
+                        data: {
+                            confid: NumAll.confsid,
+                            imgs: imgstr == '' ? '' : imgstr.slice(0, -1),
+                            token: Token
+                        },
+                        dataType: 'json',
+                        success: function (res) {
+                            if (res.error == 0) {
+                                alert(res.msg);
+                                window.location.href = history.go(-1);
+                                
+                            } else if (res.error == 5) {
+                                alert(res.msg);
+                                ReqToken();
+                            } else {
+                                alert(res.msg);
+                            }
+                        }
+                    })
+                }else{
+                    // alert('请上传图片');
+                   window.history.go(-1);
+                }
+
+            })
+        })
+        function DesImage(file) {
+            var div = document.getElementById('addimg');
+            if (file.files && file.files[0]){
+                div.innerHTML +=('<div class="miaoshuing"><img id="Desimghead'+Desimgid+'"></div>');
+                var imgid = 'Desimghead'+Desimgid;
+                var img = document.getElementById(imgid);
+                var reader = new FileReader();
+                reader.onload = function(evt){
+                    //img.src = evt.target.result;
+                    var image = new Image();
+                    image.src =evt.target.result;
+
+                    image.onload = function(){
+                        var img64 = compress(image, 400, 800, 1);
+                        //document.getElementById(imgid).src = img64;
+                        $.ajax({
+                            type : 'post',
+                            url : Urlstr + 'imgbase.do',
+                            data : {
+                                imgStr :  img64,
+                                token : Token
+                            },
+                            dataType : 'json',
+                            success : function (res) {
+                                if(res.error == 0){
+                                    $('#desimgall').value += res.row.filename+',';
+                                    document.getElementById(imgid).src =  Urlstr+'upload/' + res.row.filename;
+                                    $('#'+imgid).attr('data-img',res.row.filename);
+
+
+                                }else if(res.error == 5){
+                                    alert(res.msg);
+                                    ReqToken();
+                                }else{
+                                    alert(res.msg);
+                                }
+                            }
+                        })
+                    }
+                }
+                reader.readAsDataURL(file.files[0]);
+            }
+            Desimgid++;
+        }
+        function compress(img, width, height, ratio) {
+            var canvas, ctx, img64;
+            var orient = getPhotoOrientation(img);
+            //alert("orient2:"+orient);
+            var canvas, ctx, img64;
+            canvas = document.createElement('canvas');
+            canvas.width = width;
+            canvas.height = height;
+
+            ctx = canvas.getContext("2d");
+            if(orient == 6) {
+                ctx.save();//保存状态
+                ctx.translate(canvas.width/ 2, canvas.height / 2);//设置画布上的(0,0)位置，也就是旋转的中心点
+                ctx.rotate(90 * Math.PI / 180);//把画布旋转90度
+                // 执行Canvas的drawImage语句
+                ctx.drawImage(img, 0 - canvas.height / 2, 0 - canvas.width / 2, height, width);//把图片绘制在画布translate之前的中心点，
+                ctx.restore();//恢复状态
+            } else {
+                // 执行Canvas的drawImage语句
+                ctx.drawImage(img, 0, 0, width, height);
+            }
+
+            img64 = canvas.toDataURL("image/jpeg", ratio);
+
+            return img64;
+        }
+        function getPhotoOrientation(img){
+            var orient;
+            EXIF.getData(img, function () {
+                orient = EXIF.getTag(this, 'Orientation');
+            });
+            return orient;
+        }
+
+        function GetImgList() {
+            $.ajax({
+                type:'post',
+                url:Urlstr + 'back_web/getBackInfo.do',
+                data:{
+                    confid:NumAll.confsid,
+                    token:Token
+                },
+                dataType:'json',
+                success:function (res) {
+                    if(res.error == 0){
+                        //console.log(res);
+                        if(res.row != null){
+                            var imglist = res.row.imgs.split(',');
+                            //console.log(imglist);
+                            Desimgid = imglist.length;
+                            var htmlstr = '';
+                            for(var i = 0;i<imglist.length;i++){
+                                htmlstr +=`<div class="miaoshuing">
+                                            <img id="Desimghead${i}" src="${Urlstr}upload/${imglist[i]}" data-img="${imglist[i]}">
+                                        </div>
+                                        `
+                            }
+                            $('#addimg').html(htmlstr);
+                        }
+                    }else if(res.error == 5){
+                        alert(res.msg);
+                        ReqToken();
+                    }else{
+                        alert(res.msg);
+                    }
+                }
+            })
+        }
+        //Token 过期 重新请求
+        function ReqToken() {
+            $('#reqtoken').load("login3.html", function () {
+                $('#reqtoken').show();
+            });
+        }
+    </script>
+    <!--监听事件返回-->
+    <script type="text/javascript">
+        pushHistory();
+        window.addEventListener("popstate", function(e) {
+            // alert('mmmm.html?confsid='+NumAll.confsid);
+            // alert("我监听到了浏览器的返回按钮事件啦");//根据自己的需求实现自己的功能
+            window.location.href = 'mmmm.html?confsid='+NumAll.confsid;
+        }, false);
+        function pushHistory() {
+            var state = {
+                title: "title",
+                url: "#"
+            };
+            window.history.pushState(state, "title", "#");
+        }
+    </script>
+</body>
+</html>

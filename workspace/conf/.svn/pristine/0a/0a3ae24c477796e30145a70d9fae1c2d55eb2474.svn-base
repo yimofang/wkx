@@ -1,0 +1,34 @@
+$(function(){
+    var data = [
+        {'id': '10001', 'value': '年会'},
+        {'id': '10002', 'value': '论坛'},
+        {'id': '10003', 'value': '峰会'},
+        {'id': '10004', 'value': '培训会'},
+        {'id': '10005', 'value': '行业会'},
+        {'id': '10006', 'value': '发布会'},
+        {'id': '10007', 'value': '品牌会议'},
+        {'id': '10008', 'value': '经销商会'},
+        {'id': '10009', 'value': '其他'}
+    ];
+    var showBankDom = document.querySelector('#meetType');
+    var bankIdDom = document.querySelector('#typeId');
+    showBankDom.addEventListener('click', function () {
+        var bankId = showBankDom.dataset['id'];
+        var bankName = showBankDom.dataset['value'];
+        var bankSelect = new IosSelect(1, 
+            [data],
+            {
+                container: '.container',
+                title: '请选择会议类型',
+                itemHeight: 50,
+                itemShowCount: 3,
+                oneLevelId: bankId,
+                showAnimate:true,
+                callback: function (selectOneObj) {
+                    bankIdDom.innerHTML = selectOneObj.value;
+                }
+        });
+    });
+});
+
+    

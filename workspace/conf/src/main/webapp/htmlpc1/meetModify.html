@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>会议修改</title>
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/meetModify.css">
+    <link rel="stylesheet" href="http://cache.amap.com/lbs/static/main.css?v=1.0"/>
+    <link href="http://netdna.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.bootcss.com/bootstrap-daterangepicker/2.1.25/daterangepicker.css" rel="stylesheet">
+</head>
+
+<body>
+<div class="topLine"></div>
+<div class="header"></div>
+
+<div class="left_nav">
+    <ul class="nav_one">
+        <li class="nav_manage active">
+            <a href="meetList.html">
+                <b class="active"></b>
+
+            </a>
+        </li>
+        <li class="nav_release">
+            <a href="meetPublish.html">
+                <b></b>
+
+            </a>
+        </li>
+        <li class="nav_pwd">
+            <a href="password.html">
+                <b></b>
+
+            </a>
+        </li>
+    </ul>
+    <ul class="nav_two" style="display: block;">
+        <li class="on">
+            <a href="meetModify.html">会议修改</a>
+        </li>
+        <li >
+            <a href="meetCode.html">二维码 </a>
+        </li>
+        <li>
+            <a href="meetName.html">名单管理 </a>
+        </li>
+        <li>
+            <a href="meetData.html">资料管理 </a>
+        </li>
+        <li>
+            <a href="meetCount.html">会议统计 </a>
+        </li>
+        <li>
+            <a href="meetSurvey.html">调研问卷 </a>
+        </li>
+        <li>
+            <a href="meetBriefing.html">简报管理 </a>
+        </li>
+        <li>
+            <a href="meetSign.html">上传签到表 </a>
+        </li>
+    </ul>
+</div>
+<div class="right_wrapper">
+    <div class="top">
+            <span class="t_left">
+                <a href="#"><span>会议管理</span></a> &nbsp;/&nbsp;
+                <a href="#"><span>会议修改</span></a>
+            </span>
+        <span class="t_right">
+                <span class="t_pre">预览</span>
+                <span class="t_sava">保存</span>
+            </span>
+    </div>
+    <div class="wrapper">
+        <!--main-->
+        <div class="main">
+            <div class="title">
+                <span class="active">基本信息</span>
+                <span>会议流程</span>
+                <span>会议嘉宾</span>
+                <span>下期预告</span>
+                <span>报名设置</span>
+            </div>
+            <!--基本信息-->
+            <div class="cont1" style="display:block;">
+                <ul>
+                    <li>
+                        <span><b>*</b>会议封面：</span>
+                        <div id="meetImg" class="meetImg">
+                            <div id="preview">
+                                <img id="imghead" border="0" src="img/upimg.png" width="260" height="160" onclick="$('#previewImg').click();">
+                            </div>
+                            <input type="file" onchange="previewImageF(this)" style="display: none;" id="previewImg">
+                        </div>
+                        <p class="zhu">注：为保证会议封面不模糊，建议上传图片尺寸为750*300</p>
+                    </li>
+                    <li>
+                        <span><b>*</b>会议类型：</span>
+                        <select name="mType" id="mType">
+                            <option value="0">请选择会议类型</option>
+                        </select>
+                        <!--<input id="mType" type="text" placeholder="">-->
+                    </li>
+                    <li>
+                        <span><b>*</b>会议名称：</span>
+                        <input id="mName" type="text" placeholder="请输入会议名称">
+                    </li>
+                    <li>
+                        <span><b>*</b>会议时间：</span>
+                        <input class="sTime" id="st_time" type="text" placeholder="请选择会议时间">
+                    </li>
+                    <li>
+                        <span><b>*</b>会议地点：</span>
+                        <input id="address" type="text" placeholder="请输入会议地点">
+                        <div id="container2">
+
+                        </div>
+                    </li>
+                    <li>
+                        <span><b>*</b>主办方：</span>
+                        <input id="hoster" type="text" placeholder="请输入主办方">
+                    </li>
+                    <li>
+                        <span><b>*</b>联系电话：</span>
+                        <input id="phone" type="text" placeholder="请输入联系方式" maxlength="11">
+                    </li>
+                    <li class="miaoshu">
+                        <span class="ms_name">会议描述：</span>
+                        <div id="editor" class="ms_txt" style="width:88%;height:200px;float:left"> </div>
+                    </li>
+                </ul>
+                <ul style="clear:both"></ul>
+
+            </div>
+
+            <!--会议流程-->
+            <div class="cont2" style="display:none;">
+                <ul>
+                    <li>
+                        <span class="circle"></span>
+                        <div class="num">流程 <i>1</i> </div>
+                        <div class="cont">
+                            <input class="slTime" id="ml_time" type="text" placeholder="请选择流程时间">
+                            <textarea placeholder="会议流程描述"></textarea>
+                        </div>
+                        <div class="del" style="display: none;">
+                            <img src="img/mdel.png" alt="">删除
+                        </div>
+                    </li>
+
+                </ul>
+                <div class="add"><span class="circle"></span>添加新的会议流程</div>
+
+                <button class="saveFlow" onclick="saveFlow()">保存</button>
+            </div>
+
+            <!--会议嘉宾-->
+            <div class="cont3" style="display:none;">
+                <ul>
+                    <li class="guest">
+                        <span class="circle"></span>
+                        <div class="g_num">嘉宾 <i>1</i> </div>
+                        <div id="guestImg1" class="g_img">
+                            <div id="preview1">
+                                <img id="imghead1" border="0" src="img/g_img.png" width="150" height="152">
+                                <input type="file" onchange="previewImage(this,1)" style="display: none;" id="previewImg1">
+                            </div>
+
+                        </div>
+                        <div class="g_info">
+                            <input class="g_name" id="g_name1" type="text" placeholder="嘉宾名称">
+                            <input class="g_honer" id="g_honer1" type="text" placeholder="嘉宾头衔">
+                            <textarea class="g_intro" id="g_intro1" placeholder="嘉宾简介" ></textarea>
+                        </div>
+                        <div class="g_del" style="display:none;">
+                            <img src="img/mdel.png" alt="">删除
+                        </div>
+                    </li>
+                </ul>
+                <div class="g_add"></div>
+                <div style="clear:both"></div>
+                <button class="guestBtn" onclick="saveGuest">保存</button>
+            </div>
+            <!--下期预告-->
+            <div class="cont4" style="display:none;">
+                <div class="report" style="padding: 0 70px;text-align: center;">
+                    <span style="float: left;font-size: 14px;">下期预告：</span>
+                    <div id="editor2" class="reCont" style="float:left;width：93%;height:400px"> </div>
+                    <button class="reBtn" onclick="saveYG()">保存</button>
+                    <div style="clear:both"></div>
+                </div>
+            </div>
+            <!--报名设置-->
+            <div class="cont5" style="display:none;">
+                <div class="postName">
+                    <div class="time">
+                        <span class="n_txt">
+                            <i class="red">*</i>报名时间：
+                        </span>
+                        <input class="sTime" id="name_time" type="text" placeholder="请选择报名时间">
+                        <div style="clear:both"></div>
+                    </div>
+                    <div class="item">
+                        <span class="n_txt">
+                             <i class="red">*</i>报名填写：
+                        </span>
+                        <ul class="itemList">
+                            <li data-id="1">
+                                <div class="inp">
+                                    <span class="span1">姓名</span>
+                                    <input type="text" disabled>
+                                    <span class="span2">文本框</span>
+                                </div>
+                                <span class="bt">必填</span>
+                            </li>
+                            <li data-id="2">
+                                <div class="inp">
+                                    <span class="span1">电话号码</span>
+                                    <input type="text" disabled>
+                                    <span class="span2">文本框</span>
+                                </div>
+                                <span class="bt">必填</span>
+                            </li>
+                        </ul>
+                        <ul style="clear:both"></ul>
+                    </div>
+                    <div class="choice">
+                        <span class="email" data-id="3">
+                            <span>邮箱</span>
+                            <button></button>
+                        </span>
+                        <span class="danwei" data-id="4">
+                            <span>单位</span>
+                            <button></button>
+                        </span>
+                        <span class="job" data-id="5">
+                            <span>职位</span>
+                            <button></button>
+                        </span>
+                    </div>
+                    <div style="clear:both"></div>
+                    <button class="nameBtn" onclick="saveName()">保存</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div class="footer">
+
+</div>
+
+<script src="javascript/jquery-2.1.4.min.js"></script>
+<script src="javascript/common.js"></script>
+<script src="javascript/exif.js"></script>
+<script src="javascript/uploadimg.js"></script><!--上传封面-->
+<script src="javascript/wangEditor.min.js"></script><!--下期预告-->
+<script src="http://webapi.amap.com/maps?v=1.4.6&key=d936b2264f38b02193e59c16ceb4c75e&plugin=AMap.Geocoder"></script><!--map-->
+<!--时间插件-->
+<script src="http://netdna.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+<script src="https://cdn.bootcss.com/bootstrap-daterangepicker/2.1.25/moment.js"></script>
+<script src="https://cdn.bootcss.com/bootstrap-daterangepicker/2.1.25/daterangepicker.js"></script>
+<script src="js/meetModify.js"></script>
+<script>
+    $(function () {
+        //初始化地图对象，加载地图
+        //初始化加载地图时，若center及level属性缺省，地图默认显示用户当前城市范围
+        var map = new AMap.Map('container2', {
+            resizeEnable: true,
+            zoom: 13
+        });
+        var marker = [];
+        //地图中添加地图操作ToolBar插件
+        map.plugin(['AMap.ToolBar'], function() {
+            //设置地位标记为自定义标记
+            var toolBar = new AMap.ToolBar();
+            map.addControl(toolBar);
+        })
+        var clickEventListener = map.on('click', function(e) {
+            var lnglatXY = [e.lnglat.getLng(), e.lnglat.getLat()]
+            regeocoder(lnglatXY)
+        });
+        function regeocoder(xy) {  //逆地理编码
+            var geocoder = new AMap.Geocoder({
+                radius: 1000,
+                extensions: "all"
+            });
+            geocoder.getAddress(xy, function(status, result) {
+                if (status === 'complete' && result.info === 'OK') {
+                    geocoder_CallBack(result);
+                }
+            });
+            map.setFitView();
+        }
+        function geocoder_CallBack(data) {
+            var address = data.regeocode.formattedAddress; //返回地址描述
+            $('#address').val(address);
+        }
+    });
+</script>
+<script>
+    $(function(){
+        var E = window.wangEditor;
+        var editor = new E('#editor');
+        editor.customConfig.uploadImgShowBase64 = true;
+        editor.create();
+
+        var E2 = window.wangEditor;
+        var editor2 = new E2('#editor2');
+        editor2.customConfig.uploadImgShowBase64 = true;
+        editor2.create();
+
+    })
+</script>
+</body>
+
+</html>

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+	<title>会议流程</title>
+	<script src="js/jquery-2.1.4.min.js"></script>
+    <script src="js/iosSelect.js"></script>
+    <script src="js/removeHeader.js"></script>
+	<script src="js/rem.js"></script>
+   
+    <script src="jscript/meetFlow.js"></script>
+	<link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/iosSelect.css">
+    <link rel="stylesheet" href="css/meetChoice.css">
+</head>
+<body>
+    <div class="Header">
+        <a href="javascript:history.go(-1);"></a>
+        会议流程
+    </div>
+    <!--无流程-->
+    <div class="unhave deleteHeader" style="display: none">
+        <div class="unCont">
+            <img src="img/survey.png">
+            <p>您暂时没有添加会议流程！</p>
+        </div>
+        
+    </div>
+    <!--有流程-->
+    <div class="haveFlow deleteHeader" id="flow_list_all">
+        
+    </div>
+    <div class="flowBtn">
+        <span class="flowAdd" onclick="flowAdd()">添加会议流程</span>
+        <span class="flowFin">完成</span>
+    </div>
+    <!--添加-->
+    <div class="flowAddInfo deleteHeader" style="display: none">
+        <div class="fInfoList">
+            <ul>
+                <li class="flow" id="Addflowlist">
+                    <span>流程</span>
+                </li>
+                <li class="fStartTime" id="meetFlowSTime">
+                    <span>开始时间<b>*</b></span>
+                    <span class="flowStartTime" id="flowStartTime" data-year="" data-month="" data-date="">请选择</span>
+                </li>
+                <li class="fEndTime" id="meetFlowETime">
+                    <span>结束时间<b>*</b></span>
+                    <span class="flowEndTime" id="flowEndTime" data-year="" data-month="" data-date="">请选择</span>
+                </li>
+                <li class="flowDes">
+                    <span>流程描述<b>*</b></span>
+                    <textarea placeholder="请填写会议描述" class="flowDesTxt" id="flowDesTxt"></textarea>
+                </li>
+            </ul>
+        </div>
+        <div class="flowAddBtn" onclick="AddFlowList()">添加</div>
+    </div>
+    <!--编辑-->
+    <div class="editFlow deleteHeader" style="display: none">
+        <div class="flowInfo deleteHeader">
+            <div class="fInfoList">
+                <ul>
+                    <li class="flow" id="editFlow">
+                        <span>流程<span id="editNumber"></span></span>
+                    </li>
+                    <li class="fStartTime" id="editFlowStartTime">
+                        <span>开始时间<b>*</b></span>
+                        <span class="flowStartTime" id="editFlowSTime" data-year="" data-month=""
+                              data-date="">请选择</span>
+                    </li>
+                    <li class="fEndTime" id="editFlowEndTime">
+                        <span>结束时间<b>*</b></span>
+                        <span class="flowEndTime" id="editFlowETime" data-year="" data-month="" data-date="">请选择</span>
+                    </li>
+                    <li class="flowDes">
+                        <span>流程描述<b>*</b></span>
+                        <textarea placeholder="请填写会议描述" class="flowDesTxt" id="editFlowTxt"></textarea>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!--submit-->
+        <div class="editBtn">
+            <span class="eSave" id="editSave">保存编辑信息</span>
+            <span class="eCancel" id="editCancel">取消</span>
+        </div>
+    </div>
+    <!--遮罩-->
+    <div class="delShade" style="display: none">
+        <div class="delShadeCon" data-id="" data-index="">
+            <div class="top">温馨提示</div>
+            <div class="txt">确定删除此项会议流程吗？</div>
+            <div class="sBtn">
+                <span class="conCel" id="conCel">取消</span>
+                <span class="conSure" id="conSure">确定</span>
+            </p>
+            
+        </div>
+    </div>
+    <div id="reqtoken" class="reqtoken"></div>
+
+ <script src="jscript/time1.js"></script><!--时间选择插件-->
+</body>
+</html>

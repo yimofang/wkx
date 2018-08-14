@@ -1,0 +1,8 @@
+$(document).ready(function(e){
+	$("#queBtn").click(function(){
+		$(".bg").show();
+	});
+	$("#cueBtn").click(function(){
+		$(".bg").hide();
+	});
+});

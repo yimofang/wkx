@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+	<title>资料管理</title>
+	<link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/dataManage.css">
+    <script src="js/jquery-2.1.4.min.js"></script>
+	<script src="js/rem.js"></script>
+	<script src="js/removeHeader.js"></script>
+	<script src="jscript/dataManage.js"></script>
+</head>
+<body>
+	<!--header-->
+	<div class="Header">
+    	<a href="javascript:history.go(-1);"></a>资料管理
+	</div>
+	<!--data-->
+	<div class="data deleteHeader" style="display: none">
+	    <ul>
+	        <!--<li class="pptInfo" data-id="">-->
+	        	<!--<a href="">-->
+		            <!--<img src="img/ppt.jpg" alt="">-->
+		            <!--<div class="dataInfo">-->
+		                <!--<p class="dataTitle pptTitle"></p>-->
+		                <!--<p class="dataNum">-->
+		                    <!--<span class="dataLook"></span>-->
+		                    <!--<span class="dataLookNum"></span>-->
+		                    <!--<span class="dataShare"></span>-->
+		                    <!--<span class="dataShareNum"></span>-->
+		                <!--</p>-->
+	            	<!--</div>-->
+	            <!--</a>-->
+	            <!--<span class="dataDelBtn" onclick="deleData(0)"></span>-->
+	        <!--</li>-->
+	    </ul>
+	</div>
+
+	<!--unData-->
+	<div class="unData">
+		<img src="img/survey.png">
+		<p>请登录电脑端上传</p>
+	</div>
+
+	<script type="text/javascript">
+	    pushHistory();
+	    window.addEventListener("popstate", function(e) {
+	        // alert('mmmm.html?confsid='+NumAll.confsid);
+	        // alert("我监听到了浏览器的返回按钮事件啦");//根据自己的需求实现自己的功能
+	        window.location.href = 'mmmm.html?confsid='+NumAll.confsid;
+	    }, false);
+	    function pushHistory() {
+	        var state = {
+	            title: "title",
+	            url: "#"
+	        };
+	        window.history.pushState(state, "title", "#");
+	    }
+	</script>
+
+
+</div>
+</body>
+</html>

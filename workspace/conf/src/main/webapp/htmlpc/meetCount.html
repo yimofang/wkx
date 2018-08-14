@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>微会议</title>
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/meetCount.css">
+</head>
+
+<body>
+<div class="topLine"></div>
+<div class="header"></div>
+
+<div class="left_nav">
+    <ul class="nav_one">
+        <li class="nav_manage active">
+            <a href="meetList.html">
+                <b class="active"></b>
+                <span>会议管理</span>
+            </a>
+        </li>
+        <li class="nav_release">
+            <a href="meetPublish.html">
+                <b></b>
+                <span>发布会议</span>
+            </a>
+        </li>
+        <li class="nav_pwd">
+            <a href="password.html">
+                <b></b>
+                <span>修改密码</span>
+            </a>
+        </li>
+    </ul>
+    <ul class="nav_two" style="display: block;">
+        <li>
+            <a href="javascript:void(0)" data-url="meetModify.html">会议修改</a>
+        </li>
+        <li>
+            <a href="javascript:void(0)" data-url="meetCode.html">二维码 </a>
+        </li>
+        <li>
+            <a href="javascript:void(0)" data-url="meetName.html">名单管理 </a>
+        </li>
+        <li>
+            <a href="javascript:void(0)" data-url="meetData.html">资料管理 </a>
+        </li>
+        <li class="on">
+            <a href="javascript:void(0)" data-url="meetCount.html">会议统计 </a>
+        </li>
+        <li>
+            <a href="javascript:void(0)" data-url="meetSurvey.html">调研问卷 </a>
+        </li>
+        <li>
+            <a href="javascript:void(0)" data-url="meetBriefing.html">简报管理 </a>
+        </li>
+        <li>
+            <a href="javascript:void(0)" data-url="meetSign.html">上传签到表 </a>
+        </li>
+    </ul>
+</div>
+<div class="right_wrapper">
+    <div class="top">
+        <span>会议管理 / 会议统计</span>
+    </div>
+    <div class="wrapper">
+        <div class="count_tab">
+            <span class="on">报名签到</span>
+            <span>调研统计</span>
+            <span>推广统计</span>
+        </div>
+        <div class="count_taninfo">
+            <div class="tabs tab0">
+                <ul>
+                    <li class="count_num">
+                        <b class="num1" id="allNum">0</b>
+                        <span>总报名</span>
+                    </li>
+                    <li class="count_num count_num2">
+                        <b class="num1" id="haveNum">0</b>
+                        <span>已签到</span>
+                    </li>
+                    <li class="count_num">
+                        <b class="num1" id="unNum">0</b>
+                        <span>未签到</span>
+                    </li>
+                    <li><span>报名页浏览</span><span class="num2" id="nameLook">0</span></li>
+                    <li><span>报名转化率</span><span class="num2" id="namePercent">0%</span></li>
+                    <li><span>签到转化率</span><span class="num2" id="siPercent">0%</span></li>
+                </ul>
+            </div>
+            <div class="tabs tab1">
+                <ul>
+                    <li class="count_num">
+                        <b class="num1" id="browsenum">0</b>
+                        <span>被浏览</span>
+                    </li>
+                    <li class="count_num count_num2">
+                        <b class="num1" id="answernum">0</b>
+                        <span>提交数</span>
+                    </li>
+                    <li class="count_num">
+                        <b class="num1" id="validnum">0</b>
+                        <span>有效数</span>
+                    </li>
+                </ul>
+                <div class="problem_all">
+                    <p class="problem_tit">
+
+                    </p>
+                    <ul class="problem_list">
+
+                    </ul>
+                </div>
+            </div>
+            <div class="tabs tab2">
+                <div class="jb_list">
+                    <ul>
+                        <!--<li class="item_act">-->
+                            <!--<p class="act_tit">知诚会学习贯彻中发25号《意见》精神</p>-->
+                            <!--<p><span>文字推广次数：10</span> <span class="rigth_num">媒体推广次数：50</span></p>-->
+                        <!--</li>-->
+
+                    </ul>
+                    <div class="mores" onclick="more()">
+                        点击加载更多
+                    </div>
+                </div>
+                <div class="media_all">
+                    <p class="media_tit">文章选择的媒体推广</p>
+                    <ul class="media_list">
+                        <!--<li>-->
+                            <!--东方财富网-->
+                        <!--</li>-->
+                        <!--<li>-->
+                            <!--东方财富网-->
+                        <!--</li>-->
+                        <!--<li>-->
+                            <!--东方财富网-->
+                        <!--</li>-->
+                        <!--<li>-->
+                            <!--东方财富网-->
+                        <!--</li>-->
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<div class="footer">
+</div>
+<div class="shade"></div>
+<script src="javascript/jquery-2.1.4.min.js"></script>
+<script src="javascript/common.js"></script>
+<script src="js/meetCount.js"></script>
+</body>
+
+</html>

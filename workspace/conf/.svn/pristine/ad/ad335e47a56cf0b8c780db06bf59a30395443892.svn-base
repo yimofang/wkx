@@ -1,0 +1,70 @@
+package net.emof.building.web.controller;
+
+import net.emof.building.admin.customEXC.EhCacheSessiconException;
+import net.emof.building.util.DataMap;
+import net.emof.building.web.service.ConfsBack_web_Service;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.Map;
+
+/**
+ * Copyright (C), 2015-2017, 易魔方有限公司
+ * FileName: ConfsBack_web_Controller
+ * Author:   anshiyuan
+ * Date:     2017/12/18 下午3:22
+ * Description:上传签到表
+ * History:
+ */
+@Controller
+@RequestMapping("/back_web")
+public class ConfsBack_web_Controller {
+
+    @Autowired
+    private ConfsBack_web_Service confsBackService;
+
+
+    /**
+     *  展示会议上传签到表图片信息
+     * @author anshiyuan
+     * @creation 2018年1月2日
+     * @param confid	会议ID
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "/getBackInfo", method = RequestMethod.POST)
+    public Map<String, Object> listpage(@RequestParam(value = "confid", required = true) String confid) {
+        DataMap dataMap = this.confsBackService.listpage(confid);
+        return dataMap.data;
+    }
+    
+    /**
+     * 上传签到图片
+     * @author anshiyuan
+     * @param token   用户识别标识
+     * @param confsid 会议ID
+     * @param imgs	    上传图片名称,多个以","隔开
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "/add_back",method = RequestMethod.POST)
+    public Map<String, Object> addConfsBack(@RequestParam(value = "token", required = true) String token,
+    		@RequestParam(value = "confid", required = true) String confid,
+            @RequestParam(value = "imgs", required = false) String imgs) {
+        DataMap dataMap = new DataMap();
+		try {
+			dataMap = this.confsBackService.addConfsBack(token, confid, imgs);
+		} catch (EhCacheSessiconException e) {
+			e.printStackTrace();
+			dataMap.addMsg_diy_list(null, 5, "登录超时，请重新登录");
+			return dataMap.data;
+		}
+        return dataMap.data;
+    }
+    
+    
+}

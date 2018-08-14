@@ -1,0 +1,477 @@
+package net.emof.building.util;
+
+import java.beans.BeanInfo;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
+import java.lang.reflect.Method;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import java.util.Set;
+import java.util.UUID;
+import java.util.regex.Pattern;
+
+import javax.servlet.http.HttpServletRequest;
+
+import com.mysql.fabric.xmlrpc.base.Array;
+
+/**
+ * 工具类
+ * 
+ * @author baikun
+ * @creation 2017年6月13日
+ */
+public class ToolsUtil {
+
+	/**
+	 * list中指定字段转换成 1,2,3 字符串
+	 * 
+	 * @author baikun
+	 * @creation 2017年6月13日
+	 * @param list
+	 * @param keyName
+	 * @return
+	 */
+	public static String List_to_String(List<Map<String, Object>> list, String keyName) {
+		String format_str = "";
+		if (list == null || list.size() < 1) {
+			return null;
+		}
+		for (int x = 0; x < list.size(); x++) {
+			Map<String, Object> map_info = list.get(x);
+			format_str += map_info.get(keyName);
+			if (x + 1 <= list.size() - 1) {
+				if (list.get(x + 1) != null) {
+					format_str += ",";
+				}
+			}
+		}
+		return format_str;
+	}
+
+	/**
+	 * 去除移动端提交字符串中的 "
+	 * 
+	 * @author baikun
+	 * @creation 2017年7月24日
+	 * @param str
+	 * @return
+	 */
+	public static String jsonParamForat(String str) {
+		char[] chr = str.toCharArray();
+		String tim = "";
+		for (int i = 0; i < chr.length; i++) {
+			if (chr[i] != '"') {
+				tim += chr[i];
+			}
+		}
+		return tim;
+	}
+
+	/**
+	 * 实体转map
+	 * 
+	 * @author baikun
+	 * @creation 2017年6月30日
+	 * @param obj
+	 * @return
+	 */
+	public static Map<String, Object> pojo_to_Map(Object obj) {
+		if (obj == null) {
+			return null;
+		}
+		Map<String, Object> map = new HashMap<String, Object>();
+		try {
+			BeanInfo beanInfo = Introspector.getBeanInfo(obj.getClass
+
+			());
+			PropertyDescriptor[] propertyDescriptors =
+
+					beanInfo.getPropertyDescriptors();
+			for (PropertyDescriptor property : propertyDescriptors) {
+				String key = property.getName();
+				// 过滤class属性
+				if (!key.equals("class")) {
+					// 得到property对应的getter方法
+					Method getter = property.getReadMethod();
+					Object value = getter.invoke(obj);
+
+					map.put(key, value);
+				}
+
+			}
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		return map;
+	}
+
+	/** 正则表达式 **/
+	private static String reg = "(?:')|(?:--)|(/\\*(?:.|[\\n\\r])*?\\*/)|"
+			+ "(\\b(select|update|union|and|or|delete|insert|trancate|char|into|substr|ascii|declare|exec|count|master|into|drop|execute)\\b)";
+
+	// b 表示 限定单词边界 比如 select 不通过 1select则是可以的
+	private static Pattern sqlPattern = Pattern.compile(reg, Pattern.CASE_INSENSITIVE);
+
+	/**
+	 * 正则防sql 注入
+	 * 
+	 * @author baikun
+	 * @creation 2017年7月5日
+	 * @param str
+	 * @return
+	 */
+	public static boolean isValid(String str) {
+		if (sqlPattern.matcher(str).find()) {
+			System.out.println("未能通过过滤器：str=" + str);
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * 生成指定长度的随机字符串
+	 * 
+	 * @author baikun
+	 * @creation 2017年7月6日
+	 * @param length
+	 * @return
+	 */
+	public static String getRandomString(int length) { // length表示生成字符串的长度
+		String base = "ABCDEFGHIGHLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+		Random random = new Random();
+		StringBuffer sb = new StringBuffer();
+		for (int i = 0; i < length; i++) {
+			int number = random.nextInt(base.length());
+			sb.append(base.charAt(number));
+		}
+		return sb.toString();
+	}
+
+	/**
+	 * 生成32位随机订单号
+	 * 
+	 * @author baikun
+	 * @creation 2017年9月22日
+	 * @return
+	 */
+	public static String getOrderNub() {
+		String date = new SimpleDateFormat("yyyyMMdd").format(new Date());
+		String seconds = new SimpleDateFormat("HHmmss").format(new Date());
+		return date + "00" + getTwo() + "1000" + getTwo() + "00" + seconds + getTwo() + getTwo() + getTwo();
+
+	}
+
+	/**
+	 * 产生随机的2位数
+	 * 
+	 * @return
+	 */
+	private static String getTwo() {
+		Random rad = new Random();
+
+		String result = rad.nextInt(100) + "";
+
+		if (result.length() == 1) {
+			result = "0" + result;
+		}
+		return result;
+	}
+
+	/**
+	 * 判断 数组内是否包含 一个数
+	 * 
+	 * @author baikun
+	 * @creation 2017年7月13日
+	 * @param arr
+	 *            String数组
+	 * @param targetValue
+	 *            对比数字符
+	 * @return 包含true 否则 false
+	 */
+	public static boolean useSet(String[] arr, String targetValue) {
+		Set<String> set = new HashSet<String>(Arrays.asList(arr));
+		return set.contains(targetValue);
+	}
+
+	/**
+	 * 字符串转 日期类型
+	 * 
+	 * @author baikun
+	 * @creation 2017年10月13日
+	 * @param datestr
+	 *            xxxx-xx-xx
+	 * @param formkey
+	 *            null or 1 yyyy-MM-dd 2 yyyy-MM-dd HH:mm:ss
+	 * @return
+	 * @throws ParseException
+	 */
+	public static Date str_convert_date(String datestr, Integer formkey) throws ParseException {
+		String dateformat = "yyyy-MM-dd HH:mm:ss";
+		if (formkey == null || formkey <= 1) {
+			dateformat = "yyyy-MM-dd";
+		}
+		if (formkey != null && formkey == 2) {
+			dateformat = "yyyy-MM-dd HH:mm:ss";
+		}
+		SimpleDateFormat sdf = new SimpleDateFormat(dateformat);
+		return sdf.parse(datestr);
+	}
+
+	/**
+	 * 日期 转字符
+	 * 
+	 * @author baikun
+	 * @creation 2017年10月16日
+	 * @param date
+	 * @param formkey
+	 *            null or 1 yyyy-MM-dd 2 yyyy-MM-dd HH:mm:ss
+	 * @return
+	 */
+	public static String date_convert_str(Date date, Integer formkey) {
+		String dateformat = "yyyy-MM-dd HH:mm:ss";
+
+		if (formkey == null || formkey <= 1) {
+			dateformat = "yyyy-MM-dd";
+		}
+		if (formkey != null && formkey == 2) {
+			dateformat = "yyyy-MM-dd HH:mm:ss";
+		}
+		SimpleDateFormat sdf = new SimpleDateFormat(dateformat);
+		if (date != null) {
+			return sdf.format(date);
+		} else {
+			return sdf.format(new Date());
+		}
+	}
+
+	/**
+	 * 生成32位随机字符串
+	 * 
+	 * @author xilongfei
+	 * @creation 2017年10月23日
+	 * @return
+	 */
+	public static String get32UUID() {
+		String uuid = UUID.randomUUID().toString().trim().replaceAll("-", "");
+		return uuid;
+	}
+
+	/**
+	 * 生成字符串ID码
+	 * 
+	 * @author baikun
+	 * @creation 2017年11月6日
+	 * @return
+	 */
+	public static String get_diy_ID() {
+		String strID = "";
+		// 年
+		String yeastr = new SimpleDateFormat("yyyy").format(new Date());
+		// 月
+		String monthstr = new SimpleDateFormat("MM").format(new Date());
+		// 日
+		String daystr = new SimpleDateFormat("dd").format(new Date());
+		// 时
+		String timestr = new SimpleDateFormat("HH").format(new Date());
+		// 分
+		String branchstr = new SimpleDateFormat("mm").format(new Date());
+		// 秒
+		String seconds = new SimpleDateFormat("ss").format(new Date());
+		// 版本号
+		String edition = "0100";
+
+		strID += yeastr + monthstr + daystr + edition + getTwo() + getTwo() + getTwo() + getTwo() + timestr + getTwo()
+				+ branchstr + getTwo() + seconds + getTwo();
+
+		return strID;
+	}
+
+	/**
+	 * 返回动态id
+	 * 
+	 * @author baikun
+	 * @creation 2017年12月13日
+	 * @return
+	 */
+	public static String get_diy_token() {
+		String strID = "";
+		// 年
+		String yeastr = new SimpleDateFormat("yyyy").format(new Date());
+		// 月
+		String monthstr = new SimpleDateFormat("MM").format(new Date());
+		// 日
+		String daystr = new SimpleDateFormat("dd").format(new Date());
+		// 时
+		String timestr = new SimpleDateFormat("HH").format(new Date());
+		// 分
+		String branchstr = new SimpleDateFormat("mm").format(new Date());
+		// 秒
+		String seconds = new SimpleDateFormat("ss").format(new Date());
+		// 版本号
+		String edition = "0100";
+
+		strID += yeastr.substring(2, 4) + monthstr + daystr + timestr + branchstr + seconds + getTwo()
+				+ getRandomString(8) + getTwo() + getRandomString(8);
+
+		return strID;
+	}
+
+	/**
+	 * 获取IP
+	 * 
+	 * @author baikun
+	 * @creation 2017年10月31日
+	 * @param request
+	 * @return
+	 * @throws Exception
+	 */
+	public String getIp(HttpServletRequest request) throws Exception {
+		String ip = request.getHeader("X-Forwarded-For");
+		if (ip != null) {
+			if (!ip.isEmpty() && !"unKnown".equalsIgnoreCase(ip)) {
+				int index = ip.indexOf(",");
+				if (index != -1) {
+					return ip.substring(0, index);
+				} else {
+					return ip;
+				}
+			}
+		}
+		ip = request.getHeader("X-Real-IP");
+		if (ip != null) {
+			if (!ip.isEmpty() && !"unKnown".equalsIgnoreCase(ip)) {
+				return ip;
+			}
+		}
+		ip = request.getHeader("Proxy-Client-IP");
+		if (ip != null) {
+			if (!ip.isEmpty() && !"unKnown".equalsIgnoreCase(ip)) {
+				return ip;
+			}
+		}
+		ip = request.getHeader("WL-Proxy-Client-IP");
+		if (ip != null) {
+			if (!ip.isEmpty() && !"unKnown".equalsIgnoreCase(ip)) {
+				return ip;
+			}
+		}
+		ip = request.getRemoteAddr();
+		return ip.equals("0:0:0:0:0:0:0:1") ? "127.0.0.1" : ip;
+	}
+
+	/**
+	 * 计算两时间相差天数
+	 * 
+	 * @param date1
+	 * @param date2
+	 * @return
+	 */
+	public static int differentDays(Date date1, Date date2) {
+		Calendar cal1 = Calendar.getInstance();
+		cal1.setTime(date1);
+		Calendar cal2 = Calendar.getInstance();
+		cal2.setTime(date2);
+		int day1 = cal1.get(Calendar.DAY_OF_YEAR);
+		int day2 = cal2.get(Calendar.DAY_OF_YEAR);
+		int year1 = cal1.get(Calendar.YEAR);
+		int year2 = cal2.get(Calendar.YEAR);
+		if (year1 != year2) // 同一年
+		{
+			int timeDistance = 0;
+			for (int i = year1; i < year2; i++) {
+				if (i % 4 == 0 && i % 100 != 0 || i % 400 == 0) // 闰年
+				{
+					timeDistance += 366;
+				} else // 不是闰年
+				{
+					timeDistance += 365;
+				}
+			}
+			return timeDistance + (day2 - day1);
+		} else // 不同年
+		{
+			return day2 - day1;
+		}
+	}
+
+	/**
+	 * 两个时间相差距离多少天多少小时多少分多少秒
+	 * 
+	 * @param str1
+	 *            时间参数 1 格式：1990-01-01 12:00:00
+	 * @param str2
+	 *            时间参数 2 格式：2009-01-01 12:00:00
+	 * @return long[] 返回值为：{天day, 时hour, 分min, 秒sec}
+	 */
+	public static Map<String, Object> getDistanceTimes(String str1, String str2) {
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Map<String, Object> map = new HashMap<>();
+		Date one;
+		Date two;
+		long day = 0;
+		long hour = 0;
+		long min = 0;
+		long sec = 0;
+		long mins = 0;
+		try {
+			one = df.parse(str1);
+			two = df.parse(str2);
+			long time1 = one.getTime();
+			long time2 = two.getTime();
+			long diff;
+			if (time1 < time2) {
+				diff = time2 - time1;
+			} else {
+				diff = time1 - time2;
+			}
+			day = diff / (24 * 60 * 60 * 1000);
+			hour = (diff / (60 * 60 * 1000) - day * 24);
+			min = ((diff / (60 * 1000)) - day * 24 * 60 - hour * 60);
+			mins = ((diff / (60 * 1000)) - day * 24 * 60);
+			sec = (diff / 1000 - day * 24 * 60 * 60 - hour * 60 * 60 - min * 60);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		map.put("day", day);
+		map.put("hour", hour);
+		map.put("min", min);
+		map.put("sec", sec);
+		long[] times = { day, hour, min, sec };
+		return map;
+	}
+
+	public static void main(String[] args) {
+		
+       System.out.println(isValid("aa"));
+       System.out.println(isValid("select"));
+/*		List<String> list = new ArrayList<String>();  
+		list.add("aa");
+		 
+        for(int i=0;i<990000;i++){
+		 
+			 list.add(get_diy_token()); 
+		}
+        StringBuilder builder = new StringBuilder();  
+        for(String str : list) {  
+            // 如果不存在返回 -1。  
+            if(builder.indexOf(","+str+",") > -1) {  
+                System.out.println("重复的有："+str);  
+            } else {  
+                builder.append(",").append(str).append(",");  
+            }  
+        }  */
+    }  
+
+	
+
+}

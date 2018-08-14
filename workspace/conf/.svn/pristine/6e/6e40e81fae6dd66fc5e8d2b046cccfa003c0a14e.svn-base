@@ -1,0 +1,38 @@
+package net.emof.building.web.service;
+
+import net.emof.building.admin.service.SqlToolseService;
+import net.emof.building.dao.ConfsTypeMapper;
+import net.emof.building.util.DataMap;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Map;
+
+/**
+ * Copyright (C), 2015-2017, 易魔方有限公司
+ * FileName: ConfsType_web_Service
+ * Author:   anshiyuan
+ * Date:     2017/12/14 下午1:45
+ * Description: 会议类型数据操作
+ * History:
+ */
+@Service
+public class ConfsType_web_Service extends SqlToolseService {
+    @Autowired
+    private ConfsTypeMapper ctm;
+
+    public DataMap getConfsTypeList() {
+        DataMap dataMap = new DataMap();
+        StringBuffer table_name = new StringBuffer("confs_type obj");
+        StringBuffer find = new StringBuffer("obj.id,obj.img,obj.tname");
+        StringBuffer where = new StringBuffer("obj.isdelete=1");
+        List<Map<String, Object>> list = this.selectAll(table_name.toString(), find.toString(), where.toString(), null);
+        if (list == null || list.size() <= 0 || list.get(0) == null) {
+            dataMap.addMsg_diy_list(null, 6, "暂无数据");
+            return dataMap;
+        }
+        dataMap.addMsg_list(list, 0);
+        return dataMap;
+    }
+}

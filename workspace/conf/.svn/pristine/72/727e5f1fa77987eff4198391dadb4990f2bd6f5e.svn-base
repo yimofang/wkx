@@ -1,0 +1,93 @@
+var page = 1;
+$(function(){
+    myself();
+
+    //消息中心：上拉加载更多
+    $('.Content').scroll(function() {
+        //当滚动条离底部60px时开始加载下一页的内容
+        if (($(this)[0].scrollTop + $(this).height() + 260) >= $(this)[0].scrollHeight) {
+            clearTimeout(timers);
+            //这里还可以用 [ 延时执行 ] 来控制是否加载 （这样就解决了 当上页的条件满足时，一下子加载多次的问题啦）
+            timers = setTimeout(function() {
+                if(Page>=Pagetotal){
+                    return
+                }else{
+                    Page++;
+                    console.log("第" + Page + "页");
+                }
+            }, 0);
+        }
+    });
+});
+
+//我的首页
+function myself(){
+    $.ajax({
+        type:'post',
+        url:Urlstr + 'userInfo.do',
+        data:{
+            token:Token
+        },
+        dataType:'json',
+        success:function(res){
+            if(res.error == 0){
+                $(".myName").html(res.row.organiz);
+                $(".myselfImg").attr('src',Urlstr+'upload/'+res.row.headimg);
+            }else if(res.error == 5){
+                ReqToken();
+                alert(res.msg);
+            }else{
+                alert(res.msg);
+            }
+        }
+    });
+}
+
+
+
+
+
+
+
+//保存修改密码
+function saveNewPW(){
+	var oldPW = $(".oldPWPut").val();//旧密码
+    var newPW = $(".newPWPut").val();//新密码
+    var newPW2 = $(".sureNewPWPut").val();//确认新密码
+
+    if((oldPW && newPW && newPW2) == ''){
+    	alert("密码不能为空！");
+    }else if(newPW != newPW2){
+    	alert("两次输入密码不一致！");
+    }else{
+        $.ajax({
+            type:'post',
+            url:Urlstr+'login_web/updata_pass.do',
+            data:{
+                newpass:newPW,
+                token:Token
+            },
+            dataType:'json',
+            success:function(res){
+                if(res.error == 0){
+
+                }else if (res.error == 5) {
+                    alert(res.msg);
+                    ReqToken();
+                    Token = sessionStorage.getItem('token');
+                }else{
+                    alert(res.msg);
+                }
+            }
+        });
+    }
+
+
+}
+
+//Token 过期 重新请求
+function ReqToken() {
+    $('#reqtoken').load("login2.html",function() {
+        $('#reqtoken').show();
+    });
+}

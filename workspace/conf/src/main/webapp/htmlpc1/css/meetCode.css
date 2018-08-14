@@ -1,0 +1,94 @@
+.nav_one{width: 45px;}
+.nav_one li{padding:0;}
+.top{
+    position: fixed;
+    height: 47px;
+    line-height: 47px;
+    padding: 0 25px;
+    background: #fff;
+    border-bottom: 1px solid #eee;
+    margin-top: 10px;
+    z-index: 1000;
+    width: 80%;
+    font-size: 16px;
+    color:#333;
+}
+.main{
+    padding:0 25px;
+}
+.main .title{
+    border-bottom: 1px solid #eee;
+    height: 40px;
+    line-height: 40px;
+    cursor: pointer;
+}
+.main .title span{
+    display: inline-block;
+    font-size: 14px;
+    width: 100px;
+    text-align: center;
+    margin-right: 35px;
+    cursor: pointer;
+}
+.main .title span.active{
+    color: #da0e00;
+    border-bottom: 1px solid #da0e00;
+}
+
+/*报名*/
+.cont1{
+    /*width:315px;*/
+    width:175px;
+    height:395px;
+    padding:75px 70px 0;
+    margin-top:25px;
+    margin-left:75px;
+    background: url("../img/named.png") center center no-repeat;
+    background-size:cover;
+    text-align: center;
+}
+.cont2{
+    width:175px;
+    height:395px;
+    padding:75px 70px 0;
+    margin-top:25px;
+    margin-left:75px;
+    background: url("../img/sing.png") center center no-repeat;
+    background-size:cover;
+    text-align: center;
+}
+.n_tit{
+    font-size: 16px;
+    color: #333;
+    font-weight: bold;
+    margin: 0 auto;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    text-align: center;
+    line-height: 22px;
+}
+.n_host,.n_add,.n_time{
+    font-size: 12px;
+    color: #333;
+    line-height: 20px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    /* margin: 16px auto 1px; */
+    text-align: center;
+}
+.n_host{
+    margin:16px auto 10px;
+}
+.cont1 img,.cont2 img{
+    width:110px;
+    height:110px;
+    margin: 14px auto 10px;
+}
+.tishi{
+    color:#999cab;
+    font-size:10px;
+    line-height: 16px;
+}

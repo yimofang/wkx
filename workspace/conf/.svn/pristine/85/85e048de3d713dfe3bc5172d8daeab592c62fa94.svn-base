@@ -1,0 +1,292 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8" isELIgnored="false"%>
+
+
+<style>
+/* 隐藏遮罩层定义  */
+* {
+	margin: 0;
+	padding: 0
+}
+
+ 
+/* 隐藏遮罩层定义 结束   */
+</style>
+
+
+
+<!--遮罩层  -->
+<div   id="seed_one"
+	style="position: fixed; left: 0; top: 0; height: 100%; width: 100%; background: rgba(0, 0, 0, 0.5); display: none; z-index: 10000;"></div>
+<div c  id="seed_two"
+	style="background: #fff; border: 1px solid #ccc; border-radius: 3px; position: fixed; left: 0; top: 0; right: 0; bottom: 0; margin: auto; display: none; z-index: 10001; overflow: auto;">
+	<input type="hidden" id="ls">
+
+	<div class="ibox float-e-margins">
+		<div class="ibox-title">
+			<h5>详细信息</h5>
+			<div class="ibox-tools">
+				<!-- 关闭 -->
+				<a href="javascript:close_div()"> <i class="fa fa-times"></i>
+				</a>
+			</div>
+		</div>
+
+		<div class="ibox-content">
+			<form class="form-horizontal m-t" id="commentForm_seed"
+				enctype="multipart/form-data" accept-charset="utf-8">
+
+				<!-- 点击ID -->
+				<input type="hidden" name="id" id="seed_id">
+				<!-- 点击当前索引 -->
+				<input type="hidden" id="table_index"> 
+ 
+
+				<div class="form-group" id="grade_div">
+					<label class="col-sm-3 control-label">所属主菜单：</label>
+					<div class="col-sm-8">
+
+						<select class="form-control m-b" name="grade" id="grade"
+							autocomplete="off"  ></select>
+					</div>
+				</div>
+
+
+				<div class="form-group">
+					<label class="col-sm-3 control-label">子单名称：</label>
+					<div class="col-sm-8">
+						<input id="menuname_seed" name="name" autocomplete="off"
+							type="text" class="form-control" value="" required=""
+							pattern="^[\u4E00-\u9FA5]+$" title="请输入中文">
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-3 control-label">控制器名称：</label>
+					<div class="col-sm-8">
+						<input id="controller_name" name="controller" autocomplete="off"
+							type="text" class="form-control" value="" required="">
+					</div>
+				</div>     
+				<div class="form-group">
+					<label class="col-sm-3 control-label">短链接：</label>
+					<div class="col-sm-8">
+						<input id="link" name="link" autocomplete="off"
+							type="text" class="form-control" value="" required="">
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-sm-4 col-sm-offset-3">
+						<button class="btn btn-primary" type="submit" id="comitForm">提交</button>
+						<button class="btn btn-danger" type="button" onclick="close_div_seed()">取消</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+
+</div>
+<!--遮罩层 结束 -->
+
+
+
+<script type="text/javascript">
+	var base_path_from = $("#basePath_hid").val();
+	var method_path = base_path_from + "/menus";
+
+	function close_div_seed() {
+		//关闭遮罩层
+		$("#seed_one").hide();
+		$("#seed_two").hide();
+		frominit(null, 2);
+	}
+
+	function show_div_seed() {
+		//打开遮罩层
+		$("#seed_one").show();
+		$("#seed_two").show();
+	}
+
+	var options = {
+		//jqueryform 处理设置 
+		beforeSubmit : null, //提交前处理 
+		success : null, //处理完成 
+		resetForm : false,
+		contentType : "application/x-www-form-urlencoded; charset=utf-8",
+		dataType : 'json',
+		type : "post", //提交方式  
+		url : ""//路径 
+
+	};
+
+	//---------ajax提交表单--------------
+	$('#commentForm_seed').submit(function() {
+
+		options.beforeSubmit = showRequest_seed;
+		options.success = showResponse_seed;
+		$(this).ajaxSubmit(options);
+		//设置 提交 时不刷新，用于显示 错误提示        
+		return false;
+	});
+	//---------ajax提交表单 结束--------------
+
+	function add_obj_seed() {
+		//添加 按键 
+		btn_control = "add";
+		//设置 ajax表单提交路径 
+		options.url = method_path + "/add_info.do";
+
+		show_div_seed();
+
+		frominit_seed(null, 2);
+	}
+
+	function delete_obj_seed(obj, id, f_index, f_id) {
+
+		var tr = obj.parentNode.parentNode;
+		var tbody = tr.parentNode;
+		//删除 按钮
+		btn_control = "delete";
+
+		var se = confirm("确认要删除此信息吗？");
+
+		if (se == true) {
+
+			$.ajax({
+				type : "GET", //提交方式  
+				url : method_path + "/delete_info.do",//路径 
+				data : {
+					id : id
+				},//数据，这里使用的是Json格式进行传输  
+				dataType : "json",
+				success : function(data) {//返回数据根据结果进行相应的处理  
+					//获取选中行信息 
+					tbody.removeChild(tr);
+
+					//更新行 
+					$.ajax({
+						type : "POST", //提交方式  
+						url : method_path + "/idbyinfo.do",//路径 
+						data : {
+							id : f_id
+						},//数据，这里使用的是Json格式进行传输  
+						dataType : "json",
+						success : function(data) {//返回数据根据结果进行相应的处理  
+
+							table_obj.bootstrapTable('updateRow', {
+								index : f_index,
+								row : data
+							});
+
+						}
+					});
+					//清空索引 数据 
+					$("#hid_id").val(null);
+
+				}
+			});
+
+		}
+
+	}
+
+	//数据清空or初始化 
+	function frominit_seed(data, state) {
+
+		var path = base_path_from + "/upload/";
+
+		if (state == 1) {//初始化
+
+			$("#seed_id").val(data.id);
+			$("#menuname_seed").val(data.name);
+			$("#controller_name").val(data.controller);	
+			$("#link").val(data.link);
+			$('#grade_div').hide();
+			$('#grade').hide();
+			
+
+		}
+		if (state == 2 || data == null) {//清空  
+			   
+			$("#seed_id").val(null);
+			$("#menuname_seed").val(null);
+			$("#controller_name").val(null);	
+			$("#link").val(null);	
+			$('#grade_div').show();
+			$('#grade').show();
+			select_init("grade","get_menu_list");
+		}
+	}
+
+	function update_obj_seed(obj, id, f_index, f_id) {
+		//修改按键 
+		btn_control = "update";
+ 
+		//variable_init();
+		//设置 ajax表单提交路径 
+		options.url = method_path + "/update_info.do";
+
+		$.ajax({
+			type : "POST", //提交方式  
+			url : method_path + "/idbyinfo.do",//路径 
+			data : {
+				id : id
+			},//数据，这里使用的是Json格式进行传输  
+			dataType : "json",
+			success : function(data) {//返回数据根据结果进行相应的处理  
+
+				frominit_seed(data, 1);
+				show_div_seed();
+			}
+		});
+
+	}
+
+	//-----------ajax提交表单依赖方法 -------
+
+	function showRequest_seed(formData, jqForm, options) {
+		//处理提交时 验证		 			
+		$("#msg").html("正在提交...");
+		return true;
+	}
+
+	function showResponse_seed(responseText) {
+		//处理回调 函数 
+		if (responseText.code == 1) {
+			close_div();
+			 location.reload();
+		} else {
+			alert(responseText.msg);
+			frominit(responseText.info, 1);
+			
+		}
+		
+		
+
+	}
+
+	//-----------ajax提交表单依赖方法 -结束------
+
+	//加载下拉列表 
+	// tag_id Web标签id ,method_name 访问加载方法名 , data_id 需要对比的id 
+	function select_init(tag_id, method_name) {
+
+		var top_id = 0;
+		var select_str = "";
+
+		$.ajax({
+			type : "POST", //提交方式  
+			url : method_path + "/" + method_name+".do",//路径 
+			dataType : "json",
+			success : function(data) {//返回数据根据结果进行相应的处理 
+				$.each(data, function(index, value) {
+
+					select_str += "<option value='"+value.id+"' >"
+							+ value.name + "</option> ";
+
+				});
+				$("#" + tag_id).html(select_str);
+			}
+		});
+
+	}
+</script>

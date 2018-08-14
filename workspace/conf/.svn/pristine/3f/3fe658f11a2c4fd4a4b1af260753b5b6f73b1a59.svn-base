@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+	<title>报名设置</title>
+	<script src="js/jquery-2.1.4.min.js"></script>
+    <script src="js/iosSelect.js"></script>
+    <script src="js/removeHeader.js"></script>
+	<script src="js/rem.js"></script>
+    
+    <script src="jscript/meetNamed.js"></script>
+
+	<link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/iosSelect.css">
+    <link rel="stylesheet" type="text/css" href="css/meetChoice.css">
+</head>
+<body>
+
+    <!--header-->
+    <div class="Header">
+        <a id="mEnName" href="javascript:void(0);" onclick="BMCancel()"></a>报名设置
+    </div>
+    <!--enterName-->
+    <div class="enterName deleteHeader">
+        <ul>
+            <li class="nStartTime" id="nStartTime">
+                <span>开始时间<b>*</b></span>
+                <span class="enterTime" id="nameStartTime">请选择</span>
+            </li>
+            <li class="nEndTime" id="nEndTime">
+                <span>结束时间<b>*</b></span>
+                <span class="enterTime" id="nameEndTime">请选择</span>
+            </li>
+            <li class="enterInfo">
+                <span>报名填写</span>
+                <div class="infoContent">
+                    <ul>
+                        <li><span data-id="1">姓名</span>
+                            <button style="display: none"></button>
+                        </li>
+                        <li><span data-id="2">手机</span>
+                            <button style="display: none"></button>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+            <li class="defind">
+                <ul>
+                    <li><span data-id="3">邮箱</span>
+                        <button></button>
+                    </li>
+                    <li><span data-id="4">单位</span>
+                        <button></button>
+                    </li>
+                    <li><span data-id="5">职位</span>
+                        <button></button>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+    <!--submit-->
+    <div class="namedBtn">
+        <span class="nSave" onclick="BMsave()">完成</span>
+        <span class="nCancel" onclick="BMCancel()">取消</span>
+    </div>
+    <script src="js/iosSelect.js"></script>
+    <script src="jscript/time1.js"></script><!--时间选择插件-->
+</body>
+</html>

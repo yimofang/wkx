@@ -1,0 +1,146 @@
+$(function () {
+    $("#TitTab").on('click','li',function () {
+        $(this).children('span').addClass('active');
+        $(this).siblings().children('span').removeClass('active');
+        var index = $(this).index();
+        if(index<2){
+            $('.NameCon>div:eq('+index+')').show()
+            $('.NameCon>div:eq('+index+')').siblings('div').hide();
+        }
+        if(index == 2){
+            $('.NameCon>div:eq('+index+')').show()
+            $('.NameCon>div:eq('+index+')').siblings('div').hide();
+            var x=1;
+            if(x==1){
+                $('.PCcaozuo').show();
+                $('.ChuanListTit').hide();
+                $('.ChuanAllList').hide();
+            }else{
+                $('.PCcaozuo').hide();
+                $('.ChuanListTit').show();
+                $('.ChuanAllList').show();
+            }
+        }
+    })
+
+    /*弹出添加名单*/
+    $(".NameListAdd").click(function(){
+        $("#addName").show();
+        $("#nameList").hide();
+    });
+    $(".Goback").click(function(){
+        $("#addName").hide();
+        $("#nameList").show();
+    });
+
+
+    /*验证*/
+     /*验证姓名*/
+    $("#name").blur(function(){
+        var username=$("#name").val().match(/^[\u4e00-\u9fa5]{2,4}$/i);
+        if(!username){
+            $("#name").css('padding-right','0.5rem');
+            $("#name").css('background-image','url(img/false2.png)');
+            $("#name").css('background-size','0.4rem 0.4rem');
+            $("#name").css('background-position','right');
+            $("#name").css('background-repeat','no-repeat');
+        }
+        else{ 
+            $("#name").val(username[0]);
+            // $("#addName_content div div input").addClass('inputYes');
+            $("#name").css('padding-right','0.5rem');
+            $("#name").css('background-image','url(img/yes.png)');
+            $("#name").css('background-size','0.32rem 0.22rem');
+            $("#name").css('background-position','right');
+            $("#name").css('background-repeat','no-repeat');
+        }
+    });
+    /*验证电话*/
+    $("#phone").blur(function(){
+        var pNumber=$("#phone").val().match(/^1[34578]\d{9}$/);
+        if(!pNumber){
+            $("#phone").css('padding-right','0.5rem');
+            $("#phone").css('background-image','url(img/false2.png)');
+            $("#phone").css('background-size','0.4rem 0.4rem');
+            $("#phone").css('background-position','right');
+            $("#phone").css('background-repeat','no-repeat');
+        }
+        else{ 
+            $("#phone").val(pNumber[0]);
+            $("#phone").css('padding-right','0.5rem');
+            $("#phone").css('background-image','url(img/yes.png)');
+            $("#phone").css('background-size','0.32rem 0.22rem');
+            $("#phone").css('background-position','right');
+            $("#phone").css('background-repeat','no-repeat');
+        }
+    });
+    /*验证邮箱*/
+    $("#mail").blur(function(){
+        var email=$("#mail").val().match(/^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((\.[a-zA-Z0-9_-]{2,3}){1,2})$/);
+        if(email){
+            $("#mail").val(email[0]);
+            $("#mail").css('padding-right','0.5rem');
+            $("#mail").css('background-image','url(img/yes.png)');
+            $("#mail").css('background-size','0.32rem 0.22rem');
+            $("#mail").css('background-position','right');
+            $("#mail").css('background-repeat','no-repeat');
+        }
+    });
+
+
+    /*报名*/
+    var signUpdata = [
+        {'id': '10001', 'value': '报名'},
+        {'id': '10002', 'value': '未报名'}
+    ];
+
+    var signUp = document.querySelector('#signUp');   // 绑定一个触发元素
+    var showSignUp = document.querySelector('#signUpChoice');  // 绑定一个存储结果的元素
+    signUp.addEventListener('click', function () {  // 添加监听事件
+        var typeId = signUp.dataset['id'];          // 获取元素的data-id属性值
+        var title = signUp.dataset['value'];        // 获取元素的data-value属性值
+        // 实例化组件
+        var example = new IosSelect(1,               // 第一个参数为级联层级，演示为1
+            [signUpdata],
+            {
+                container: '.container',             // 容器class
+                title: '请选择',                     // 标题
+                itemHeight: 50,                      // 每个元素的高度
+                itemShowCount: 3,                    // 每一列显示元素个数，超出将隐藏
+                oneLevelId: typeId,  
+                showAnimate:true,                    // 第一级默认值
+                callback: function (selectOneObj) {  // 用户确认选择后的回调函数
+                    showSignUp.innerHTML = selectOneObj.value;
+                }
+            });
+    });
+
+
+    /*签到*/
+    var checkInData = [
+        {'id': '10001', 'value': '签到'},
+        {'id': '10002', 'value': '未签到'}
+    ];
+
+    var checkIn = document.querySelector('#checkIn');   // 绑定一个触发元素
+    var showCheckIn = document.querySelector('#checkInChoice');  // 绑定一个存储结果的元素
+    checkIn.addEventListener('click', function () {  // 添加监听事件
+        var typeId = checkIn.dataset['id'];          // 获取元素的data-id属性值
+        var title = checkIn.dataset['value'];        // 获取元素的data-value属性值
+        // 实例化组件
+        var example = new IosSelect(1,               // 第一个参数为级联层级，演示为1
+            [checkInData],
+            {
+                container: '.container',             // 容器class
+                title: '请选择',                     // 标题
+                itemHeight: 50,                      // 每个元素的高度
+                itemShowCount: 3,                    // 每一列显示元素个数，超出将隐藏
+                oneLevelId: typeId,  
+                showAnimate:true,                    // 第一级默认值
+                callback: function (selectOneObj) {  // 用户确认选择后的回调函数
+                    showCheckIn.innerHTML = selectOneObj.value;
+                }
+            });
+    });
+})
+

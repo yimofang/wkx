@@ -1,0 +1,31 @@
+$(function(){
+	$(".navAll").click(function(){
+		$(".navAll>span").addClass('active');
+		$(".navIng>span").removeClass('active');
+		$(".navHad>span").removeClass('active');
+		$(".conAll").show();
+		$(".conIng").hide();
+		$(".conHad").hide();
+	});
+	$(".navIng").click(function(){
+		$(".navIng>span").addClass('active');
+		$(".navAll>span").removeClass('active');
+		$(".navHad>span").removeClass('active');
+		$(".conIng").show();
+		$(".conAll").hide();
+		$(".conHad").hide();
+	});
+	$(".navHad").click(function(){
+		$(".navHad>span").addClass('active');
+		$(".navIng>span").removeClass('active');
+		$(".navAll>span").removeClass('active');
+		$(".conHad").show();
+		$(".conIng").hide();
+		$(".conAll").hide();
+	});
+
+	/*搜索*/
+	$("#search").bind('input',function(){
+		$(".searchList").show();
+	});
+});

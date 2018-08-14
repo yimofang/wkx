@@ -1,0 +1,51 @@
+package net.emof.building.timer;
+
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.log4j.Logger;
+import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
+
+import net.emof.building.model.Confs;
+import net.emof.building.util.ToolsUtil;
+import net.emof.building.web.service.Confs_web_Service;
+
+
+/**
+ * @Description: TODO
+ * @author 作者: 习龙飞
+ * @date 创建时间：2016年9月12日 上午10:16:10
+ */
+@Component
+public class TimerCount {
+	/**
+	 * 日志
+	 */
+	private final Logger logger = Logger.getLogger(TimerCount.class);
+
+	@Autowired
+	private Confs_web_Service confsService;
+	
+	
+	/**
+	 * 删除前一天未发布的会议
+	 * @author xilongfei
+	 * @creation 2017年12月26日
+	 * @return
+	 */
+	@Scheduled(cron = "0 0 17 * * ?")
+	public void deleteBespeak() {
+		logger.info("--------进入定时删除未发布的会议--------");
+		String date = ToolsUtil.getDayAfter(new Date(), 1);
+		List<Confs> confs = confsService.selectNoRlsConfs(date); //查询未发布的会议
+		if(!confs.isEmpty()) {
+			int num = confsService.deleteNoRlsConfs(confs);
+			logger.info("--------已结束定时删除待支付订单----状态:--" + num + "--");
+		}
+	}
+	
+}

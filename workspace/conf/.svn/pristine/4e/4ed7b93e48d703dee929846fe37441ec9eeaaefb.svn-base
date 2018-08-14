@@ -1,0 +1,176 @@
+package net.emof.building.web.controller;
+
+import net.emof.building.admin.customEXC.EhCacheSessiconException;
+import net.emof.building.ehcache.EhSessicon;
+import net.emof.building.model.Users;
+import net.emof.building.util.DataMap;
+import net.emof.building.web.service.ConfsFlow_web_Service;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * 会议流程： 跳转页面 查询会议流程 添加会议流程 修改会议流程 删除会议流程
+ *
+ * @author anshiyuan
+ * @create 2017/12/12
+ * @since 1.0.0
+ */
+@Controller
+@RequestMapping("/confsFlow_web")
+public class ConfsFlow_web_Controller {
+
+    @Autowired
+    private ConfsFlow_web_Service confsFlowService;
+
+
+    /**
+     * 查询会议流程列表
+     *
+     * @param confsid 会议ID  必传项
+     * @return 数据集合 或者 null + 文字提示
+     */
+    @ResponseBody
+    @RequestMapping(value = "/listpage", method = RequestMethod.POST)
+    public Map<String, Object> list_page(@RequestParam(value = "confsid", required = true) String confsid) {
+        DataMap dataMap = this.confsFlowService.getConfsFlowList(confsid,1);
+        return dataMap.data;
+    }
+
+    /**
+     * 添加会议流程
+     *
+     * @param confsid 会议ID
+     * @param token   用户token
+     * @param fname   会议流程名称
+     * @param bhstart 开始时间
+     * @param bhend   结束时间
+     * @return
+     * @author anshiyuan
+     * @method = RequestMethod.POST
+     */
+    @ResponseBody
+    @RequestMapping(value = "/add_flow", method = RequestMethod.POST)
+    public Map<String, Object> addConfsFlow(@RequestParam(value = "confsid", required = true) String confsid,
+                                         @RequestParam(value = "token", required = true) String token,
+                                         @RequestParam(value = "fname", required = false) String fname,
+                                         @RequestParam(value = "bhstart", required = false) String bhstart,
+                                         @RequestParam(value = "bhend", required = false) String bhend) {
+        DataMap dataMap = this.confsFlowService.addConfsFlow(confsid, token, fname, bhstart, bhend);
+        return dataMap.data;
+    }
+
+    
+    /**
+     * 添加会议流程
+     *
+     * @param confsid 会议ID
+     * @param token   用户token
+     * @param fname   会议流程名称
+     * @param bhstart 开始时间
+     * @param bhend   结束时间
+     * @return
+     * @author anshiyuan
+     * @method = RequestMethod.POST
+     */
+    @ResponseBody
+    @RequestMapping(value = "/add_flowPc")
+    public Map<String, Object> addConfsFlowPc( @RequestParam(value = "confsid", required = false) String confsid,
+            @RequestParam(value = "token", required = false) String token,
+    		@RequestParam(value = "array", required = false) String array) {
+    	
+        System.out.println("confsid="+confsid+"=token="+token);
+    	 Users users;
+    	 DataMap dataMap = new DataMap();
+    	  try {
+              users = EhSessicon.getTokenInfo(token);
+              if (users == null) {
+                  dataMap.addMsg_diy_list(null, 5, "登录超时，请重新登录");
+                  return dataMap.data;
+              }
+          } catch (EhCacheSessiconException e) {
+              dataMap.addMsg_diy_list(null, 5, "登录超时，请重新登录");
+              return dataMap.data;
+          }
+    	  
+    		if(null==confsid||confsid.equals("")) {
+    		   	 dataMap.addMsg_diy_list(null, 6, "confsid不能为空");
+    		        return dataMap.data;
+    		   }
+    	  
+    	 JSONArray arr = new JSONArray(array);
+         JSONObject object = null;
+         List<Map<String, Object>> list= new ArrayList<Map<String, Object>>();
+         for (int i = 0; i < arr.length(); i++) {
+             object = arr.getJSONObject(i);
+             String id = object.getString("id");
+             String fname = object.getString("fname");
+             String bhstart = object.getString("bhstart");
+             String bhend = object.getString("bhend");
+  System.out.println("id="+id+"=fname="+fname+"=bhstart="+bhstart+"=bhend="+bhend);
+  
+  
+  /*
+http://weihuiyi.ldynet.cn:89/confsFlow_web/add_flowPc.do?token=180605084709969Y8fT2iI12pwlpRnLW&confsid=180129085908jxC9ESSS&array=[{"id":"","fname":"内容","bhstart":"2018-06-29 10:13:31","bhend":"2018-08-29 10:13:31"},{"id":"","fname":"福满楼","bhstart":"2018-06-29 10:13:31","bhend":"2018-07-29 10:13:31"}]
+   * */
+  
+  
+			  if(null==id||id.equals("")) {
+				  DataMap dm =this.confsFlowService.addConfsFlow(confsid, token, fname, bhstart, bhend);
+				  list.add(dm.data);
+			  } else {
+				  DataMap dm =this.confsFlowService.updateConfsFlow(id, confsid, token, fname, bhstart, bhend);
+				  list.add(dm.data);
+			  }
+         }
+         
+        dataMap.addMsg_diy_list(list, 0, "存储成功！");
+        return dataMap.data;
+    }
+    
+    
+    
+    /**
+     * 修改会议流程
+     *
+     * @param flowid  会议流程ID
+     * @param fname   会议名称
+     * @param bhstart 会议流程开始时间
+     * @param bhend   会议流程结束时间
+     * @return
+     * @author anshiyuan
+     */
+    @ResponseBody
+    @RequestMapping(value = "/updata_flow", method = RequestMethod.POST)
+    public Map<String, Object> updataConfsFlow(@RequestParam(value = "flowid", required = true) String flowid,
+                                           @RequestParam(value = "fname", required = false) String fname,
+                                           @RequestParam(value = "bhstart", required = false) String bhstart,
+                                           @RequestParam(value = "bhend", required = false) String bhend) throws ParseException {
+        DataMap dataMap = this.confsFlowService.updataConfsFlow(flowid, fname, bhstart, bhend);
+        return dataMap.data;
+    }
+
+    /**
+     * 删除会议流程
+     *
+     * @param flowid 会议流程ID
+     * @return
+     * @author anshiyuan
+     */
+    @ResponseBody
+    @RequestMapping(value = "/delete_flow")
+    public Map<String, Object> deleteConfsFlow(@RequestParam(value = "flowid", required = true) String flowid) {
+        DataMap dataMap = this.confsFlowService.deleteConfsFlow(flowid);
+        return dataMap.data;
+    }
+}

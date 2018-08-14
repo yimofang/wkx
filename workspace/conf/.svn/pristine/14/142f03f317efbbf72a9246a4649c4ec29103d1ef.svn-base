@@ -1,0 +1,15 @@
+$(function(){
+	$("#hot").click(function(){
+		$(".mediaHot").show();
+		$(".mediaPackage").hide();
+		$("#hot").addClass("current");
+		$("#package").removeClass("current");
+	});
+	$("#package").click(function(){
+		$(".mediaHot").hide();
+		$(".mediaPackage").show();
+		$("#hot").removeClass("current");
+		$("#package").addClass("current");
+	});
+});
+	

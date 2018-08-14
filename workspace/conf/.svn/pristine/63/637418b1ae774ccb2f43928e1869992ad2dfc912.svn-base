@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+    <title>微会议</title>
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="css/my.css">
+    <script src="js/jquery-2.1.4.min.js"></script>
+    <script src="js/rem.js"></script>
+    <script src="js/removeHeader.js"></script>
+    <script src="jscript/my.js"></script>
+</head>
+<body>
+	<!--header-->
+	<div class="Header">
+    	<a href="javascript:history.go(-1);"></a>修改密码
+	</div>
+	<!--modifyCon-->
+	<div class="modifyCon">
+		<ul>
+			<li>
+				<span class="oldPW PW">旧密码</span>
+				<input class="oldPWPut PWPut" type="password" placeholder="请输入旧密码">
+				<span class="del" id="delOldPW"></span>
+			</li>
+			<li class="modNew">
+				<span class="newPW PW">新密码</span>
+				<input class="newPWPut PWPut" type="password" placeholder="请输入新密码">
+				<span class="del" id="delNewPW"></span>
+			</li>
+			<li>
+				<span class="sureNewPW PW">确认新密码</span>
+				<input class="sureNewPWPut PWPut" type="password" placeholder="请再次输入新密码">
+				<span class="del" id="delSureNP"></span>
+			</li>
+		</ul>
+	</div>
+	<!--btn-->
+	<div class="btn" onclick="saveNewPW()">确认修改</div>
+	
+	<div id="reqtoken" class="reqtoken"></div>
+
+	<!-- <script>
+		var ua = navigator.userAgent.toLowerCase();
+	　　var isWeixin = ua.indexOf('micromessenger') != -1;
+	　　if (isWeixin) {
+	        //修改密码
+        	$(".modifyCon").css('margin-top','0.2rem');
+	   　　 return true;
+	　　}else{
+	   　　 return false;      
+	　　}
+	</script> -->
+</body>
+</html>

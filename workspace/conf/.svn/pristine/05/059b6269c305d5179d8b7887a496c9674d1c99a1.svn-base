@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>名单管理</title>
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <link rel="stylesheet" href="css/css.css">
+    <link rel="stylesheet" href="css/name_list.css">
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/iosSelect.css">
+    <script src="js/jquery-2.1.4.min.js"></script>
+    <script src="js/rem.js"></script>
+    <script src="js/iosSelect.js"></script>
+    <script src="jscript/NameList.js"></script>
+    <script src="js/removeHeader.js"></script>
+</head>
+<body>
+    <!--名单列表-->
+    <div class="nameList" id="nameList">
+        <!--header-->
+        <div class="Header">
+        <a href="javascript:history.go(-1)" class="Goback"></a>名单管理
+        <!--<a class="SearchIocn" href="nameSearch.html">-->
+        </a>
+        </div>
+         <!--nameList-->
+        <div class="NameList deleteHeader">
+        <ul class="TitTab overflow" id="TitTab">
+            <li><span class="active">全部<b id="totalnum">()</b></span></li>
+            <li><span>已签到</span></li>
+            <li><span>上传名单</span></li>
+        </ul>
+        
+        <div class="NameCon">
+            <div class="NameCon1" >
+                <ul class="overflow AllListTit">
+                    <li>参会人</li>
+                    <li>手机号</li>
+                    <li>报名时间</li>
+                    <li>签到否</li>
+                </ul>
+                <ul class=" AllListCon">
+                    <!--<li>-->
+                        <!--<span>测试</span>-->
+                        <!--<span>18888888888</span>-->
+                        <!--<span>2017-11-03</span>-->
+                        <!--<span><img src="img/yes.png" alt=""></span>-->
+                    <!--</li>-->
+                    <!--<li>-->
+                        <!--<span>测试</span>-->
+                        <!--<span>18888888888</span>-->
+                        <!--<span>2017-11-03</span>-->
+                        <!--<span><img src="img/yes.png" alt=""></span>-->
+                    <!--</li>-->
+                    <!--<li>-->
+                        <!--<span>测试</span>-->
+                        <!--<span>18888888888</span>-->
+                        <!--<span>2017-11-03</span>-->
+                        <!--<span><img src="img/yes.png" alt=""></span>-->
+                    <!--</li>-->
+                    <!--<li>-->
+                        <!--<span>测试</span>-->
+                        <!--<span>18888888888</span>-->
+                        <!--<span>2017-11-03</span>-->
+                        <!--<span><img src="img/yes.png" alt=""></span>-->
+                    <!--</li>-->
+                    <!--<li>-->
+                    <!--<span>测试</span>-->
+                    <!--<span>18888888888</span>-->
+                    <!--<span>2017-11-03</span>-->
+                    <!--<span><img src="img/yes.png" alt=""></span>-->
+                <!--</li>-->
+                    <!--<li>-->
+                        <!--<span>测试</span>-->
+                        <!--<span>18888888888</span>-->
+                        <!--<span>2017-11-03</span>-->
+                        <!--<span><img src="img/no.png" alt=""></span>-->
+                    <!--</li>-->
+                    <!--<li>-->
+                        <!--<span>测试</span>-->
+                        <!--<span>18888888888</span>-->
+                        <!--<span>2017-11-03</span>-->
+                        <!--<span><img src="img/no.png" alt=""></span>-->
+                    <!--</li>-->
+                    <!--<li>-->
+                        <!--<span>测试</span>-->
+                        <!--<span>18888888888</span>-->
+                        <!--<span>2017-11-03</span>-->
+                        <!--<span><img src="img/no.png" alt=""></span>-->
+                    <!--</li>-->
+                    <!--<li>-->
+                        <!--<span>测试</span>-->
+                        <!--<span>18888888888</span>-->
+                        <!--<span>2017-11-03</span>-->
+                        <!--<span><img src="img/no.png" alt=""></span>-->
+                    <!--</li>-->
+                    <!--<li>-->
+                        <!--<span>测试</span>-->
+                        <!--<span>18888888888</span>-->
+                        <!--<span>2017-11-03</span>-->
+                        <!--<span><img src="img/no.png" alt=""></span>-->
+                    <!--</li>-->
+                    <!--<li>-->
+                        <!--<span>测试</span>-->
+                        <!--<span>18888888888</span>-->
+                        <!--<span>2017-11-03</span>-->
+                        <!--<span><img src="img/no.png" alt=""></span>-->
+                    <!--</li>-->
+                    <!--<li>-->
+                        <!--<span>测试</span>-->
+                        <!--<span>18888888888</span>-->
+                        <!--<span>2017-11-03</span>-->
+                        <!--<span><img src="img/no.png" alt=""></span>-->
+                    <!--</li>-->
+                    <!--<li>-->
+                        <!--<span>测试</span>-->
+                        <!--<span>18888888888</span>-->
+                        <!--<span>2017-11-03</span>-->
+                        <!--<span><img src="img/no.png" alt=""></span>-->
+                    <!--</li>-->
+                    <!--<li>-->
+                        <!--<span>测试</span>-->
+                        <!--<span>18888888888</span>-->
+                        <!--<span>2017-11-03</span>-->
+                        <!--<span><img src="img/no.png" alt=""></span>-->
+                    <!--</li>-->
+                </ul>
+            </div>
+            <div class="NameCon2" style="display: none;">
+                <ul class="overflow QianListTit">
+                    <li>参会人</li>
+                    <li>手机号</li>
+                    <li>签到时间</li>
+                </ul>
+                <ul class="QianAllList">
+                    <!--<li>-->
+                        <!--<span>测试</span>-->
+                        <!--<span>18888888888</span>-->
+                        <!--<span>2017-11-03</span>-->
+                    <!--</li>-->
+                    <!--<li>-->
+                        <!--<span>测试</span>-->
+                        <!--<span>18888888888</span>-->
+                        <!--<span>2017-11-03</span>-->
+                    <!--</li>-->
+                    <!--<li>-->
+                        <!--<span>测试</span>-->
+                        <!--<span>18888888888</span>-->
+                        <!--<span>2017-11-03</span>-->
+                    <!--</li>-->
+                    <!--<li>-->
+                        <!--<span>测试</span>-->
+                        <!--<span>18888888888</span>-->
+                        <!--<span>2017-11-03</span>-->
+                    <!--</li>-->
+                    <!--<li>-->
+                        <!--<span>测试</span>-->
+                        <!--<span>18888888888</span>-->
+                        <!--<span>2017-11-03</span>-->
+                    <!--</li>-->
+                    <!--<li>-->
+                    <!--<span>测试</span>-->
+                    <!--<span>18888888888</span>-->
+                    <!--<span>2017-11-03</span>-->
+                <!--</li>-->
+                    <!--<li>-->
+                    <!--<span>测试7</span>-->
+                    <!--<span>18888888888</span>-->
+                    <!--<span>2017-11-03</span>-->
+                <!--</li>-->
+                    <!--<li>-->
+                        <!--<span>测试8</span>-->
+                        <!--<span>18888888888</span>-->
+                        <!--<span>2017-11-03</span>-->
+                    <!--</li>-->
+                    <!--<li>-->
+                        <!--<span>测试9</span>-->
+                        <!--<span>18888888888</span>-->
+                        <!--<span>2017-11-03</span>-->
+                    <!--</li>-->
+                    <!--<li>-->
+                        <!--<span>测试10</span>-->
+                        <!--<span>18888888888</span>-->
+                        <!--<span>2017-11-03</span>-->
+                    <!--</li>-->
+                    <!--<li>-->
+                        <!--<span>测试11</span>-->
+                        <!--<span>18888888888</span>-->
+                        <!--<span>2017-11-03</span>-->
+                    <!--</li>-->
+                    <!--<li>-->
+                        <!--<span>测试12</span>-->
+                        <!--<span>18888888888</span>-->
+                        <!--<span>2017-11-03</span>-->
+                    <!--</li>-->
+
+                </ul>
+            </div>
+            <div class="NameCon3" style="display: none;">
+                <ul class="overflow ChuanListTit">
+                    <li>参会人</li>
+                    <li>手机号</li>
+                    <li>签到否</li>
+                </ul>
+                <ul class="ChuanAllList">
+                    <!--<li>-->
+                        <!--<span>测试人</span>-->
+                        <!--<span>18888888888</span>-->
+                        <!--<span><img src="img/yes.png" alt=""></span>-->
+                    <!--</li>-->
+                    <!--<li>-->
+                        <!--<span>测试人</span>-->
+                        <!--<span>18888888888</span>-->
+                        <!--<span><img src="img/yes.png" alt=""></span>-->
+                    <!--</li>-->
+                    <!--<li>-->
+                        <!--<span>测试人</span>-->
+                        <!--<span>18888888888</span>-->
+                        <!--<span><img src="img/yes.png" alt=""></span>-->
+                    <!--</li>-->
+                    <!--<li>-->
+                        <!--<span>测试人</span>-->
+                        <!--<span>18888888888</span>-->
+                        <!--<span><img src="img/yes.png" alt=""></span>-->
+                    <!--</li>-->
+                    <!--<li>-->
+                        <!--<span>测试人</span>-->
+                        <!--<span>18888888888</span>-->
+                        <!--<span><img src="img/yes.png" alt=""></span>-->
+                    <!--</li>-->
+                    <!--<li>-->
+                        <!--<span>测试人</span>-->
+                        <!--<span>18888888888</span>-->
+                        <!--<span><img src="img/yes.png" alt=""></span>-->
+                    <!--</li>-->
+                    <!--<li>-->
+                        <!--<span>测试人</span>-->
+                        <!--<span>18888888888</span>-->
+                        <!--<span><img src="img/yes.png" alt=""></span>-->
+                    <!--</li>-->
+                    <!--<li>-->
+                    <!--<span>测试人</span>-->
+                    <!--<span>18888888888</span>-->
+                    <!--<span><img src="img/yes.png" alt=""></span>-->
+                <!--</li>-->
+                    <!--<li>-->
+                        <!--<span>测试人</span>-->
+                        <!--<span>18888888888</span>-->
+                        <!--<span><img src="img/yes.png" alt=""></span>-->
+                    <!--</li>-->
+
+
+                </ul>
+                <div class="PCcaozuo">
+                    <img src="img/pc.png" alt="">
+                </div>
+            </div>
+        </div>
+        <a href="javascript:void(0);" class="NameListAdd">+ 手动添加</a>
+        </div>
+    </div>
+
+    <!--隐藏添加名单-->
+    <div id="addName" style="display: none">
+        <!--header-->
+        <div class="Header">
+            <a class="Goback" href="javascript:void(0);"></a>添加名单
+        </div>
+        <!--addName_content-->
+        <div class="addName_content deleteHeader">
+            <div>
+                <div class="name">
+                    <span>姓名<b>*</b></span>
+                    <input type="text" id="name" placeholder="请填写参会者姓名">
+                </div>
+                <div class="mobile">
+                    <span>手机号码<b>*</b></span>
+                    <input type="text" id="phone" placeholder="请填写参会者手机号码">
+                </div>
+                <div class="email">
+                    <span>邮箱</span>
+                    <input type="text" id="mail" placeholder="请填写参会者邮箱">
+                </div>
+                <div class="company">
+                    <span>公司</span>
+                    <input type="text" placeholder="请填写参会者公司" id="units">
+                </div>
+                <div class="job">
+                    <span>职位</span>
+                    <input type="text" placeholder="请填写参会者职位" id="job">
+                </div>
+                <!--<div class="signUp" id="signUp">-->
+                    <!--<span>是否报名<b>*</b></span>-->
+                    <!--<span id="signUpChoice" style="float:right;">请选择</span>-->
+                <!--</div>-->
+                <div class="checkIn" id="checkIn">
+                    <span>是否签到<b>*</b></span>
+                    <span id="checkInChoice" style="float:right;">请选择</span>
+                </div>
+            </div>
+        </div>
+        
+        <!--隐藏是否报名-->
+        <div id="ifSignUp" class="ifSignUp" style="display: none;">
+            <div class="shade"></div>
+            <div class="ifEnter">
+                <div id="onSignUp">报名</div>
+                <div id="unSignUp">未报名</div>
+            </div> 
+        </div>
+        <!--隐藏是否签到-->
+        <div  id="ifCheckIn" class="ifCheckIn" style="display: none;">
+            <div class="shade"></div>
+            <div class="ifEnter">
+                <div id="onCheckIn">签到</div>
+                <div id="unCheckIn">未签到</div>
+            </div>
+        </div>
+
+        <!--submit-->
+        <div class="btn" style="margin-top: 0.66rem;" onclick="BtnSlimt()">完成</div>
+    </div>
+    <div id="reqtoken" class="reqtoken"></div>
+</body>
+</html>

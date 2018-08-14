@@ -1,0 +1,507 @@
+package net.emof.building.admin.service;
+
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import net.emof.building.admin.customEXC.AppendAdmException;
+import net.emof.building.admin.customEXC.DeleteAdmException;
+import net.emof.building.admin.customEXC.SelectAdmException;
+import net.emof.building.admin.customEXC.UpdateAdmException;
+import net.emof.building.dao.ConfsBriefMapper;
+import net.emof.building.model.ConfsBrief;
+import net.emof.building.model.Users;
+import net.emof.building.util.DataMap;
+import net.emof.building.util.PageInfo;
+import net.emof.building.util.ToolsUtil;
+import net.emof.building.util.intfc.ToolseSrvIntfc;
+
+/**
+ * 会议简报
+ * 
+ * @author baikun
+ * @creation 2017年12月20日
+ */
+@Service
+public class ConfsBriefService extends SqlToolseService implements ToolseSrvIntfc<DataMap, ConfsBrief, String> {
+
+	@Autowired
+	private ConfsBriefMapper cm;
+
+	// 日志
+	private final Logger logger = Logger.getLogger(this.getClass());
+
+	/**
+	 * 验证规则注入
+	 */
+	private DataMap proving = null;
+
+	/**
+	 * 验证规则注入
+	 */
+	public DataMap getProving() {
+		return proving;
+	}
+
+	/**
+	 * 验证规则注入
+	 */
+	public void setProving(DataMap proving) {
+		this.proving = proving;
+	}
+
+	/**
+	 * 初始化分页列表
+	 * 
+	 * @author baikun
+	 * @creation 2017年12月18日
+	 * @param page
+	 * @param display
+	 * @param select
+	 * @param sort
+	 *            排序字段
+	 * @param sortOrder
+	 * @param agodate
+	 *            开始日期
+	 * @param backdate
+	 *            结束日期
+	 * @param sessiconAdmin
+	 *            当前用户
+	 * @return
+	 */
+	public DataMap pagelist(Integer page, Integer display, String select, String sort, String sortOrder, String agodate,
+			String backdate, String confsid, Users sessiconAdmin,Integer type) {
+		DataMap map = null;
+
+		if (page == null) {
+			page = 1;
+		}
+		if (display == null) {
+			display = 5;
+		}
+		if ((page != null && !ToolsUtil.isValid(page + "")) || (display != null && !ToolsUtil.isValid(display + ""))) {
+			return new DataMap(null, 4);
+		}
+
+		String tableName = " confs_brief as obj  "; // 表名
+		String find = " obj.* "; // 显示字段
+		String where = " 1=1  and  obj.isdelete=1 and  obj.userid=" + sessiconAdmin.getId(); // 条件
+
+		if (sessiconAdmin.getPowerid() == 1) {
+			// 如果是 超级管理员 全部信息
+			//where = " obj.isdelete=1 and  obj.codes like \'" + this.get_code(sessiconAdmin.getId()).get("code").toString() + "%\' "; // 条件
+		}
+
+		if (type != null && type==1) {
+			where += " and obj.push=0";
+		}
+		if (type != null && type==2) {
+			where += " and obj.push>0";
+		}
+		
+		if (confsid != null && confsid.trim() != "") {
+			where += " and obj.confsid=\'" + confsid + "\'";
+		}
+
+		String order = null; // 排序
+
+		if (select != null && select.trim() != "" && !ToolsUtil.isValid(select.trim())) {
+			where = where + " and  obj.bname like '%" + select + "%' ";
+		}
+
+		if ((agodate != null && agodate.trim() != "" && !ToolsUtil.isValid(agodate.trim()))
+				&& (backdate == null || backdate.trim() == "" && !ToolsUtil.isValid(backdate.trim()))) {
+			where = where + " and  DATE_FORMAT(obj.createtime, '%Y-%m-%d')=DATE_FORMAT('" + agodate + "', '%Y-%m-%d')";
+		}
+
+		if ((backdate != null && backdate.trim() != "" && !ToolsUtil.isValid(backdate.trim()))
+				&& (agodate == null || agodate.trim() == "" && !ToolsUtil.isValid(agodate.trim()))) {
+			where = where + " and  DATE_FORMAT(obj.createtime, '%Y-%m-%d')=DATE_FORMAT('" + backdate + "', '%Y-%m-%d')";
+		}
+
+		if (agodate != null && agodate.trim() != "" && !ToolsUtil.isValid(agodate.trim())) {
+
+			if (backdate != null && backdate.trim() != "" && !ToolsUtil.isValid(backdate.trim())) {
+
+				where = where + " and DATE_FORMAT(obj.createtime, '%Y-%m-%d')  BETWEEN DATE_FORMAT('" + agodate
+						+ "', '%Y-%m-%d') AND DATE_FORMAT('" + backdate + "', '%Y-%m-%d')  ";
+			}
+		}
+		if (sort != null && sortOrder != null) {
+			order = " order by " + sort + " " + sortOrder;
+		} else {
+			order = " order by obj.createtime desc";
+		}
+		//System.out.println(tableName+"=="+find+"=="+ where+"=="+ order+"=="+ page+"=="+ display);
+		map = this.pageList(tableName, find, where, order, page, display);
+		return map;
+	}
+
+	
+	
+	/**
+	 * 初始化分页列表
+	 * 
+	 * @author baikun
+	 * @creation 2017年12月18日
+	 * @param page
+	 * @param display
+	 * @param select
+	 * @param sort
+	 *            排序字段
+	 * @param sortOrder
+	 * @param agodate
+	 *            开始日期
+	 * @param backdate
+	 *            结束日期
+	 * @param sessiconAdmin
+	 *            当前用户
+	 * @return
+	 */
+	public DataMap pagelistb(PageInfo pageInfo,String limit, String offset, String select, 
+			String sort, String sortOrder, String agodate,String backdate, Users sessiconAdmin) {
+		
+
+		if (pageInfo == null) {
+			pageInfo = new PageInfo();
+		}
+		pageInfo.setPage(Integer.parseInt(offset) / Integer.parseInt(limit) + 1);
+		pageInfo.setPageSize(Integer.parseInt(limit));
+		if (pageInfo.getPage() < 2 || pageInfo.getPage() >= pageInfo.getTotalPage()) {
+			pageInfo.setCount(0);
+		}
+		String codes = sessiconAdmin.getCodes();//this.get_code(sessiconAdmin.getId()).get("code").toString();
+//		String tableName = " brief_media as bm  "; // 表名
+//		String tableKey = "bm.id"; // 表主键
+//		tableName += " LEFT JOIN confs_brief  as cb on cb.id=bm.briefid ";
+//		String find = " bm.id,bm.bname as name ,bm.bphone ,cb.bname,bm.createtime "; // 显示字段
+//		find += ",(select group_concat(mname) from media where isdelete=1 and   find_in_set(media.id,bm.mediaid)  ) as mediastr";
+		
+		String tableName = " confs_brief as bm  "; // 表名,brief_media as b
+		String tableKey = "bm.id"; // 表主键
+		String find = " bm.id,bm.bname,bm.push,bm.mediaid "; // 显示字段,b.id as bid,b.mediaid
+		find += " ";
+
+		
+		String where = " 1=1   and codes  like '"+codes+"%'    "; // 条件and b.briefid=bm.id
+
+		String order = " bm.createtime asc";; // 排序
+/**
+		if (select != null && select.trim() != "" && ToolsUtil.isValid(select.trim())) {
+			where = where + " and  cb.bname like '%" + select + "%' ";
+		}
+
+		if ((agodate != null && agodate.trim() != "" && ToolsUtil.isValid(agodate.trim()))
+				&& (backdate == null || backdate.trim() == "" && ToolsUtil.isValid(backdate.trim()))) {
+			where = where + " and  DATE_FORMAT(bm.createtime, '%Y-%m-%d')=DATE_FORMAT('" + agodate + "', '%Y-%m-%d')";
+		}
+
+		if ((backdate != null && backdate.trim() != "" && ToolsUtil.isValid(backdate.trim()))
+				&& (agodate == null || agodate.trim() == "" && ToolsUtil.isValid(agodate.trim()))) {
+			where = where + " and  DATE_FORMAT(bm.createtime, '%Y-%m-%d')=DATE_FORMAT('" + backdate + "', '%Y-%m-%d')";
+		}
+
+		if (agodate != null && agodate.trim() != "" && ToolsUtil.isValid(agodate.trim())) {
+
+			if (backdate != null && backdate.trim() != "" && ToolsUtil.isValid(backdate.trim())) {
+
+				where = where + " and DATE_FORMAT(bm.createtime, '%Y-%m-%d')  BETWEEN DATE_FORMAT('" + agodate
+						+ "', '%Y-%m-%d') AND DATE_FORMAT('" + backdate + "', '%Y-%m-%d')  ";
+			}
+		}
+		
+		
+		
+	{"msg":"操作成功","total":1,"pages":1,"row":[
+	{"bname":"yuh","id":"180622134409FgbZA3j6","bid":"180622143712TYLfN6Aa","mediaid":"2"},
+	{"bname":"Tfffv","id":"180622110826A0D9dFHD","bid":"180622111055wPmYsHC7","mediaid":"4,5"},
+	{"bname":"Hdhdh","id":"1806221107170RFcnwqk","bid":"180622111055gH1f7MDf","mediaid":"4,5"},
+	{"bname":"cxvc","id":"180621091644OMCOINbn","bid":"180621112836UujHnF66","mediaid":"6"},
+	{"bname":"发的放大","id":"180621090715rHvkUuS9","bid":"180621172324DxVY2ItS","mediaid":"2"},
+	{"bname":"简报标题4444444","id":"180621085453RSAEVpMM","bid":"1806290955475mksL6hA","mediaid":"4"},
+	{"bname":"简报标题4444444","id":"180621085453RSAEVpMM","bid":"180629095657edGaVtHy","mediaid":"4,5,6"},
+	{"bname":"opo","id":"1806201734568zzW3M8x","bid":"180621151759TMwy89mD","mediaid":"3,4"},
+	{"bname":"禾和和和和 笔","id":"180123105645a9Pnf1ij","bid":"180123172617looaZWEt","mediaid":"1"},
+	{"bname":"禾和和和和 笔","id":"180123105645a9Pnf1ij","bid":"180123172130hNif54bI","mediaid":"1,2,3"},
+	{"bname":"禾和和和和 笔","id":"180123105645a9Pnf1ij","bid":"180123172404FLBNRPx1","mediaid":"1,2"},
+	{"bname":"1234411241","id":"180123105637ykxlX5nO","bid":"180123172404iCb2MtIa","mediaid":"1,2"},{"bname":"1234411241","id":"180123105637ykxlX5nO","bid":"180123172617RzVn85xd","mediaid":"1"},{"bname":"1234411241","id":"180123105637ykxlX5nO","bid":"180123172130vwY24HHb","mediaid":"1,2,3"},{"bname":"简报","id":"180116115507B84oe9mW","bid":"180418134153Z43cgzf3","mediaid":"1,2,3"},{"bname":"简报","id":"180116115507B84oe9mW","bid":"180418141521tWFrxGwo","mediaid":"4"}],"page":1,"error":"0"}
+		
+		
+		
+		
+**/
+		if (sort != null && sortOrder != null) {
+			order = " order by " + sort + " " + sortOrder;
+		} else {
+			order = " order by bm.id desc";
+		}
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("myCount", 0);// 总条数
+		map.put("tableName", tableName);// 表名
+		map.put("tableKey", tableKey);// 表主键ID，不填写order默认以此排序
+		map.put("find", find);// 查询结果显示字段
+		map.put("pageSize", pageInfo.getPageSize());// 总页数
+		map.put("page", pageInfo.getPage());// 当前页
+		map.put("where", where);// 条件语句（查询不需要写where）
+		map.put("order", order);//排序
+		
+		//srv.pagelistb(page, display, null, null, null, null, null,confsid, users,type);
+		List<Map<String, Object>> list = null;//exps.getPage_json(map);
+		
+		//String tableName, String find, String where, String order, Integer page, Integer display
+		DataMap s=this.pageList(tableName, find, where, order, Integer.parseInt(offset), Integer.parseInt(limit));
+	//	return map;
+		
+		
+		// 请求存留 过程 中返回的总条数
+		pageInfo.setCount(Integer.parseInt(map.get("myCount").toString()));
+
+		Map<String, Object> map_res = new HashMap<String, Object>();
+		// 定义dataTable 基础信息 键名不可更改 控制有约束
+		map_res.put("rows", s.data);
+		map_res.put("total", pageInfo.getCount());
+		return s;
+	
+		
+		
+	}
+	
+	
+	/**
+	 * 返回列表
+	 * 
+	 * @author wkx
+	 * @creation 2017年12月18日
+	 * @return
+	 */
+	public DataMap getPageList(String briefid) {
+		DataMap map = new DataMap();
+		String tableName = " brief_media as obj  "; // 表名
+		String find = " obj.* "; // 显示字段
+		String where = " obj.briefid=\'" + briefid + "\'"; // 条件
+		try {
+			map.addMsg_list(this.selectAll(tableName, find, where, null), 0);
+		} catch (Exception e) {
+			logger.error("【get_info添加异常】信息位置" + this.getClass().getName() + " "
+					+ Thread.currentThread().getStackTrace()[1].getMethodName() + " nubmer:"
+					+ new Throwable().getStackTrace()[0].getLineNumber() + "【参数】" + briefid + "【异常】" + e.getMessage());
+			map.addMsg_diy_obj(null, 5, "无查询信息");
+			return map;
+		}
+
+		return map;
+	}
+	
+	
+	/**
+	 * 返回列表
+	 * 
+	 * @author baikun
+	 * @creation 2017年12月18日
+	 * @return
+	 */
+	public DataMap getList(String confsid) {
+		DataMap map = new DataMap();
+		String tableName = " confs_brief as obj  "; // 表名
+		String find = " obj.* "; // 显示字段
+		String where = " obj.confsid=\'" + confsid + "\'"; // 条件
+		try {
+			map.addMsg_list(this.selectAll(tableName, find, where, null), 0);
+		} catch (Exception e) {
+			logger.error("【get_info添加异常】信息位置" + this.getClass().getName() + " "
+					+ Thread.currentThread().getStackTrace()[1].getMethodName() + " nubmer:"
+					+ new Throwable().getStackTrace()[0].getLineNumber() + "【参数】" + confsid + "【异常】" + e.getMessage());
+			map.addMsg_diy_obj(null, 5, "无查询信息");
+			return map;
+		}
+
+		return map;
+	}
+
+	/**
+	 * 修改实体
+	 * 
+	 * @author baikun
+	 * @creation 2017年8月18日
+	 * @param record
+	 * @return
+	 */
+	@Override
+	public DataMap update_obj(ConfsBrief record) throws UpdateAdmException {
+		DataMap map = proving == null ? provinginfo(record) : proving;
+
+		if (record.getId() == null || record.getId().trim().length() < 1) {
+			map.addMsg_diy_obj(record, 1, "修改失败ID不存在");
+			return map;
+		}
+		Integer row = null;
+		try {
+			//if (map.errorJudge()) {
+				row = cm.updateByPrimaryKeySelective(record);
+				map.addMsg_obj(record.getId(), 0);
+			//}
+		} catch (Exception e) {
+			logger.error("【Media修改异常】信息位置" + this.getClass().getName() + " "
+					+ Thread.currentThread().getStackTrace()[1].getMethodName() + " nubmer:"
+					+ new Throwable().getStackTrace()[0].getLineNumber() + "【参数】"
+					+ ToolsUtil.pojo_to_Map(record).toString() + "【异常】" + e.getMessage());
+			map.addMsg_diy_obj(record, 1, "修改失败,请检查添加信息");
+			return map;
+		}
+		return map;
+	}
+
+	/**
+	 * 添加实体
+	 * 
+	 * @author baikun
+	 * @creation 2017年8月18日
+	 * @param record
+	 * @return
+	 */
+	@Override
+	public DataMap add_obj(ConfsBrief record) throws AppendAdmException {
+		System.out.println("555555");
+		DataMap map = proving == null ? provinginfo(record) : proving;
+		// 创建时间
+		System.out.println("666666666");
+		record.setCreatetime(new Date());
+		// 逻辑删除 1正常 2删除
+		record.setId(ToolsUtil.get_diy_ID());
+		Integer row = 0;
+		try {
+			//if (map.errorJudge()) {
+				row = cm.insertSelective(record);
+			//}
+		} catch (Exception e) {
+//			logger.error("【Media添加异常】信息位置" + this.getClass().getName() + " "
+//					+ Thread.currentThread().getStackTrace()[1].getMethodName() + " nubmer:"
+//					+ new Throwable().getStackTrace()[0].getLineNumber() + "【参数】"
+//					+ ToolsUtil.pojo_to_Map(record).toString() + "【异常】" + e.getMessage());
+			map.addMsg_diy_obj(record, 1, "添加失败,请检查添加信息");
+			return map;
+		}
+		if (row > 0) {
+			map.addMsg_diy_obj(record.getId(), 0, "添加成功，");
+			return map;
+		}
+		return map;
+	}
+
+	/**
+	 * 根据ID返回实体信息
+	 * 
+	 * @author baikun
+	 * @creation 2017年8月18日
+	 * @param ID
+	 * @return
+	 */
+	@Override
+	public DataMap getInfo(String ID) {
+		DataMap map = new DataMap();
+		if (ID == null || !ToolsUtil.isValid(ID + "")) {
+			logger.error("【get_info异常】信息位置" + this.getClass().getName() + " "
+					+ Thread.currentThread().getStackTrace()[1].getMethodName() + " nubmer:"
+					+ new Throwable().getStackTrace()[0].getLineNumber() + "【参数】" + ID);
+			map.addMsg_obj(null, 4);
+			return map; 
+		}
+		String tableName = " confs_brief as obj  "; // 表名
+		String find = " obj.* "; // 显示字段
+		String where = " obj.id=\'" + ID+"\'"; // 条件
+		Map<String, Object> mapinfo;
+		try {
+			mapinfo = this.selectMap(tableName, find, where);
+		} catch (Exception e) {
+			logger.error("【get_info添加异常】信息位置" + this.getClass().getName() + " "
+					+ Thread.currentThread().getStackTrace()[1].getMethodName() + " nubmer:"
+					+ new Throwable().getStackTrace()[0].getLineNumber() + "【参数】" + ID + "【异常】" + e.getMessage());
+			map.addMsg_diy_obj(null, 4, "无查询信息");
+			return map;
+		}
+
+		map.addMsg_obj(mapinfo, 0);
+		return map;
+	}
+
+	/**
+	 * 逻辑删除
+	 */
+	@Override
+	public DataMap isDelete(String ID) throws DeleteAdmException {
+		try {
+			cm.isDelete(ID);
+		} catch (Exception e) {
+			logger.error("【删除异常】信息位置" + this.getClass().getName() + " "
+					+ Thread.currentThread().getStackTrace()[1].getMethodName() + " nubmer:"
+					+ new Throwable().getStackTrace()[0].getLineNumber() + "【参数】" + ID + "【异常】" + e.getMessage());
+
+			return new DataMap(null, 5);
+		}
+		return new DataMap();
+	}
+
+	/**
+	 * 物理删除
+	 */
+	@Override
+	public DataMap del_obj(String ID) throws DeleteAdmException {
+		try {
+			cm.deleteByPrimaryKey(ID);
+		} catch (Exception e) {
+			logger.error("【删除异常】信息位置" + this.getClass().getName() + " "
+					+ Thread.currentThread().getStackTrace()[1].getMethodName() + " nubmer:"
+					+ new Throwable().getStackTrace()[0].getLineNumber() + "【参数】" + ID + "【异常】" + e.getMessage());
+
+			return new DataMap(null, 5);
+		}
+		return new DataMap();
+	}
+
+	/**
+	 * 通用验证
+	 * 
+	 * @author baikun
+	 * @creation 2017年12月15日
+	 * @param record
+	 * @return
+	 * @throws Exception
+	 */
+	@Override
+	public DataMap provinginfo(ConfsBrief record) {
+		DataMap map = new DataMap(record, 0);
+		if (record.getBname() == null || record.getBname().trim().equals("") || record.getBname().trim().length() < 1
+				|| !ToolsUtil.isValid(record.getBname().trim())) {
+			map.addMsg_diy_obj(record, 4, "标题格式不正确");
+			return map;
+		}
+//		if (record.getIntrod() == null || record.getIntrod().trim().equals("") || record.getIntrod().trim().length() < 1
+//				|| !ToolsUtil.isValid(record.getIntrod().trim())) {
+//			map.addMsg_diy_obj(record, 4, "简报内容格式不正确");
+//			return map;
+//		}
+
+		return map;
+	}
+
+	/**
+	 * 未使用
+	 * 
+	 * @author baikun
+	 * @creation 2017年12月18日
+	 * @param ID
+	 * @return
+	 * @throws SelectAdmException
+	 */
+	@Override
+	public Map<String, Object> get_info(String ID) throws SelectAdmException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

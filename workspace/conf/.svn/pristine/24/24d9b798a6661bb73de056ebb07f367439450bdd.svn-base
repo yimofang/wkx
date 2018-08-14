@@ -1,0 +1,393 @@
+var dxlist = 0,
+    wqID = '';
+$(function () {
+    getHeader();
+    $(".nav_one li").css('padding', '0');
+    getInfo();
+    $('.survey_box').on('blur', 'input', function () {
+        var _val = $.trim($(this).val());
+        if (_val == '' || _val == null) {
+            $(this).addClass('on');
+        } else {
+            $(this).removeClass('on');
+        }
+    })
+    $('.survey_all').on('click', 'i.del_question', function () {
+        $(this).parents('li').remove();
+    });
+
+    $('.survey_all').on('click', 'i.del_option', function () {
+        var _num = $(this).parent('li').parent('ul').children('li').length
+        if (_num <= 2) {
+            alert('选择题至少为两个选项');
+        } else {
+            var _type = $(this).attr('data-type');
+            if (_type == 3) {
+                var num = $(this).parents('.option_list').children('li').length - 1;
+                for (var i = 1, html = ''; i <= num; i++) {
+                    html += '<option value="' + i + '">' + i + '</option>'
+                }
+                console.log(html);
+                var _min = '<option value="0">最少选择</option>' + html;
+                var _max = '<option value="0">最多选择</option>' + html;
+                $(this).parents('.option_list').siblings('div.max_min').children('.this_min').html(_min);
+                $(this).parents('.option_list').siblings('div.max_min').children('.this_max').html('<option value="0">最多选择</option>');
+            }
+            $(this).parent('li').remove();
+        }
+
+    });
+
+    $('.survey_all').on('click', '.add_option', function () {
+        var _type = $(this).attr('data-type');
+        var htmls = '<li>' +
+            '    <b></b>' +
+            '    <input type="text" placeholder="子选项">' +
+            '    <i class="del_option" data-type="' + _type + '"></i>' +
+            '</li>'
+        $(this).siblings('ul').append(htmls);
+        if (_type == 3) {
+            var num = $(this).siblings('ul').children('li').length;
+            for (var i = 1, html = ''; i <= num; i++) {
+                html += '<option value="' + i + '">' + i + '</option>'
+            }
+            var _min = '<option value="0">最少选择</option>' + html;
+            var _max = '<option value="0">最多选择</option>' + html;
+            $(this).siblings('div.max_min').children('.this_min').html(_min);
+            $(this).siblings('div.max_min').children('.this_max').html('<option value="0">最多选择</option>');
+        }
+    });
+
+    $(".guestDesTxt").on('blur keyup input', function () {
+        var text = $(".guestDesTxt").val();
+        var counter = text.length;
+        $(".number").text(counter);
+    });
+})
+
+
+function getInfo() {
+    $.ajax({
+        type: 'post',
+        url: urlstr + 'qnr_web/getQnrDetails.do',
+        data: {
+            confid: halfUrl.conid,
+            token: Token
+        },
+        dataType: 'json',
+        success: function (res) {
+            if (res.error == 0) {
+                if (res.row != null) {
+                    $('.survey_title').val(res.row.fname)
+                    $('.guestDesTxt').val(res.row.qbrief)
+                    var lists = res.row.titles;
+                    for (var i = 0, html1 = '', html2 = '', html3 = '',dxs = 0; i < lists.length; i++) {
+                        if (lists[i].tstate == 3) {
+                            var states = lists[i].isitem==1?"checked":" ";
+                            html1 += '<li>' +
+                                     '    <span class="left_tit">' +
+                                     '        <input type="checkbox" '+states+'>必填' +
+                                     '    </span>' +
+                                     '    <input type="text" placeholder="请输入填空问题" value="'+lists[i].fname+'">' +
+                                     '    <i class="del_question"></i>' +
+                                     '</li>';
+                        } else if (lists[i].tstate == 1) {
+                            html2 += '<li>' +
+                                     '    <span class="left_tit">单选题</span>' +
+                                     '    <div class="radio_all">' +
+                                     '        <div class="radio_question">' +
+                                     '            <input type="text" placeholder="请输入问卷问题" value="'+lists[i].fname+'">' +
+                                     '            <i class="del_question"></i>' +
+                                     '        </div>' +
+                                     '        <ul class="option_list">';
+                            for(var j=0;j<lists[i].options.length;j++) {
+                                html2 += '<li>' +
+                                         '    <b></b>' +
+                                         '    <input type="text" placeholder="子选项" value="'+lists[i].options[j].fname+'">' +
+                                         '    <i class="del_option"></i>' +
+                                         '</li>';
+                            }
+                            html2 += '        </ul>' +
+                                     '        <span class="add_option">添加选项</span>' +
+                                     '    </div>' +
+                                     '</li>';
+                        } else if (lists[i].tstate == 2) {
+                            dxs++;
+                            html3 += '<li class="dxlist'+dxs+'">' +
+                                    '    <span class="left_tit">多选题</span>' +
+                                    '    <div class="check_all">' +
+                                    '        <div class="check_question">' +
+                                    '            <input type="text" placeholder="请输入问卷问题" value="'+lists[i].fname+'">' +
+                                    '            <i class="del_question"></i>' +
+                                    '        </div>' +
+                                    '        <ul class="option_list">';
+                            for(var k=0;k<lists[i].options.length;k++) {
+                                html3 += '<li>' +
+                                    '    <b></b>' +
+                                    '    <input type="text" placeholder="子选项" value="'+lists[i].options[k].fname+'">' +
+                                    '    <i class="del_option"></i>' +
+                                    '</li>';
+                            }
+                            html3 += '        </ul>' +
+                                    '        <span class="add_option" data-type="3">添加选项</span>' +
+                                    '        <div class="max_min">' +
+                                    '            <select class="this_min" onchange="_min(this.options[this.options.selectedIndex].value,'+dxs+')">' +
+                                    '                <option value="0">最少选择</option>';
+                            for(var x=1;x<=lists[i].options.length;x++){
+                                var qnrmin = lists[i].qnrmin;
+                                if(x == qnrmin){
+                                    html3 +='<option value="'+x+'" selected>'+x+'</option>';
+                                }else{
+                                    html3 +='<option value="'+x+'">'+x+'</option>';
+                                }
+
+                            }
+                            html3 +='</select> ~ ' +
+                                    '<select class="this_max" onchange="_max(this.options[this.options.selectedIndex].value,'+dxs+')">' +
+                                    '<option value="0">最多选择</option>';
+                            for(var y=lists[i].qnrmin;y<=lists[i].options.length;y++){
+                                var qnrmax = lists[i].qnrmax;
+                                if(y == qnrmax){
+                                    html3 +='<option value="'+y+'" selected>'+y+'</option>';
+                                }else{
+                                    html3 +='<option value="'+y+'">'+y+'</option>';
+                                }
+                            }
+                            html3 +='            </select>' +
+                                    '        </div>' +
+                                    '    </div>' +
+                                    '</li>';
+                        }
+
+                    }
+                    $('.survey_tiankong ul').html(html1);
+                    $('.survey_radio ul').html(html2);
+                    $('.survey_checkbox ul').html(html3);
+                    wqID = res.row.id;
+                    dxlist = dxs;
+                    if (res.row.rls == 1) {
+                        var htmlstr='<button class="survey_release" ">已发布</button>'
+                        $('.survey_btn').html(htmlstr);
+                        $('.survey_type').remove();
+                        $('.survey_all').css('float','none').css('margin','0 auto');
+                        $('.survey_all input').attr('disabled','disabled');
+                        $('.survey_all textarea').attr('disabled','disabled');
+                        $('.survey_all select').attr('disabled','disabled');
+                        $('.add_option').remove();
+                        $('.del_question').hide();
+                        $('.del_option').hide();
+                        $('.font_num').hide();
+                    }
+                }
+            } else if (res.error == 5) {
+                alert(res.msg);
+                ReqToken(1);
+            } else {
+                alert(res.msg);
+            }
+        }
+    })
+}
+
+
+function addTK() {
+    var html1 = '<li>' +
+        '                            <span class="left_tit">' +
+        '                                <input type="checkbox">必填' +
+        '                            </span>' +
+        '                            <input type="text" placeholder="请输入填空问题">' +
+        '                            <i class="del_question"></i>' +
+        '                        </li>';
+    $('.survey_tiankong>ul').append(html1);
+}
+
+function addDX() {
+    var html2 = '<li>' +
+        '                            <span class="left_tit">单选题</span>' +
+        '                            <div class="radio_all">' +
+        '                                <div class="radio_question">' +
+        '                                    <input type="text" placeholder="请输入问卷问题">' +
+        '                                    <i class="del_question"></i></i>' +
+        '                                </div>' +
+        '                                <ul class="option_list">' +
+        '                                    <li>' +
+        '                                        <b></b>' +
+        '                                        <input type="text" placeholder="子选项">' +
+        '                                        <i class="del_option"></i>' +
+        '                                    </li>' +
+        '                                    <li>' +
+        '                                        <b></b>' +
+        '                                        <input type="text" placeholder="子选项">' +
+        '                                        <i class="del_option"></i>' +
+        '                                    </li>' +
+        '                                </ul>' +
+        '                                <span class="add_option">添加选项</span>' +
+        '                            </div>' +
+        '                        </li>';
+    $('.survey_radio>ul').append(html2);
+}
+
+function addDXS() {
+    dxlist++;
+    var html3 = '<li class="dxlist' + dxlist + '">' +
+        '    <span class="left_tit">多选题</span>' +
+        '    <div class="check_all">' +
+        '        <div class="check_question">' +
+        '            <input type="text" placeholder="请输入问卷问题">' +
+        '            <i class="del_question"></i>' +
+        '        </div>' +
+        '        <ul class="option_list">' +
+        '            <li>' +
+        '                <b></b>' +
+        '                <input type="text" placeholder="子选项">' +
+        '                <i class="del_option" data-type="3"></i>' +
+        '            </li>' +
+        '            <li>' +
+        '                <b></b>' +
+        '                <input type="text" placeholder="子选项">' +
+        '                <i class="del_option" data-type="3"></i>' +
+        '            </li>' +
+        '        </ul>' +
+        '        <span class="add_option" data-type="3">添加选项</span>' +
+        '        <div class="max_min">' +
+        '            <select class="this_min" onchange="_min(this.options[this.options.selectedIndex].value,' + dxlist + ')">' +
+        '                <option value="0" >最少选择</option>' +
+        '                <option value="1">1</option>' +
+        '                <option value="2">2</option>' +
+        '            </select>  ~ ' +
+        '            <select class="this_max" onchange="_max(this.options[this.options.selectedIndex].value,' + dxlist + ')">' +
+        '                <option value="0">最多选择</option>' +
+        '            </select>' +
+        '        </div>' +
+        '    </div>' +
+        '</li>';
+    $('.survey_checkbox>ul').append(html3);
+}
+
+function saveSurvey(num) {
+    var status = judgment()
+    if (!status) {
+        alert('问卷信息填写不完整，请填写！')
+    } else {
+        var list1 = $('.survey_tiankong ul li'),
+            list2 = $('.survey_radio>ul>li'),
+            list3 = $('.survey_checkbox>ul>li');
+
+        for (var i = 0, arr1 = []; i < list1.length; i++) {
+            var obj1 = {'id': '', 'name': '', 'isitem': ''};
+            obj1.isitem = $('.survey_tiankong ul li:eq(' + i + ') input[type="checkbox"]').prop('checked') ? '1' : '2';
+            obj1.name = $('.survey_tiankong ul li:eq(' + i + ') input[type="text"]').val();
+            arr1.push(obj1);
+        }
+        for (var k = 0, arr2 = []; k < list2.length; k++) {
+            var obj = {'id': '', 'name': '', 'isitem': '1', 'options': []};
+            obj.name = $('.survey_radio>ul>li:eq(' + k + ')  .radio_question input').val();
+            var arr = $('.survey_radio>ul>li:eq(' + k + ')  .option_list li');
+            for (var x = 0; x < arr.length; x++) {
+                obj.options.push({
+                    'oid': '',
+                    'option': $('.survey_radio>ul>li:eq(' + k + ')  .option_list li:eq(' + x + ') input').val()
+                });
+            }
+            arr2.push(obj);
+        }
+        for (var j = 0, arr3 = []; j < list3.length; j++) {
+            var obj3 = {'id': '', 'name': '', 'isitem': '1', 'options': [], 'qnrmin': '1', 'qnrmax': '1'};
+            obj3.name = $('.survey_checkbox>ul>li:eq(' + j + ')  .check_question input').val();
+            obj3.qnrmin = $('.survey_checkbox>ul>li:eq(' + j + ')  .this_min option:selected').val();
+            obj3.qnrmax = $('.survey_checkbox>ul>li:eq(' + j + ')  .this_max option:selected').val();
+            var arr_op = $('.survey_checkbox>ul>li:eq(' + j + ')  .option_list li');
+            for (var y = 0; y < arr_op.length; y++) {
+                obj3.options.push({
+                    'oid': '',
+                    'option': $('.survey_checkbox>ul>li:eq(' + j + ')  .option_list li:eq(' + y + ') input').val()
+                });
+            }
+            arr3.push(obj3);
+        }
+        $.ajax({
+            type: 'post',
+            url: urlstr + 'qnrTitle_web/addTitleInfoPc.do',
+            data: {
+                confsid: halfUrl.conid,
+                token: Token,
+                qnrid: wqID,
+                tstate1: JSON.stringify(arr2),
+                tstate2: JSON.stringify(arr3),
+                tstate3: JSON.stringify(arr1),
+                rls: num,
+                fname: $('.survey_title').val(),
+                qbrief: $('.guestDesTxt').val()
+            },
+            dataType: 'json',
+            success: function (res) {
+                if (res.error == 0) {
+                    alert(res.msg);
+                    window.location.reload();
+                } else if (res.error == 5) {
+                    alert(res.msg);
+                    ReqToken(1);
+                } else {
+                    alert(res.msg);
+                }
+            }
+        })
+    }
+}
+
+function judgment() {
+    var _inputs = $('.survey_all input[type="text"]');
+    for (var i = 0, status = true; i < _inputs.length; i++) {
+        if ($.trim(_inputs[i].value) == '') {
+            _inputs[i].className = 'on';
+            status = false
+        }
+    }
+    var _select = $('.survey_checkbox select');
+    if (_select.length > 0) {
+        for (var j = 0, _status = true; j < _select.length; j++) {
+            var index = _select[j].selectedIndex;
+            if (_select[j].options[index].value == 0) {
+                _select[j].className = _select[j].className + ' on';
+                _status = false
+            }
+        }
+    } else {
+        _status = true;
+    }
+
+    if (status && _status) {
+        return true
+    } else {
+        return false
+    }
+}
+
+function _min(obj, index) {
+
+    var this_num = $('.dxlist' + index + ' ul.option_list li').length
+    for (var i = obj, html = ''; i <= this_num; i++) {
+        if (i == 0) {
+            html += '';
+        } else {
+            html += '<option value="' + i + '">' + i + '</option>'
+        }
+
+    }
+    $('.dxlist' + index + ' .this_max').html('<option value="0">最多选择</option>' + html);
+    if (obj > 0) {
+        $('.dxlist' + index + ' .this_min').removeClass('on');
+    } else {
+        $('.dxlist' + index + ' .this_min').addClass('on');
+    }
+}
+
+function _max(num, index) {
+    if (num > 0) {
+        $('.dxlist' + index + ' .this_max').removeClass('on');
+    } else {
+        $('.dxlist' + index + ' .this_max').addClass('on');
+    }
+}
+
+

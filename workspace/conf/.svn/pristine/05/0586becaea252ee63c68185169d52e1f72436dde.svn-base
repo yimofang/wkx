@@ -1,0 +1,241 @@
+package net.emof.building.web.controller;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import net.emof.building.admin.customEXC.EhCacheSessiconException;
+import net.emof.building.ehcache.EhSessicon;
+import net.emof.building.model.Confs;
+import net.emof.building.model.Users;
+import net.emof.building.util.DataMap;
+import net.emof.building.util.RegexUtils;
+import net.emof.building.util.ToolsUtil;
+import net.emof.building.web.service.Confs_web_Service;
+
+/**
+ * 会议流程控制层
+ * @author xilongfei
+ * @creation 2017年11月10日
+ */
+@Controller
+@RequestMapping("/confs_web")
+public class Confs_web_Controller {
+	
+	@Autowired
+	private Confs_web_Service cws;
+	
+	
+	/**
+	 * 跳转发布会议,添加一条会议记录
+	 * @author xilongfei
+	 * @creation 2017年12月12日
+	 * @return
+	 * @throws ParseException
+	 */
+	@ResponseBody
+	@RequestMapping("/createConf")
+	public Map<String, Object> addConfsInfo() throws ParseException {
+		DataMap dataMap = new DataMap();
+		String id = ToolsUtil.get_diy_ID(); //主键
+		Confs confs = new Confs();
+		confs.setId(id);
+		dataMap = cws.addConfsInfo(confs);
+		return dataMap.data;
+	}
+	
+	/**
+	 * 添加会议基本信息(修改)
+	 * @author xilongfei
+	 * @creation 2017年11月11日
+	 * @param cname		会议名称
+	 * @param touch		联系电话
+	 * @param addr		会议地址
+	 * @param type		会议类型
+	 * @param bhstart	会议开始时间
+	 * @param bhend		会议结束时间
+	 * @param userid	用户id
+	 * @param codes		层级序列
+	 * @return
+	 * @throws ParseException 
+	 */
+	@ResponseBody
+	@RequestMapping("/addConfsInfo")
+	public Map<String, Object> addConfsInfo(@RequestParam(value = "id", required = false) String id,
+			@RequestParam(value = "cname", required = false) String cname,
+			@RequestParam(value = "touch", required = false) String touch,
+			@RequestParam(value = "addr", required = false) String addr,
+			@RequestParam(value = "type", required = false) Integer type,
+			@RequestParam(value = "bhstart", required = false) String bhstart,
+			@RequestParam(value = "bhend", required = false) String bhend) throws ParseException {
+		DataMap dataMap = new DataMap();	
+		Users users = new Users();
+		try {
+			users = EhSessicon.getTokenInfo("xxxx");
+		} catch (EhCacheSessiconException e) {
+			dataMap.addMsg_diy_obj(null, 6, "登录超时,请重新登录");
+			return dataMap.data;
+		}
+		if (users == null) {
+			dataMap.addMsg_diy_obj(null, 6, "登录超时,请重新登录");
+			return dataMap.data;
+		}
+		if (id == null || id.trim().equals("")) {
+			dataMap.addMsg_diy_obj(null, 6, "未找到该会议信息");
+			return dataMap.data;
+		}
+		if (cname == null || cname.trim().equals("")) {
+			dataMap.addMsg_diy_obj(null, 6, "请填写会议名称");
+			return dataMap.data;
+		}
+		if (touch == null || touch.trim().equals("")) {
+			dataMap.addMsg_diy_obj(null, 6, "请填写联系电话");
+			return dataMap.data;
+		}
+		if (!RegexUtils.checkMobile(touch) && !RegexUtils.lenientTel(touch)) {
+			dataMap.addMsg_diy_obj(null, 6, "联系电话格式不正确");
+			return dataMap.data;
+		}
+		if (addr == null || addr.trim().equals("") || addr.trim().length() < 1) {
+			dataMap.addMsg_diy_obj(null, 6, "请填写正确的会议地址");
+			return dataMap.data;
+		}
+		if (bhstart == null || bhstart.trim().equals("")) {
+			dataMap.addMsg_diy_obj(null, 6, "请填选择会议开始时间");
+			return dataMap.data;
+		}
+		if (bhend == null || bhend.trim().equals("")) {
+			dataMap.addMsg_diy_obj(null, 6, "请填选择会议结束时间");
+			return dataMap.data;
+		}
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+		Confs confs = new Confs(id, cname, touch, addr, 1, type, sdf.parse(bhstart), sdf.parse(bhend), users.getId(), users.getCodes(), 2);
+		dataMap = cws.alterConfsInfo(confs,"发布成功");
+		return dataMap.data;
+	}
+	
+	/**
+	 * 添加会议描述
+	 * @author xilongfei
+	 * @creation 2017年12月13日
+	 * @param id		会议id
+	 * @param imgs		描述图片
+	 * @param introd	会议描述
+	 * @return
+	 * @throws ParseException
+	 */
+	@ResponseBody
+	@RequestMapping("/addIntrod")
+	public Map<String, Object> addIntrod(@RequestParam(value = "id", required = false) String id,
+			@RequestParam(value = "imgs", required = false) String imgs,
+			@RequestParam(value = "introd", required = false) String introd) {
+		DataMap dataMap = new DataMap();
+		if (id == null || id.trim().equals("")) {
+			dataMap.addMsg_diy_obj(null, 6, "未找到该会议信息");
+			return dataMap.data;
+		}
+		
+		if (introd == null || introd.trim().equals("")) {
+			dataMap.addMsg_diy_obj(null, 6, "请填写会议描述");
+			return dataMap.data;
+		}
+		Confs confs = new Confs();
+		confs.setId(id);
+		confs.setIntrod(introd);
+		if(imgs!=null && !imgs.trim().equals("")){
+			confs.setImgs(imgs);
+		}else{
+			confs.setImgs("");
+		}
+		dataMap = cws.alterConfsInfo(confs,"以保存");
+		return dataMap.data;
+	}
+	
+	/**
+	 * 查询会议描述信息
+	 * @author xilongfei
+	 * @creation 2017年12月13日
+	 * @param id		会议id
+	 * @return
+	 * @throws ParseException
+	 */
+	@ResponseBody
+	@RequestMapping("/getIntrod")
+	public Map<String, Object> getIntrod(@RequestParam(value = "id", required = false) String id){
+		DataMap dataMap = new DataMap();
+		if (id == null || id.trim().equals("")) {
+			dataMap.addMsg_diy_obj(null, 6, "未找到该会议信息");
+			return dataMap.data;
+		}
+		Confs confs = cws.selectConfs(id);
+		Map<String, Object> conf = new HashMap<String, Object>();
+		conf.put("id", id);
+		conf.put("introd", confs.getIntrod()==null?"":confs.getIntrod());
+		conf.put("imgs", confs.getImgs()==null?"":confs.getImgs());
+		dataMap.addMsg_obj(conf, 0);
+		return dataMap.data;
+	}
+	
+	/**
+	 * 会议报名设置
+	 * @author xilongfei
+	 * @creation 2017年12月13日
+	 * @param id	会议id
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("/getEnlist")
+	public Map<String, Object> getEnlist(@RequestParam(value = "id", required = false) String id){
+		DataMap dataMap = new DataMap();
+		if (id == null || id.trim().equals("")) {
+			dataMap.addMsg_diy_obj(null, 6, "未找到该会议信息");
+			return dataMap.data;
+		}
+		Confs confs = cws.selectConfs(id);
+		if(confs == null){
+			dataMap.addMsg_diy_obj(null, 6, "该会议信息不存在");
+			return dataMap.data;
+		}
+		List<Map<String, Object>> enlists = cws.selctEnlistInfo(confs.getEnlist(),1);
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("id", id);
+		map.put("shstart", confs.getShstart()==null?"":confs.getShstart());
+		map.put("shend", confs.getShend()==null?"":confs.getShend());
+		map.put("enlists", enlists);
+		dataMap.addMsg_obj(map, 0);
+		return dataMap.data;
+	}
+	
+	/**
+	 * 查询未添加报名填写选项
+	 * @author baikun
+	 * @creation 2017年12月13日
+	 * @param enlist 报名填写id 格式  1,2,3
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("/selectEnlist")
+	public Map<String, Object> selectEnlist(@RequestParam(value = "enlist", required = false) String enlist){
+		DataMap dataMap = new DataMap();
+		if (enlist == null || enlist.trim().equals("")) {
+			dataMap.addMsg_diy_obj(null, 6, "未找到相关信息");
+			return dataMap.data;
+		}
+		List<Map<String, Object>> enlists = cws.selctEnlistInfo(enlist,2);
+		if(enlists.isEmpty() || enlists.get(0).size()<1 ){
+			dataMap.addMsg_diy_obj(null, 6, "没有可选的信息");
+		}else{
+			dataMap.addMsg_obj(enlists, 0);
+		}
+		return dataMap.data;
+	}
+}

@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+    <title>会议统计</title>
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/meet.css">
+    <script src="js/jquery-2.1.4.min.js"></script>
+	<script src="js/rem.js"></script>
+	<script src="js/removeHeader.js"></script>
+	<script src="jscript/meetStatistic.js"></script>
+</head>
+<body> 
+	<!--meetStatistics-->
+	<div class="meetStatistics">
+	<!--header-->
+	<div class="Header deleteHeader">
+    	<a href="javascript:history.go(-1);"></a>
+    	会议统计
+	</div>
+	<!--nav-->
+	<div class="nav">
+		<div class="nav_title">
+			<ul>
+				<li id="nav_title_bmqd" class="current">报名签到</li>
+				<li id="nav_title_dytj">调研统计</li>
+				<li id="nav_title_tgtj">推广统计</li>
+			</ul>
+		</div>
+	</div>
+
+<div class="showContent">
+	<!--bmqd-->
+	<div class="bmqd" id="bmqd" >
+		<div class="bmqd_content">
+			<div class="bmqd_content_info">
+				<div id="havaSign">
+					<p class="haveNum"></p>
+					<p>已签到</p>
+				</div>
+				<div id="unSign">
+					<p class="unNum"></p>
+					<p>未签到</p>
+				</div>
+				<div id="allName">
+					<p class="allNum"></p>
+					<p>总报名</p>
+				</div>
+			</div>
+		</div>
+		<div class="bmqd_list">
+			<div>
+				<ul>
+					<li><span>报名页浏览</span><span class="nameLook"></span></li>
+					<li><span>报名转化率</span><span class="namePercent"></span></li>
+					<li class="signPercent"><span>签到转化率</span><span class="siPercent"></span></li>
+				</ul>
+			</div>
+		</div>
+		<div class="btn renovate" onclick="renovate()">刷新</div>
+	</div>
+	<!--dytj-->
+	<div class="dytj" id="dytj" style="display: none;">
+		<div class="dytj_title">
+			<p>2017论坛会问卷调查</p>
+			<p>无问卷说明</p>
+		</div>
+		<div class="dytj_content">
+			<ul>
+				<li class="name">
+					<span>1.您的公司名称是？</span>
+					<span>填空题</span>
+				</li>
+				<li class="join">
+					<span>2.您是否参加过类似会议？</span>
+					<span>单选题</span>
+					<span></span>
+				</li>
+				<li class="purpose">
+					<span>3.您参加会议的目的有哪些？</span>
+					<span>多选题</span>
+					<span></span>
+				</li>
+				<li>
+					<span>4.您是通过哪种渠道获取到会议信息的？</span>
+					<span>单选题</span>
+					<span></span>
+				</li>
+				<li>
+					<span>5.您觉得会议的哪种因素比较重要？</span>
+					<span>多选题</span>
+					<span></span>
+				</li>
+			</ul>
+		</div>
+	</div>
+	<!--tgtj-->
+	<div class="tgtj" id="tgtj" style="display: none;"></div>
+	</div>
+</div>
+
+	<div class="dytjcontent">
+	<!--blank-->
+	<div class="blank" style="display: none">
+		<!--header-->
+		<div class="Header deleteHeader">
+	    	<a class="dytjCon" href="javascript:void(0)"></a>调研统计详情
+		</div>
+		<!--blank-->
+		<div class="blankTitle">
+			<div>您的公司名称是？</div>
+		</div>
+		<div class="blankCompany">
+			<div>
+				<p>易魔方</p>
+				<p>北京易魔方科技有限公司</p>
+			</div>
+			<div>
+				<p>SOMEONE</p>
+				<p>中关村社会组织会创新如无专委会</p>
+			</div>
+			<div>
+				<p>知诚中农</p>
+				<p>北京知诚中农小企业财税与金融服务促进会</p>
+			</div>
+			<div>
+				<p>嘉汇聚</p>
+				<p>北京嘉汇聚食品公司</p>
+			</div>
+			<div style="border: none">
+				<p>安德鲁</p>
+				<p>石家庄安德鲁俄科技信息有限公司</p>
+			</div>
+		</div>
+	</div>
+	<!--single-->
+	<div class="single" style="display: none">
+		<!--header-->
+		<div class="Header">
+	    	<a class="dytjCon" href="javascript:void(0);"></a>调研统计详情
+		</div>
+	    <!--single-->
+	    <div class="singleTitle">
+	        您是否参加过类似会议？
+	    </div>
+	    <div class="singleAnswer">
+	        <ul>
+	            <li>
+	                <span>A:是</span>
+	                <span>调研统计：45人</span>
+	            </li>
+	            <li>
+	                <span>B:否</span>
+	                <span>调研统计：20人</span>
+	            </li>
+	        </ul>
+	    </div>
+	</div>
+	<!--double-->
+	<div class="double" style="display: none"> 
+		<!--header-->
+		<div class="Header">
+	    	<a class="dytjCon" href="javascript:voli(0);"></a>调研统计详情
+		</div>
+		<!--double-->
+		<div class="doubleTitle">
+			您参加会议的目的有哪些？
+		</div>
+		<div class="doubleAnswer">
+			 <ul>
+	            <li>
+	                <span>A:认识更多的朋友</span>
+	                <span>调研统计：45人</span>
+	            </li>
+	            <li>
+	                <span>B:寻找机会，拓展业务</span>
+	                <span>调研统计：20人</span>
+	            </li>
+	            <li>
+	                <span>C:关注当前行业发展趋势</span>
+	                <span>调研统计：41人</span>
+	            </li>
+	        </ul>
+		</div>
+	</div>	
+	</div>
+
+</body>
+</html>

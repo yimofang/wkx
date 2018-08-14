@@ -1,0 +1,253 @@
+package net.emof.building.admin.controller;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import net.emof.building.admin.service.OrganizService;
+import net.emof.building.model.Organiz;
+import net.emof.building.model.Users;
+
+/**
+ * 组织机构
+ * 
+ * @author baikun
+ * @creation 2017年3月10日
+ */
+@Controller
+@RequestMapping("organiz")
+public class OrganizController {
+
+	@Autowired
+	private OrganizService ozservice;
+
+	/**
+	 * 
+	 * @author baikun
+	 * @creation 2017年2月21日
+	 * @return
+	 */
+	@RequestMapping("")
+	public String golist(HttpServletRequest request, Model model) {
+		Map<String, Object> map_res = new HashMap<String, Object>();
+		map_res.put("data", ozservice.getChild(0));
+		model.addAttribute("mdata", ozservice.getChild(0));
+
+		Users userinfo = sessicon_get_info(request);
+		model = get_conductlist(userinfo.getPowerlist(), model);
+		System.out.println(model.toString());
+
+		return "/hframe/organiz/organiz_list";
+	}
+
+	/**
+	 * 返回当前权限下的操作行为
+	 * 
+	 * @author baikun
+	 * @creation 2017年3月10日
+	 * @param powerlist
+	 * @param model
+	 * @return
+	 */
+	private Model get_conductlist(List<Map<String, Object>> powerlist, Model model) {
+
+		List<Map<String, Object>> power_list = powerlist;
+
+		// 用当前用户的权限查询当前controller 的操作行为
+		System.out.println(this.getClass().getName());
+
+		String classname = this.getClass().getName().substring(this.getClass().getName().lastIndexOf(".") + 1);
+
+		Map<String, Object> info = null;
+		for (int i = 0; i < power_list.size(); i++) {
+			info = power_list.get(i);
+			if (classname.equals(info.get("controller"))) {
+				break;
+			} else {
+				continue;
+			}
+		}
+		if (info != null) {
+			List<Map<String, Object>> conductlist = (List<Map<String, Object>>) info.get("conductlist");
+			for (int x = 0; x < conductlist.size(); x++) {
+				String key = conductlist.get(x).get("symbol").toString();
+				model.addAttribute(key, key);
+			}
+
+		}
+
+		return model;
+	}
+
+	/**
+	 * 返回 sessicon 中保存的 当前用户实体
+	 * 
+	 * @author baikun
+	 * @creation 2017年3月13日
+	 * @param request
+	 * @return
+	 */
+	private Users sessicon_get_info(HttpServletRequest request) {
+
+		HttpSession session = request.getSession();
+		Users aduser = (Users) session.getAttribute("admin");
+		if (aduser == null) {
+			return null;
+		}
+		return aduser;
+	}
+
+	@ResponseBody
+	@RequestMapping("list")
+	public List<Map<String, Object>> getTree() {
+		// 假设查询顶级，也就是parent为0
+		Map<String, Object> map_res = new HashMap<String, Object>();
+		map_res.put("data", ozservice.getChild(0));
+
+		return ozservice.getChild(0);
+	}
+
+	/**
+	 * 添加方法
+	 * 
+	 * @author baikun
+	 * @creation 2017年2月22日
+	 * @param request
+	 * @param record
+	 *            表单对象
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("add_info")
+	public Map<String, Object> add_info(HttpServletRequest request, Organiz record) {
+
+		Map<String, Object> map = provinginfo(record);
+		// 独立验证
+		Map<String, Object> map_info = ozservice.idByInfo(record.getId());
+
+		if ((int) map.get("code") != 2) {
+
+			// 查询当前用户子级最后一个识别码
+			Map<String, Object> code_map = ozservice.get_code_map(map_info.get("code").toString());
+			// 重组识别码code
+			record.setPid(Integer.parseInt(map_info.get("id").toString()));
+
+			if (code_map.get("codes") != null && !code_map.get("codes").toString().trim().equals("")) {
+				record.setCode(
+						map_info.get("code").toString() + (Integer.parseInt(code_map.get("codes").toString()) + 1));
+			} else {
+				record.setCode(map_info.get("code").toString() + (1000 + 1));
+			}
+			record.setId(null);
+			int judge = ozservice.add_obj(record);
+			if (judge > 0) {
+				map.put("code", 1);
+
+				map.put("msg", "操作成功");
+			} else {
+				map.put("code", 2);
+				map.put("info", record);
+				map.put("msg", "操作失败");
+				System.out.println("update_info 执行修改失败:");
+			}
+		}
+		return map;
+	}
+
+	/**
+	 * 修改方法
+	 * 
+	 * @author baikun
+	 * @creation 2017年2月22日
+	 * @param request
+	 * @param record
+	 *            表单对象
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("update_info")
+	public Map<String, Object> update_info(HttpServletRequest request, Organiz record) {
+
+		Map<String, Object> map = provinginfo(record);
+
+		if ((int) map.get("code") != 2) {
+
+			int judge = ozservice.update_obj(record);
+			if (judge > 0) {
+				map.put("code", 1);
+
+				map.put("msg", "操作成功");
+			} else {
+				map.put("code", 2);
+				map.put("info", record);
+				map.put("msg", "操作失败");
+				System.out.println("update_info 执行修改失败:");
+			}
+		}
+		return map;
+	}
+
+	/**
+	 * 删除
+	 * 
+	 * @author 白琨 2016-11-11
+	 * @param id
+	 * @param response
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("/delete_info")
+	public Map<String, Object> delete_info(Integer id, HttpServletResponse response, HttpServletRequest req) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("code", ozservice.isDelete(id));
+		map.put("msg", "删除成功");
+		return map;
+
+	}
+
+	/**
+	 * 验证数据是否返回正常
+	 * 
+	 * @author 白琨
+	 * @see 2016-11-22
+	 * @return map
+	 */
+	protected Map<String, Object> provinginfo(Organiz record) {
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("code", 1);
+
+		if (record.getName() == null || record.getName().trim().equals("")) {
+			map.put("code", 2);
+			map.put("msg", "未填写姓名");
+			map.put("info", record);
+			return map;
+		}
+
+		return map;
+	}
+
+	/**
+	 * 根据 ID返回 实体对象
+	 * 
+	 * @author baikun
+	 * @creation 2017年2月22日
+	 * @param id
+	 * @param request
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("idbyinfo")
+	public Map<String, Object> idbyinfo(Integer id, HttpServletRequest request) {
+		Map<String, Object> map = ozservice.idByInfo(id);
+		return map;
+	}
+
+}

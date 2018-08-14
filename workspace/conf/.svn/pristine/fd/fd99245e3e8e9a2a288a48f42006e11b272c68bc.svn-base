@@ -1,0 +1,57 @@
+$(function(){
+	$("#nav_title_bmqd").click(function(e){
+		$("#bmqd").show();
+		$("#dytj").hide();
+		$("#tgtj").hide();
+		$("#nav_title_bmqd").addClass("current");
+		$("#nav_title_dytj").removeClass("current");
+		$("#nav_title_tgtj").removeClass("current");
+	});
+	$("#nav_title_dytj").click(function(e){
+		$("#dytj").show();
+		$("#bmqd").hide();
+		$("#tgtj").hide();
+		$("#nav_title_dytj").addClass("current");
+		$("#nav_title_bmqd").removeClass("current");
+		$("#nav_title_tgtj").removeClass("current");
+	});
+	$("#nav_title_tgtj").click(function(e){
+		$("#tgtj").show();
+		$("#bmqd").hide();
+		$("#dytj").hide();
+		$("#nav_title_tgtj").addClass("current");
+		$("#nav_title_bmqd").removeClass("current");
+		$("#nav_title_dytj").removeClass("current");
+	});
+
+	$(".name").click(function(){
+		$(".meetStatistics").hide();
+		$(".blank").show();
+		
+		$(".dytjCon").click(function(){
+			$(".meetStatistics").show();
+			$(".blank").hide();
+		});
+	});
+	$(".join").click(function(){
+		$(".meetStatistics").hide();
+		$(".single").show();
+
+		$(".dytjCon").click(function(){
+			$(".meetStatistics").show();
+			$(".single").hide();
+		});
+
+	});
+	$(".purpose").click(function(){
+		$(".meetStatistics").hide();
+		$(".double").show();
+
+		$(".dytjCon").click(function(){
+			$(".meetStatistics").show();
+			$(".double").hide();
+		});
+
+	});
+	
+});

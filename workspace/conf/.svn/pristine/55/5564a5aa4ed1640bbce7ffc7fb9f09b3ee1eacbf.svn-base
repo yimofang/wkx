@@ -1,0 +1,309 @@
+package net.emof.building.admin.aspect;
+
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.log4j.Logger;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.session.Session;
+import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.After;
+import org.aspectj.lang.annotation.AfterReturning;
+import org.aspectj.lang.annotation.Around;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
+import org.aspectj.lang.annotation.Pointcut;
+import org.aspectj.lang.reflect.MethodSignature;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import net.emof.building.dao.AdminLogMapper;
+import net.emof.building.model.AdminLog;
+import net.emof.building.model.Users;
+import net.emof.building.util.DataMap;
+
+@Component
+@Aspect
+public class AdminAspect {
+
+	@Autowired
+	AdminLogMapper adminLogMapper;
+	// 日志
+	private final Logger logger = Logger.getLogger(this.getClass());
+
+	@Pointcut(value = "execution(* net.emof.building.admin.controller.*.*(..))")
+	public void foundMonkey() {
+		// 定义切点
+	}
+
+	/**
+	 * 前置通知，在方法执行之前执行
+	 * 
+	 * @author 白琨
+	 * @see 2017-1-7
+	 * @param point
+	 * @throws LoginException
+	 */
+	@Before(value = "foundMonkey()")
+	public void foundBefore(JoinPoint point) throws LoginException {
+
+		String[] strs = point.getSignature().getDeclaringTypeName().split("\\.");
+		String controllername = strs[strs.length - 1];
+		boolean proving = true;
+		// 不拦截登陆页
+		if (controllername.equals("LoginUsersController")) {
+			proving = false;
+		}
+		// 不拦截登陆首页
+		if (controllername.equals("AdminIndexController")) {
+			proving = false;
+		}
+		// 不拦截上传
+		System.out.println(SecurityUtils.getSubject().isAuthenticated() ? "登陆成功" : "登陆失败");
+		if (controllername.equals("FileUploadController")) {
+			if (!SecurityUtils.getSubject().isAuthenticated()) {
+				throw new LoginException("您没有登陆，请登陆");
+			}
+			proving = false;
+		}
+		if (controllername.equals("ShiroLogin")) { // 测试
+			proving = false;
+		}
+
+		// --
+		if (proving) {
+			if (!SecurityUtils.getSubject().isAuthenticated()) {
+				throw new LoginException("您没有登陆，请登陆");
+			}
+
+			Session shiro_session = SecurityUtils.getSubject().getSession();
+			Users userinfo = (Users) shiro_session.getAttribute("admin");
+			// shiro 授权判断 是否可以访问此控制器
+			if (!SecurityUtils.getSubject().hasRole(controllername)) {
+				throw new LoginException("没有访问权限:" + controllername);
+			} else {
+				System.out.println("-------------当前访问的:" + controllername);
+			}
+		}
+		// -----
+
+	}
+
+	/**
+	 * 后置通知，在方法执行之后执行
+	 * 
+	 * @author 白琨
+	 * @see 2017-1-7
+	 * @param point
+	 */
+	@After(value = "foundMonkey()")
+	public void After(JoinPoint point) {
+		/*
+		 * System.out.println("猴子离开了果园..."); String[] strs =
+		 * point.getSignature().getDeclaringTypeName().split("\\.");
+		 * System.out.println("目标访问包路径为:" +
+		 * point.getSignature().getDeclaringTypeName());
+		 * System.out.println("目标访问类名为:" + strs[strs.length - 1]);
+		 * System.out.println("@After：目标方法为：" + point.getSignature().getName());
+		 * System.out.println("@After：参数为：" + Arrays.toString(point.getArgs()));
+		 */
+
+	}
+
+	/**
+	 * 返回通知，在方法返回结果之后返回，可以访问方法的返回值，进行操作，例如写日志
+	 * 
+	 * @author 白琨
+	 * @see 2017-1-7
+	 * @param point
+	 *            当前操作类的信息
+	 * @param returnValue
+	 *            操作后返回类信息
+	 */
+	@AfterReturning(pointcut = "foundMonkey()", returning = "returnValue")
+	public void foundAfter(JoinPoint point, Object returnValue) {
+		// 后置返回通知：使用org.aspectj.lang.annotation 包下的@AfterReturning注解
+		String[] strs = point.getSignature().getDeclaringTypeName().split("\\.");
+		String controllername = strs[strs.length - 1];
+		// 不拦截登陆页
+		if (controllername.equals("LoginUsersController")) {
+			return;
+		}
+		// 不拦截登陆首页
+		if (controllername.equals("AdminIndexController")) {
+			return;
+		}
+		if (controllername.equals("AdminLogController")) {
+			return;
+		}
+		//获取方法名	
+		String[] m = InfoSwicth(point,controllername,returnValue);
+		if(m!=null) {
+			//获取用户信息
+			Session shiro_session = SecurityUtils.getSubject().getSession();
+			Users userinfo = (Users) shiro_session.getAttribute("admin");
+			
+			AdminLog adminLog=new AdminLog();
+			adminLog.setTitle(m[0]);
+			adminLog.setContent("操作人:"+userinfo.getRealname()+","+m[1]);
+			adminLog.setName(m[2]);
+			adminLog.setUserid(userinfo.getId());
+			adminLog.setCreatetime(new Date());		
+			adminLog.setConduct(new Integer(m[3]));
+			adminLog.setFindid(new Integer(m[4]));
+			adminLogMapper.insertSelective(adminLog);
+		}
+		
+	}
+	/**
+	 * 信息分拣
+	 * @author YLS
+	 * @creation 2018年4月12日
+	 * @param point 切点
+	 * @return
+	 */
+	private String[] InfoSwicth(JoinPoint point,String controllername,Object returnValue) {		
+		String[] strs=new String[5];//[{标题,内容,操作表名,行为id,操作id}]
+		//获取方法名
+		String methodName = point.getSignature().getName(); 
+		if(methodName.indexOf("add")>=0) {
+			if(!((Map<String, Object>) returnValue).get("error").equals("0")) {
+				return null;
+			}
+			strs[0]="添加";
+			strs[3]="1";
+			//获取插入参数
+			Map<String, Object> map=(Map<String, Object>) returnValue;
+			String s="插入数据："+map.get("row").toString();	
+			strs[1]=s;
+			Map<String, Object> rowMap = (Map<String, Object>)map.get("row");
+			strs[4]=rowMap.get("id").toString();
+		}else if(methodName.indexOf("update")>=0) {
+			if(!((Map<String, Object>) returnValue).get("error").equals("0")) {
+				return null;
+			}
+			strs[0]="修改";
+			strs[3]="2";
+			//获取修改参数
+			Map<String, Object> map=(Map<String, Object>) returnValue;
+			String s="修改数据："+map.get("row").toString();	
+			strs[1]=s;
+			Map<String, Object> rowMap = (Map<String, Object>)map.get("row");
+			strs[4]=rowMap.get("id").toString();
+		}else if(methodName.indexOf("delete")>=0) {
+			strs[0]="删除";
+			strs[3]="3";
+			//获取删除参数
+			Object[] obj=point.getArgs();
+			int id=((Integer)obj[0]).intValue();
+			String s="删除数据：id="+id+"";
+			strs[1]=s;
+			strs[4]=id+"";
+		}else {
+			return null;
+		}
+		
+		switch (controllername) {
+		case "AdminUsersController":
+			strs[2]="users";
+			break;
+		case "PowersController":
+			strs[2]="powers";		
+			break;
+		case "MenusController":
+			strs[2]="menus";
+			break;
+		case "ConductController":
+			strs[2]="conduct";
+			break;
+		case "OrganizController":
+			strs[2]="organiz";
+			break;
+		case "MediaController":
+			strs[2]="media";
+			break;
+		case "MsgController":
+			strs[2]="msg";
+			break;
+		case "ConfsTypeController":
+			strs[2]="confs_type";
+			break;
+		case "PowerMenuController":
+			strs[2]="power_menu";
+			break;
+
+		default:
+			return null;
+		}
+		return strs;
+	}
+
+	/**
+	 * 异常通知，关联的方法若抛出异常，可以访问该异常，并进行操作
+	 * 
+	 * @author 白琨
+	 * @see 2017-1-7
+	 * @param point
+	 *            当前操作类
+	 * @param exception
+	 *            异常信息
+	 */
+	/*
+	 * @AfterThrowing(value = "foundMonkey()", throwing = "exception") public
+	 * void afterThrowing(JoinPoint point, Exception exception) { String
+	 * methodName = point.getSignature().getName();
+	 * System.out.println("----------------异常通知--------------");
+	 * System.out.println("method:  " + methodName + "occurs exception:" +
+	 * exception.getMessage()); }
+	 */
+
+	/**
+	 * 
+	 * 环绕通知，围绕着方法进行执行
+	 * 
+	 * @author 白琨
+	 * @see 2017-1-7
+	 * @param pjp
+	 *            当前操作的类
+	 * @return
+	 * @throws Throwable
+	 */
+	@Around("foundMonkey()")
+	public Object around(ProceedingJoinPoint pjp) {
+		// 环绕通知：使用org.aspectj.lang.annotation 包下的@Around注解
+		/*
+		 * System.out.println("猴子开始搜刮.......");
+		 * 
+		 * Object[] args = pjp.getArgs();// 参数 String method_str =
+		 * pjp.getSignature().getName();// 方法名 String class_str =
+		 * pjp.getTarget().getClass().getName();// 类名
+		 * 
+		 * System.out.println("当前访问的类名:" + class_str);
+		 * System.out.println("当前访问的方法名:" + method_str); // 输入参数格式化 StringBuffer
+		 * paramSB = new StringBuffer(); if (args != null) { for (int i = 0; i <
+		 * args.length; i++) { Object obj = args[i]; if (obj != null)
+		 * paramSB.append(obj.toString()); else paramSB.append("null"); if (i <
+		 * args.length - 1) paramSB.append(","); } }
+		 * System.out.println("当前访问的参数序列:" + paramSB);
+		 */
+		Object obj = null;
+		try {
+			obj = pjp.proceed();
+		} catch (Throwable e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+
+			// 打印日期信息
+			System.out.println("----------------环绕通知发现异常--------------");
+			System.out.println(e.getMessage());
+			logger.info(e.getMessage());
+			// return new ModelAndView("/403");
+		}
+
+		return obj;
+	}
+
+}

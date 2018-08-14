@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+    <title>会议记录</title>
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/index.css">
+    <script src="js/jquery-2.1.4.min.js"></script>
+    <script src="js/rem.js"></script>
+    <script src="js/removeHeader.js"></script>
+
+</head>
+<body>
+<!--header-->
+<div class="Header"><a href="javascript:history.go(-1);"></a>会议记录</div>
+<!--content-->
+<div class="Content IndexContent">
+    <ul class="MeetingList">
+
+    </ul>
+</div>
+<script>
+    var State = 2,	//状态
+        Page = 1,	//页码
+        Pagetotal = 0, //总页码
+        Select = '',//模糊查询
+        timers = null;//加载更多定时器
+
+    $(function(){
+
+        Getliust(State,Page,Token,Select);
+        //上拉加载更多
+        $('.Content').scroll(function() {
+            //当时滚动条离底部60px时开始加载下一页的内容
+            if (($(this)[0].scrollTop + $(this).height() + 260) >= $(this)[0].scrollHeight) {
+                clearTimeout(timers);
+                //这里还可以用 [ 延时执行 ] 来控制是否加载 （这样就解决了 当上页的条件满足时，一下子加载多次的问题啦）
+                timers = setTimeout(function() {
+                    if(Page>=Pagetotal){
+                        return
+                    }else{
+                        Page++;
+                        console.log("第" + Page + "页");
+
+                    }
+                }, 0);
+            }
+        });
+
+    });
+    //获取会议列表
+    function Getliust(a,b,c,d) {//a:状态  b:页数  c：token  d:模糊查询
+        $.ajax({
+            type : 'POST',
+            url : Urlstr+'confs_web/listpage.do',
+            data : {
+                display:'10',
+                page:b,
+                state:a,
+                token:c,
+                select:d
+            },
+            dataType : 'json',
+            success : function (res) {
+                if(res.error == 0){
+                    var meetlist = res.row;
+                    if(meetlist.length == 0){
+
+                    }else{
+                        Pagetotal = res.pages;
+                        var htmlstr = '';
+                        for(var i = 0;i<meetlist.length;i++){
+                            var stime = ZHDate(new Date(meetlist[i].bhstart));
+                            htmlstr += `<li>
+                                        <a href="MeetManage.html?confsid=${meetlist[i].id}">
+                                            <img src="${Urlstr}upload/${meetlist[i].cimg}" alt="">
+                                            <div class="MeetingAddress">
+                                                <h2>${meetlist[i].cname}</h2>
+                                                <p class="Address">${meetlist[i].addr}</p>
+                                                <p class="Time">${stime}</p>
+                                            </div>
+                                        </a>
+                                    </li>`;
+                        }
+                        $('.MeetingList').html(htmlstr);
+                    }
+                }else if(res.error == 5){
+                    alert(res.msg);
+                    ReqToken()
+                }else{
+                    alert(res.msg);
+                }
+            }
+        })
+    }
+    //Token 过期 重新请求
+    function ReqToken() {
+        $('#reqtoken').load("login2.html",function() {
+            $('#reqtoken').show();
+        });
+    }
+</script>
+
+</body>
+</html>

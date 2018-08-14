@@ -1,0 +1,119 @@
+package net.emof.building.admin.service;
+
+import java.util.Date;
+
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import net.emof.building.dao.ConfsMapper;
+import net.emof.building.model.Users;
+import net.emof.building.util.DataMap;
+import net.emof.building.util.ToolsUtil;
+
+/**
+ * 会议管理
+ * 
+ * @author baikun
+ * @creation 2017年12月26日
+ */
+@Service
+public class ConfsService extends SqlToolseService {
+
+	@Autowired
+	private ConfsMapper cm;
+
+	// 日志
+	private final Logger logger = Logger.getLogger(this.getClass());
+
+	/**
+	 * 初始化分页列表
+	 * 
+	 * @author baikun
+	 * @creation 2017年12月18日
+	 * @param page
+	 * @param display
+	 * @param select
+	 * @param sort
+	 *            排序字段
+	 * @param sortOrder
+	 * @param agodate
+	 *            开始日期
+	 * @param backdate
+	 *            结束日期
+	 * @param sessiconAdmin
+	 *            当前用户
+	 * @return
+	 */
+	public DataMap pagelist(Integer page, Integer display, String select, String sort, String sortOrder, String agodate,
+			String backdate, Integer opt, Users sessiconAdmin) {
+		DataMap map = null;
+
+		if (page == null) {
+			page = 1;
+		}
+		if (display == null) {
+			display = 5;
+		}
+		if ((page != null && !ToolsUtil.isValid(page + "")) || (display != null && !ToolsUtil.isValid(display + ""))) {
+			return new DataMap(null, 4);
+		}
+
+		String code = this.get_code(sessiconAdmin.getId()).get("code").toString();
+		String tableName = " confs as obj "; // 表名
+		tableName += " LEFT JOIN users as u on u.id=obj.userid ";
+		tableName += " LEFT JOIN organiz as o on u.organizid=o.id ";
+		tableName += " join confs_type as t on t.id=obj.type ";
+		String find = " obj.* "; // 显示字段
+		find += ",t.tname"; // 分类
+		find += ",u.realname"; // 真实姓名
+		find += ",o.name";// 分组
+		String where = "  obj.state=1 "; // 条件
+		String order = null; // 排序
+		if (select != null && select.trim() != "" && !ToolsUtil.isValid(select.trim())) {
+			where = where + " and  obj.cname like '%" + select + "%' ";
+		}
+
+		if (opt != null && opt != 0) {
+			// 排序
+			if (opt == 1) {// 报名中
+				where += " and  DATE_FORMAT(obj.shstart, '%Y-%m-%d %h:%i:%s')=DATE_FORMAT('"
+						+ ToolsUtil.date_convert_str(new Date(), 2) + "', '%Y-%m-%d %h:%i:%s')";
+			}
+			if (opt == 2) {// 进行中
+				where += " and  DATE_FORMAT(obj.bhstart, '%Y-%m-%d %h:%i:%s')=DATE_FORMAT('"
+						+ ToolsUtil.date_convert_str(new Date(), 2) + "', '%Y-%m-%d %h:%i:%s')";
+			}
+			if (opt == 3) {// 已结束
+				where += " and  DATE_FORMAT(obj.bhend, '%Y-%m-%d %h:%i:%s')=DATE_FORMAT('"
+						+ ToolsUtil.date_convert_str(new Date(), 2) + "', '%Y-%m-%d %h:%i:%s')";
+			}
+		}
+
+		if ((agodate != null && agodate.trim() != "") && (backdate == null || backdate.trim() == "")) {
+			where = where + " and  DATE_FORMAT(obj.createtime, '%Y-%m-%d')=DATE_FORMAT('" + agodate + "', '%Y-%m-%d')";
+		}
+
+		if ((backdate != null && backdate.trim() != "") && (agodate == null || agodate.trim() == "")) {
+			where = where + " and  DATE_FORMAT(obj.createtime, '%Y-%m-%d')=DATE_FORMAT('" + backdate + "', '%Y-%m-%d')";
+		}
+
+		if (agodate != null && agodate.trim() != "" && !ToolsUtil.isValid(agodate.trim())) {
+
+			if (backdate != null && backdate.trim() != "" && !ToolsUtil.isValid(backdate.trim())) {
+
+				where = where + " and DATE_FORMAT(obj.createtime, '%Y-%m-%d')  BETWEEN DATE_FORMAT('" + agodate
+						+ "', '%Y-%m-%d') AND DATE_FORMAT('" + backdate + "', '%Y-%m-%d')  ";
+			}
+		}
+		if (sort != null && sortOrder != null) {
+			order = " order by " + sort + " " + sortOrder;
+		} else {
+			order = " order by obj.createtime desc";
+		}
+		map = this.pageList(tableName, find, where, order, page, display);
+		return map;
+	}
+
+}

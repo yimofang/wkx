@@ -1,0 +1,227 @@
+package net.emof.building.admin.service;
+
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+ 
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import net.emof.building.admin.customEXC.AppendAdmException;
+import net.emof.building.dao.MsgUserMapper;
+ 
+import net.emof.building.model.MsgUser;
+import net.emof.building.model.Users;
+import net.emof.building.util.DataMap;
+import net.emof.building.util.ToolsUtil;
+
+/**
+ * 消息管理
+ * @author baikun
+ * @creation 2017年12月25日
+ */
+@Service
+public class MsgUserService extends SqlToolseService {
+
+	@Autowired
+	private MsgUserMapper mum;
+
+	@Autowired
+	private AdminUsersService aus;
+
+	// 日志
+	private final Logger logger = Logger.getLogger(this.getClass());
+
+	/**
+	 * 初始化分页列表
+	 * 
+	 * @author baikun
+	 * @creation 2017年12月18日
+	 * @param page
+	 * @param display
+	 * @param select
+	 * @param sort
+	 *            排序字段
+	 * @param sortOrder
+	 * @param agodate
+	 *            开始日期
+	 * @param backdate
+	 *            结束日期
+	 * @param sessiconAdmin
+	 *            当前用户
+	 * @return
+	 */
+	public DataMap pagelist(Integer page, Integer display, String select, String sort, String sortOrder, String agodate,
+			String backdate, Users sessiconAdmin) {
+		DataMap map = null;
+
+		if (page == null) {
+			page = 1;
+		}
+		if (display == null) {
+			display = 5;
+		}
+		if ((page != null && !ToolsUtil.isValid(page + "")) || (display != null && !ToolsUtil.isValid(display + ""))) {
+			return new DataMap(null, 4);
+		}
+
+		String tableName = " msg_user as obj "; // 表名
+		tableName += " LEFT JOIN msg_user as mu ";
+		String find = " obj.* "; // 显示字段
+		find += " ,mu.title,mu.content";
+		String where = " 1=1   and userid=" + sessiconAdmin.getId(); // 条件
+
+		String order = null; // 排序
+
+		if (select != null && select.trim() != "" && !ToolsUtil.isValid(select.trim())) {
+			where = where + " and  title like '%" + select + "%' ";
+		}
+
+		if ((agodate != null && agodate.trim() != "" && !ToolsUtil.isValid(agodate.trim()))
+				&& (backdate == null || backdate.trim() == "" && !ToolsUtil.isValid(backdate.trim()))) {
+			where = where + " and  DATE_FORMAT(obj.createtime, '%Y-%m-%d')=DATE_FORMAT('" + agodate + "', '%Y-%m-%d')";
+		}
+
+		if ((backdate != null && backdate.trim() != "" && !ToolsUtil.isValid(backdate.trim()))
+				&& (agodate == null || agodate.trim() == "" && !ToolsUtil.isValid(agodate.trim()))) {
+			where = where + " and  DATE_FORMAT(obj.createtime, '%Y-%m-%d')=DATE_FORMAT('" + backdate + "', '%Y-%m-%d')";
+		}
+
+		if (agodate != null && agodate.trim() != "" && !ToolsUtil.isValid(agodate.trim())) {
+
+			if (backdate != null && backdate.trim() != "" && !ToolsUtil.isValid(backdate.trim())) {
+
+				where = where + " and DATE_FORMAT(obj.createtime, '%Y-%m-%d')  BETWEEN DATE_FORMAT('" + agodate
+						+ "', '%Y-%m-%d') AND DATE_FORMAT('" + backdate + "', '%Y-%m-%d')  ";
+			}
+		}
+		if (sort != null && sortOrder != null) {
+			order = " order by " + sort + " " + sortOrder;
+		} else {
+			order = " order by obj.createtime desc";
+		}
+		map = this.pageList(tableName, find, where, order, page, display);
+		return map;
+	}
+
+	/**
+	 * 添加 消息阅读记录
+	 * 
+	 * @author baikun
+	 * @creation 2017年12月25日
+	 * @param msgid
+	 * @param type
+	 *            1公告 2消息
+	 * @param iswhole
+	 *            1群发消息 2单发消息
+	 * @return
+	 * @throws AppendAdmException
+	 */
+	public DataMap add_obj(String msgid, Integer type, Integer iswhole, Integer userid) throws AppendAdmException {
+		DataMap map = new DataMap();
+		MsgUser record = new MsgUser();
+		if (msgid == null || msgid.trim().equals("") || msgid.trim().length() < 1) {
+			map.addMsg_diy_obj(null, 1, "添加失败,消息标识不存在");
+			return map;
+		}
+		if (type == null || type > 2 || type < 1) {
+			map.addMsg_diy_obj(null, 1, "添加失败,消息类型不存在");
+			return map;
+		}
+		if (iswhole == null || iswhole > 2 || iswhole < 1) {
+			iswhole = 1;
+		}
+		if (iswhole == 2) {
+			if (userid == null || userid <= 0) {
+				map.addMsg_diy_obj(null, 1, "添加失败,用户不存在");
+				return map;
+			}
+		}	
+		record.setId(ToolsUtil.get_diy_ID());
+		record.setCreatetime(new Date());
+		record.setMsgid(msgid);
+		record.setType(type);
+		// 1已读 2未读
+		record.setIslook(1);
+		Integer row = null;
+		if (map.errorJudge()) {
+			try {
+				if (iswhole == 1) {// 群发
+					List<Map<String, Object>> maplist = aus.getUsersList();
+					if (maplist == null || maplist.size() < 1 || maplist.get(0) == null) {
+						map.addMsg_diy_obj(record, 1, "群发消息失败,不存在接收用户群");
+						return map;
+					}
+					for (int i = 0; i < maplist.size(); i++) {
+						Map<String, Object> info = maplist.get(i);
+						if (info == null || info.get("id") == null) {
+							continue;
+						}
+						record.setId(ToolsUtil.get_diy_ID());
+						record.setUserid(Integer.parseInt(info.get("id").toString()));
+						mum.insertSelective(record);
+					}
+				}
+			} catch (NumberFormatException e) {
+				logger.error("【msguser群发异常】信息位置" + this.getClass().getName() + " "
+						+ Thread.currentThread().getStackTrace()[1].getMethodName() + " nubmer:"
+						+ new Throwable().getStackTrace()[0].getLineNumber() + "【参数】"
+						+ ToolsUtil.pojo_to_Map(record).toString() + "【异常】" + e.getMessage());
+				map.addMsg_diy_obj(record, 1, "添加失败,请检查添加信息");
+				return map;
+			}
+
+			try {
+				if (iswhole == 2) {// 单发
+					record.setUserid(userid);
+					row = mum.insertSelective(record);
+					if (row > 0) {
+						map.addMsg_diy_obj(record.getId(), 0, "添加成功，");
+						return map;
+					}
+				}
+			} catch (Exception e) {
+				logger.error("【msguser单发消息添加异常】信息位置" + this.getClass().getName() + " "
+						+ Thread.currentThread().getStackTrace()[1].getMethodName() + " nubmer:"
+						+ new Throwable().getStackTrace()[0].getLineNumber() + "【参数】"
+						+ ToolsUtil.pojo_to_Map(record).toString() + "【异常】" + e.getMessage());
+				map.addMsg_diy_obj(record, 1, "添加失败,请检查添加信息");
+				return map;
+			}
+		}
+		return map;
+	}
+
+	/**
+	 * 修改阅读状态
+	 * 
+	 * @author baikun
+	 * @creation 2017年12月25日
+	 * @param id
+	 *            记录ID
+	 * @return
+	 */
+	public DataMap update_islook(String id) {
+		DataMap map = new DataMap();
+		try {
+			Map<String, Object> info = this.selectMap("msg_user", "*", "where id=" + id);
+			if (info == null || info.get("id") == null) {
+				map.addMsg_diy_obj(null, 1, "修改状态失败");
+				return map;
+			}
+			MsgUser msgUser = new MsgUser();
+			msgUser.mapsetInfo(info);
+			msgUser.setIslook(2);
+			mum.updateByPrimaryKeySelective(msgUser);
+		} catch (Exception e) {
+			logger.error("【msguser单发消息添加异常】信息位置" + this.getClass().getName() + " "
+					+ Thread.currentThread().getStackTrace()[1].getMethodName() + " nubmer:"
+					+ new Throwable().getStackTrace()[0].getLineNumber() + "【异常】" + e.getMessage());
+			map.addMsg_diy_obj(null, 1, "修改状态失败");
+			return map;
+		}
+		return map;
+	}
+
+}

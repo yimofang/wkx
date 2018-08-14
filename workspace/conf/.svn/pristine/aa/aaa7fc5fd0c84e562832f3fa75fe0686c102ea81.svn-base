@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+    <title>调研问卷</title>
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/survey.css">
+    <script src="js/jquery-2.1.4.min.js"></script>
+    <script src="js/rem.js"></script>
+    <script src="js/removeHeader.js"></script>
+    <script src="jscript/addSurvey.js"></script>
+</head>
+<body>
+	<!--header-->
+	<div class="Header">
+    	<a href="javascript:history.go(-1);"></a>多选题
+	</div>
+	<!--添加多选-->
+	<div class="addSurQue">
+		<!--double-->
+		<div class="doubleTitle deleteHeader">
+			<div>
+				<span>标题</span>
+				<input id="douTitle" type="text" placeholder="请输入题目标题">
+			</div>
+		</div>
+		<div class="doubleOption addDoubOpt">
+			<div class="douOptList">
+				<span class="opt">选项<span class="douNum">1</span></span>
+				<input class="dOptionVal" type="text" placeholder="请填写选项">
+				<button class="douDel"></button>
+			</div>
+			<div class="douOptList">
+				<span class="opt">选项<span class="douNum">2</span></span>
+				<input class="dOptionVal" type="text"  placeholder="请填写选项">
+				<button class="douDel"></button>
+			</div>
+			<div class="addOption">
+				<p id="addDoubleList" onclick="addDoubleList()">+添加选项</p>
+			</div>
+		</div>
+		<div class="doubleChoice">
+			<div>
+				<span>最少选择</span>
+				<select class="select" id="less">
+					<!-- <option value="0" selected>不限</option> -->
+					<option value=""></option>
+					<option value="1">1</option>
+					<option value="2">2</option>
+				</select>
+			</div>
+			<div>
+				<span>最多选择</span>
+				<select class="select" id="more">
+					<!-- <option value="0" selected>不限</option> -->
+					<option value=""></option>
+					<option value="1">1</option>
+					<option value="2">2</option>
+				</select>
+			</div>
+		</div>
+		<!--submit-->
+		<div class="btn doubleBtn" id="doubleBtn" onclick="doubleBtn()">递交</div>
+	</div>
+	<!--修改多选-->
+	<div class="editSurQue" style="display: none">
+		<!--double-->
+		<div class="doubleTitle deleteHeader">
+			<div>
+				<span>标题</span>
+				<input id="editDouTitle" type="text" placeholder="输入题目标题">
+			</div>
+		</div>
+		<div class="doubleOption editDoubOpt">
+			<!-- <div class="douOptList">
+				<span class="opt">选项<span class="douNum">1</span></span>
+				<input class="dOptionVal" type="text" placeholder="选项名称">
+				<button class="douDel"></button>
+			</div>
+			<div class="douOptList">
+				<span class="opt">选项<span class="douNum">2</span></span>
+				<input class="dOptionVal" type="text"  placeholder="选项名称">
+				<button class="douDel"></button>
+			</div> -->	
+		</div>
+		<div class="addOption" style="border-bottom:0.01rem solid #efefef">
+				<p id="editAddDouList" onclick="editAddDouList()">+添加选项</p>
+			</div>
+		<div class="doubleChoice">
+			<div>
+				<span>最少选择</span>
+				<select class="select" id="editLess">
+					<!-- <option value="1" selected>1</option>
+					<option value="2">2</option> -->
+				</select>
+			</div>
+			<div>
+				<span>最多选择</span>
+				<select class="select" id="editMore">
+					<!-- <option value="1" selected>1</option>
+					<option value="2">2</option> -->
+				</select>
+			</div>
+		</div>
+		<!--submit-->
+		<div class="btn doubleBtn" id="editDoubleBtn" onclick="editDoubleBtn()">保存修改</div>
+	</div>
+		
+	<div id="reqtoken" class="reqtoken"></div>
+</body>
+</html>

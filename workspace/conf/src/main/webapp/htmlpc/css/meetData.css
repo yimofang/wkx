@@ -1,0 +1,117 @@
+.data_all {
+    padding: 25px;
+}
+
+.item {
+    width: 900px;
+    padding: 15px;
+    margin-bottom: 25px;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.item:hover {
+    border: 1px solid #ddd;
+    box-shadow: 0px 0px 1px 1px #ddd;
+    margin-bottom: 23px;
+}
+
+.item_tit {
+    float: left;
+    width: 80px;
+    line-height: 30px;
+}
+.item_tit b{
+    color: #da0e00;
+}
+.item_info{
+    float: left;
+    width: 748px;
+    margin-right: 15px;
+    line-height: 30px;
+}
+.item_info a{
+    display: block;
+    width: 100%;
+    height: 30px;
+    line-height: 30px;
+    padding: 0 10px 0 40px;
+    background: url(../img/word.png) no-repeat 10px 5px;
+    background-size: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+.item_info p{
+    line-height: 30px;
+    font-size: 12px;
+    padding: 0 10px 0 40px;
+    background: url(../img/ok.png) no-repeat 12px 7px;
+    background-size: 18px;
+    box-sizing: border-box;
+}
+.item_det{
+    display: none;
+    float: left;
+    width: 24px;
+    height: 60px;
+    line-height: 30px;
+    text-align: center;
+    border-radius: 5px;
+    color: #fff;
+    background: #212123;
+    cursor: pointer;
+
+}
+.item:hover .item_det{
+    display: block;
+}
+
+.up_data{
+    width: 150px;
+    position: relative;
+}
+.up_data img{
+    display: block;
+    width: 150px;
+    height: auto;
+}
+.data_file{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+}
+
+.data_shade{
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 9999;
+    background: rgba(0,0,0,.4);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

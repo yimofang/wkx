@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>微会议</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/meetName.css">
+</head>
+
+<body>
+
+<div class="topLine"></div>
+<div class="header"></div>
+<div class="left_nav">
+    <ul class="nav_one">
+        <li class="nav_manage active">
+            <a href="meetList.html">
+                <b class="active"></b>
+                <span>会议管理</span>
+            </a>
+        </li>
+        <li class="nav_release">
+            <a href="meetPublish.html">
+                <b></b>
+                <span>发布会议</span>
+            </a>
+        </li>
+        <li class="nav_pwd">
+            <a href="password.html">
+                <b></b>
+                <span>修改密码</span>
+            </a>
+        </li>
+    </ul>
+    <ul class="nav_two" style="display: block;">
+        <li>
+            <a href="javascript:void(0)" data-url="meetModify.html">会议修改</a>
+        </li>
+        <li>
+            <a href="javascript:void(0)" data-url="meetCode.html">二维码 </a>
+        </li>
+        <li class="on">
+            <a href="javascript:void(0)" data-url="meetName.html">名单管理 </a>
+        </li>
+        <li>
+            <a href="javascript:void(0)" data-url="meetData.html">资料管理 </a>
+        </li>
+        <li>
+            <a href="javascript:void(0)" data-url="meetCount.html">会议统计 </a>
+        </li>
+        <li>
+            <a href="javascript:void(0)" data-url="meetSurvey.html">调研问卷 </a>
+        </li>
+        <li>
+            <a href="javascript:void(0)" data-url="meetBriefing.html">简报管理 </a>
+        </li>
+        <li>
+            <a href="javascript:void(0)" data-url="meetSign.html">上传签到表 </a>
+        </li>
+    </ul>
+</div>
+<div class="right_wrapper">
+    <div class="top">
+        <a href="#">会议管理</a> &nbsp;/&nbsp;
+        <a href="#">名单管理</a>
+    </div>
+    <div class="wrapper">
+        <div class="main">
+            <div class="title">
+                <span class="active" data-state="0">全部</span>
+                <span data-state="1">已签到</span>
+                <span data-state="2">上传名单</span>
+                <div class="name_rightbtn">
+                    <div class="name_search">
+                        <input type="text" placeholder="搜索参会人姓名或手机号">
+                        <i></i>
+                    </div>
+                    <span class="all_down" onclick="downPC()">批量下载</span>
+                    <span class="add_name" onclick="showAdd()">添加名单</span>
+                </div>
+            </div>
+            <!--全部-->
+            <div class="cont1">
+                <ul>
+                    <li class="tit">
+                        <span class="man">参会人</span>
+                        <span class="tel">手机号码</span>
+                        <span class="time">报名时间</span>
+                        <span class="sign">签到否</span>
+                        <span class="caouo">操作</span>
+                    </li>
+                </ul>
+                <ul class="namelist">
+
+                </ul>
+            </div>
+            <div class="cont2">
+                <div class="name_title2">
+                    <span>参会人</span>
+                    <span>手机号码</span>
+                    <span>签到时间</span>
+                    <span>操作</span>
+                </div>
+                <ul class="name_list2">
+
+                </ul>
+            </div>
+            <div class="cont3">
+
+                <div class="jd1">
+                    <img src="img/upname.png" alt="">
+                    <div class="exl_up">
+                        <span>批量上传</span>
+                        <form id="forms">
+                            <input type="file" id="upload" name="myfiles" onchange="getInfo(this)">
+                        </form>
+                    </div>
+                    <button class="exl_sup" style="display: none;" onclick="doUpload()">确认上传</button>
+                    <a href="http://192.168.2.220:89/conf/upload/ce.xlsx">*点击下载名单上传模版</a>
+                </div>
+
+                <div class="jd3" style="display: none;">
+                    <img src="img/uploads.png" alt="">
+                    <div class="exl_ok">上传成功 <span></span></div>
+                </div>
+
+                <!--<div class="jd2" style="display: none;">-->
+                <!--<div class="name_tit3">-->
+                <!--<span class="man">参会人</span>-->
+                <!--<span class="tel">手机号码</span>-->
+                <!--<span class="time">报名时间</span>-->
+                <!--<span class="sign">签到否</span>-->
+                <!--</div>-->
+                <!--<ul class="name_list3">-->
+                <!--<li>-->
+                <!--<div>dsa</div>-->
+                <!--<div> 15933331292</div>-->
+                <!--<div> 2018-06-20</div>-->
+                <!--<div>-->
+                <!--<img src="img/yes.png" alt="">-->
+                <!--</div>-->
+                <!--</li>-->
+                <!--</ul>-->
+                <!--<div class="exl_btn">确认上传</div>-->
+                <!--</div>-->
+            </div>
+            <div class="noData">
+                <img src="img/nodata.png">
+                <p>暂无数据</p>
+            </div>
+            <form id="form1" runat="server">
+                <div>
+                    <ul class="pagination" id="pagination">
+                    </ul>
+                    <input type="hidden" id="PageCount" runat="server"/>
+                    <input type="hidden" id="PageSize" runat="server" value="20"/>
+                    <input type="hidden" id="countindex" runat="server" value=""/>
+                    <!--设置最多显示的页码数 可以手动设置 默认为7-->
+                    <input type="hidden" id="visiblePages" runat="server" value="4"/>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>
+<div class="footer"></div>
+<div class="add_thisname">
+    <div class="add_bg">
+        <div class="add_tit">
+            <span>添加名单</span>
+            <div class="add_btn">
+                <span class="add_close" onclick="hideAdd()">取消</span>
+                <span class="add_sumit" onclick="submitAddName()">保存</span>
+            </div>
+        </div>
+        <ul class="add_list">
+            <li>
+                <span class="item_tit"><b>*</b>姓名：</span>
+                <input type="text" class="input_text" placeholder="请输入参会者姓名" id="add_name">
+            </li>
+            <li>
+                <span class="item_tit"><b>*</b>手机号码：</span>
+                <input type="text" class="input_text" placeholder="请输入参会者手机号码" id="add_tel">
+            </li>
+            <li>
+                <span class="item_tit">邮箱：</span>
+                <input type="text" class="input_text" placeholder="请输入参会者邮箱" id="add_email">
+            </li>
+            <li>
+                <span class="item_tit">公司：</span>
+                <input type="text" class="input_text" placeholder="请输入参会者公司" id="add_con">
+            </li>
+            <li>
+                <span class="item_tit">职位：</span>
+                <input type="text" class="input_text" placeholder="请输入参会者职位" id="add_zhi">
+            </li>
+            <li>
+                <span class="item_tit"><b>*</b>是否报名：</span>
+                <label for="r1">
+                    <div class="radio_bg">
+                        <input type="radio" id="r1" name="baoming" checked data-val="1">
+                    </div>
+                    <span>报名</span>
+                </label>
+                <label for="r2">
+                    <div class="radio_bg">
+                        <input type="radio" id="r2" name="baoming" data-val="2">
+                    </div>
+                    <span>未报名</span>
+                </label>
+            </li>
+            <li>
+                <span class="item_tit"><b>*</b>是否签到：</span>
+                <label for="r3">
+                    <div class="radio_bg">
+                        <input type="radio" id="r3" name="qiandao" checked data-val="1">
+                    </div>
+                    <span>签到</span>
+                </label>
+                <label for="r4">
+                    <div class="radio_bg">
+                        <input type="radio" id="r4" name="qiandao" data-val="2">
+                    </div>
+                    <span>未签到</span>
+                </label>
+            </li>
+        </ul>
+    </div>
+</div>
+<div class="show_naminfo">
+    <div class="show_bg">
+        <div class="show_tit">
+            <span>名单详情</span>
+            <div class="show_btn">
+                <span class="show_close" onclick="hideInfo()">关闭</span>
+            </div>
+        </div>
+        <ul class="show_list">
+            <li>
+                <span class="item_tit">姓名：</span>
+                <span class="item_info info_name"></span>
+            </li>
+            <li>
+                <span class="item_tit">手机号码：</span>
+                <span class="item_info info_tel"></span>
+            </li>
+            <li>
+                <span class="item_tit">邮箱：</span>
+                <span class="item_info info_email"></span>
+            </li>
+            <li>
+                <span class="item_tit">公司：</span>
+                <span class="item_info info_con"></span>
+            </li>
+            <li>
+                <span class="item_tit">职位：</span>
+                <span class="item_info info_job"></span>
+            </li>
+            <li>
+                <span class="item_tit">是否报名：</span>
+                <span class="item_info info_baoming"></span>
+            </li>
+            <li>
+                <span class="item_tit">是否签到：</span>
+                <span class="item_info info_qiandao"></span>
+            </li>
+        </ul>
+    </div>
+</div>
+<div class="shade"></div>
+<div class="mask">
+    <div class="maskInfo">
+        <h3>温馨提示</h3>
+        <p class="message">您确定要删除此条名单信息吗？</p>
+        <p class="btns">
+            <span class="no_btn" onclick="goback()">取消</span>
+            <span class="yes_btn" onclick="deletemeet(this)" data-id="" data-index="">确定</span>
+        </p>
+    </div>
+</div>
+
+<script src="javascript/jquery-2.1.4.min.js"></script>
+<script src="javascript/common.js"></script>
+<script src="javascript/jqPaginator.min.js" type="text/javascript"></script>
+<script src="js/meetName.js"></script>
+</body>
+
+</html>

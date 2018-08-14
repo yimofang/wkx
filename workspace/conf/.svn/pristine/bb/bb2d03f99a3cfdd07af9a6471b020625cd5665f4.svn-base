@@ -1,0 +1,175 @@
+package net.emof.building.admin.service;
+
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import net.emof.building.dao.OrganizMapper;
+
+import net.emof.building.model.Organiz;
+import net.emof.building.model.Users;
+
+/**
+ * 组织操作
+ * 
+ * @author baikun
+ * @creation 2017年7月12日
+ */
+
+@Service
+public class OrganizService extends SqlToolseService {
+
+	@Autowired
+	private OrganizMapper om;
+
+	/**
+	 * 逻辑删除
+	 * 
+	 * @author baikun
+	 * @creation 2017年2月21日
+	 * @param id
+	 * @param state
+	 * @return
+	 */
+	public int isDelete(Integer id) {
+		return om.isDelete(id);
+	}
+
+	/**
+	 * 修改用户实体
+	 * 
+	 * @author baikun
+	 * @creation 2017年2月21日
+	 * @param id
+	 * @param record
+	 * @return
+	 */
+	public int update_obj(Organiz record) {
+		return om.updateByPrimaryKeySelective(record);
+	}
+
+	/**
+	 * 添加用户实体
+	 * 
+	 * @author baikun
+	 * @creation 2017年2月21日
+	 * @param record
+	 * @return
+	 */
+	public int add_obj(Organiz record) {
+		return om.insertSelective(record);
+	}
+
+	/**
+	 * 返回指定 查询条件下 的数据数量
+	 * 
+	 * @author baikun
+	 * @creation 2017年2月23日
+	 * @param fildname
+	 * @param fildvalue
+	 * @return
+	 */
+	public Integer count_nub(String fildname, String fildvalue) {
+		String tableName = " organiz as obj "; // 表名
+		String find = " count(*) as  iscount "; // 显示字段
+		String where = fildname + "=\'" + fildvalue + "\' and isdelete=1 ";
+		Map<String, Object> countMap = this.selectMap(tableName, find, where);
+		return countMap != null ? Integer.parseInt(countMap.get("iscount").toString()) : 0;
+	}
+
+	/**
+	 * 根据id返回 map实体对象
+	 * 
+	 * @author baikun
+	 * @creation 2017年2月21日
+	 * @param id
+	 * @return
+	 */
+	public Map<String, Object> get_info(Integer id, Users sessiconAdmin) {
+		String tableName = " organiz as o "; // 表名
+		String find = " o.* "; // 显示字段
+		String where = " where 1=1 and isdelete=1  and o.id=" + id;
+		Map<String, Object> map = this.selectMap(tableName, find, where);
+		return map;
+	}
+
+	/**
+	 * 递归方法，负责调用自身，直到到达树的末端
+	 * 
+	 * @author baikun
+	 * @creation 2017年2月28日
+	 * @param parentId
+	 * @return
+	 */
+	public List<Map<String, Object>> getChild(int parentId) {
+		List<Map<String, Object>> items = getItemByParent(parentId);// 此处查数据库
+		// 如果该节点有下级，则循环所有下级继续递归，如果没有，则返回items也就是空值
+		if (items != null && items.size() > 0) {
+			// 循环查询
+			for (Map<String, Object> map : items) {
+				// 把自己的id传给递归方法，去数据库查询有无下级
+				map.put("children", getChild(Integer.parseInt(map.get("id").toString())));
+			}
+		}
+		return items;
+	}
+
+	/**
+	 * 与Dao交互的方法
+	 * 
+	 * @author baikun
+	 * @creation 2017年2月28日
+	 * @param pid
+	 * @return
+	 */
+	public List<Map<String, Object>> getItemByParent(int pid) {
+		String tableName = " organiz   "; // 表名
+		String find =null; // 显示字段
+		String where = " isdelete=1 and    pid=" + pid;
+		List<Map<String, Object>> items = this.selectAll(tableName, find, where, null);	// 查询数据库,无数据返回空
+		return items;
+	}
+
+	
+	/**
+	 * 根据id查询实体
+	 * 
+	 * @author baikun
+	 * @creation 2017年8月1日
+	 * @param id
+	 * @return
+	 */
+	public Map<String, Object> idByInfo(Integer id) {
+		String tableName = " organiz as obj "; // 表名
+		String find = null; // 显示字段
+		String where = " obj.id=" + id;
+		List count_list = this.selectAll(tableName, find, where, null);
+		return (Map<String, Object>) ((count_list != null) && (count_list.size() > 0) ? count_list.get(0) : null);
+	}
+
+	
+	
+	
+	/**
+	 * 返回 子级最后一个code值
+	 * 
+	 * @author baikun
+	 * @creation 2017年2月23日
+	 * @param codes
+	 * @return
+	 */
+	public Map<String, Object> get_code_map(String codes) {
+		String tableName = " organiz "; // 表名
+
+		String find = " name,code, "; // 显示字段
+		find += "SUBSTR(code,1 , (CASE  WHEN((LENGTH(code)-4)<=0)THEN 4 ELSE (LENGTH(code)-4)END)) as fz ,";
+		find += "(SUBSTR(code,(CASE  WHEN((LENGTH(code)-4)<=0)THEN 1 ELSE (LENGTH(code)-4)+1 END),4)) as zz ,";
+		find += "(SUBSTR(SUBSTR(code,1,(LENGTH(\'" + codes + "\')+4)),LENGTH(\'" + codes + "\')+1,4) ) as codes";
+		String where = "code LIKE \'" + codes + "%\'  ORDER BY code desc  limit 1";
+		Map<String, Object> map =this.selectMap(tableName, find, where);
+		return map;
+	}
+
+}

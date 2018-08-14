@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+    <title>账号登录</title>
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/index.css">
+    <script src="js/jquery-2.1.4.min.js"></script>
+    <script src="js/rem.js"></script>
+    <script src="js/removeHeader.js"></script>
+</head>
+<body>
+    <div class="Header">账号登录</div>
+    <div class="user_info">
+        <ul>
+            <li>
+                <span>账号</span>
+                <input type="text" id="user_name" placeholder="请输入您的账号">
+                <i id="clearId"></i>
+            </li>
+            <li>
+                <span>密码</span>
+                <input type="password" id="user_pwd" placeholder="请输入您的密码">
+                <i id="clearPw"></i>
+            </li>
+        </ul>
+        <div id="login" class="login">登录</div>
+    </div>
+    <script>
+        $(function () {
+            //禁止后退
+            history.pushState(null, null, document.URL);
+            window.addEventListener('popstate', function () {
+                history.pushState(null, null, document.URL);
+
+            });
+
+            //清除账号
+            $("#clearId").click(function(){
+                $("#user_name").val(''); 
+            });
+            //清除密码
+            $("#clearPw").click(function(){
+                $("#user_pwd").val(''); 
+            });
+
+        });
+        //var Urlstr = 'http://192.168.2.238:8080/conf/';
+        var o = document.getElementById('login');
+        $('#login').click(function () {
+            // alert(111);
+            $(this).css('pointer-events','none');
+            var user_name = $('#user_name').val(),
+                user_pwd = $('#user_pwd').val();
+            $.ajax({
+                type: 'post',
+                url: Urlstr + 'login_web.do',
+                data: {
+                    name : user_name,
+                    pass : user_pwd
+                },
+                dataType: 'json',
+                success:function (res) {
+                    console.log(res);
+                    if(res.error == 0){
+                        sessionStorage.setItem('token',res.token);
+                        window.location.href = 'index.html';
+                    }else{
+                        alert(res.msg);
+                        $('#login').css('pointer-events','auto');
+                    }
+                }
+            })
+        })
+    </script>
+</body>
+</html>

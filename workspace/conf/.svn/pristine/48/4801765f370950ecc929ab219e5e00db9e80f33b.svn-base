@@ -1,0 +1,104 @@
+package net.emof.building.web.controller;
+
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import net.emof.building.admin.customEXC.EhCacheSessiconException;
+import net.emof.building.util.DataMap;
+import net.emof.building.web.service.Qnr_web_Service;
+
+@Controller
+@RequestMapping("qnr_web")
+public class Qnr_web_Controller {
+	
+	@Autowired
+	private Qnr_web_Service qnrService;
+	
+	
+	/**
+	 * 添加问卷名称与说明
+	 * @author xilongfei
+	 * @creation 2017年12月15日
+	 * @param token		登录识别标识
+	 * @param name		问卷名称
+	 * @param qbrief	问卷说明
+	 * @param confid	会议id
+	 * @return
+	 */
+	/*@ResponseBody
+	@RequestMapping("/getQurInfo")
+	public Map<String, Object> addIntrod(@RequestParam(value = "token", required = false) String token,
+			@RequestParam(value = "confid", required = false) String confid) {
+		DataMap dataMap = new DataMap();
+		try {
+			dataMap = qnrService.addQurInfo(token, confid);
+		} catch (EhCacheSessiconException e) {
+			e.printStackTrace();
+			 dataMap.addMsg_diy_list(null, 5, "登录超时，请重新登录");
+	         return dataMap.data;
+		}
+		return dataMap.data;
+	}*/
+	
+	
+	/**
+	 * 修改问卷信息
+	 * @author xilongfei
+	 * @creation 2017年12月16日
+	 * @param id		问卷id	
+	 * @param name		标题
+	 * @param qbrief	说明
+	 * @return
+	 */
+	/*@ResponseBody
+	@RequestMapping("/alterQurInfo")
+	public Map<String, Object> alterQurInfo(@RequestParam(value = "id", required = false) String id,
+			@RequestParam(value = "name", required = false) String name,
+			@RequestParam(value = "qbrief", required = false) String qbrief) {
+		DataMap dataMap = qnrService.updateQnrInfo(id, name, qbrief);
+		return dataMap.data;
+	}*/
+	
+	/**
+     * 根据会议id 查询问卷下的所有问题与问题选项 
+     * @author xilongfei
+     * @creation 2017年12月19日
+     * @param confid	会议id
+     * @param token		登录识别标识
+     * @return
+     */
+	@ResponseBody
+	@RequestMapping("/getQnrDetails")
+	public Map<String, Object> getQnrDetails(@RequestParam(value = "confid", required = false) String confid,
+			@RequestParam(value = "token", required = false) String token) {
+		DataMap dataMap = new DataMap();
+		try {
+			dataMap = qnrService.getQnrDetails(confid, token);
+		} catch (EhCacheSessiconException e) {
+			e.printStackTrace();
+			dataMap.addMsg_diy_list(null, 5, "登录超时，请重新登录");
+	        return dataMap.data;
+		}
+		return dataMap.data;
+	}
+	
+	
+	/**
+	 * 删除问卷
+	 * @author xilongfei
+	 * @creation 2017年12月22日
+	 * @param qnrid		问卷ID
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("/deleteQnrDetails")
+	public Map<String, Object> deleteQnrDetails(@RequestParam(value = "qnrid", required = false) String qnrid) {
+		DataMap dataMap = qnrService.deleteQnrDetails(qnrid);
+		return dataMap.data;
+	}
+}

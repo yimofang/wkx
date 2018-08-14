@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+    <title>会议统计</title>
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/meet.css">
+	<script src="js/jquery-2.1.4.min.js"></script>
+	<script src="js/rem.js"></script>
+	<script src="js/removeHeader.js"></script>
+</head>
+<body> 
+	<!--header-->
+	<div class="Header">
+    	<a href="javascript:history.go(-1);"></a>调研统计详情
+	</div>
+	<!--blank-->
+	<div class="blankTitle deleteHeader">
+		<div id="wentititle"></div>
+	</div>
+	<div class="blankCompany">
+		<ul>
+			<!--<li>-->
+				<!--<span class="xuhao">300</span>-->
+				<!--<span class="user"></span>-->
+				<!--<span class="user_title"></span>-->
+			<!--</li>-->
+		</ul>
+	</div>
+
+	<script>
+		var page = 1,
+			totallist = '';
+		$(function () {
+            GETinfo();
+        })
+		function GETinfo() {
+			$.ajax({
+				type:'post',
+				url:Urlstr + 'rejoin_web/getAnswerStatistics.do',
+				data:{
+				    display:50,
+					page:page,
+                    state:3,
+                    titleid:NumAll.id
+				},
+				dataType:'json',
+				success:function (res) {
+					if(res.error == 0){
+						console.log(res);
+						var htmlstr = '';
+                        totallist = res.count;
+						$('#wentititle').html(res.row[0].fname);
+						for(var i = res.row.length-1;i>=0;i--){
+                            htmlstr += `<li>
+											<span class="xuhao">${i+1}</span>
+											<span class="user">${res.row[i].realname}</span>
+											<span class="user_title">${res.row[i].answer}</span>
+										</li>`
+						}
+						$('.blankCompany ul').html(htmlstr);
+					}else if (res.error == 5) {
+                        alert(res.msg)
+                        ReqToken()
+                    } else {
+                        alert(res.msg)
+                    }
+                }
+			})
+        }
+	</script>
+</body>
+</html>

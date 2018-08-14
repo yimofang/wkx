@@ -1,0 +1,1101 @@
+// var Urlstr = 'http://192.168.2.238:8080/conf/',
+//     NumAll = GetRequest(),
+//     Token = sessionStorage.getItem('token');       //用户token
+$(function () {
+    MeetTitle();
+    $('#flow_list_all').on('click', '.flowEdit', function () {
+        var FlowId = $(this).attr('data-id');
+        var index = $(this).parents('.fInfoList').index();
+        var Stime = $('#flow_list_all .fInfoList:eq(' + index + ') .flowStartTime').html();
+        var Stimehour = $('#flow_list_all .fInfoList:eq(' + index + ') .flowStartTime').attr('data-hour');
+        var Stimeminute = $('#flow_list_all .fInfoList:eq(' + index + ') .flowStartTime').attr('data-minute');
+        var Etime = $('#flow_list_all .fInfoList:eq(' + index + ') .flowEndTime').html();
+        var Etimehour = $('#flow_list_all .fInfoList:eq(' + index + ') .flowEndTime').attr('data-hour');
+        var Etimeminute = $('#flow_list_all .fInfoList:eq(' + index + ') .flowEndTime').attr('data-minute');
+        var FlowMs = $('#flow_list_all .fInfoList:eq(' + index + ') .flowDesP').html();
+        $('#editNumber').html(index + 1);
+        $('#editFlowSTime').html(Stime).attr('data-hour', Stimehour).attr('data-minute', Stimeminute);
+        $('#editFlowETime').html(Etime).attr('data-hour', Etimehour).attr('data-minute', Etimeminute);
+        $('#editFlowTxt').val(FlowMs);
+        $('#editSave').attr('data-id', FlowId);
+        $('.havaMeetFlow').hide();
+        $('.editFlow').show();
+
+
+    });
+
+    //删除流程弹框
+    $('#flow_list_all').on('click', '.flowDelete', function () {
+        var index = $(this).parents('.fInfoList').index();
+        var id = $(this).attr('data-id');
+        $(".delShade").show();
+        $(".delShadeCon").attr('data-id',id);
+        $(".delShadeCon").attr('data-index',index);
+    });
+    //关闭流程弹框
+    $("#conCel").click(function(){
+        $(".delShade").hide();
+        $(".delShadeCon").attr('data-id','');
+        $(".delShadeCon").attr('data-index','');
+    });
+
+    //删除流程
+    $("#conSure").click(function(){
+        var index = $(".delShadeCon").attr('data-index');
+        var id = $(".delShadeCon").attr('data-id');
+        $.ajax({
+            type: 'post',
+            url: Urlstr + 'confsFlow_web/delete_flow.do',
+            data: {
+                flowid: id,
+                token: Token
+            },
+            dataType: 'json',
+            success: function (res) {
+                if (res.error == 0) {
+                    $('#flow_list_all .fInfoList:eq(' + index + ')').remove();
+                    if ($('#flow_list_all .fInfoList').length > 0) {
+                        for (var i = 0; i < $('#flow_list_all .fInfoList').length; i++) {
+                            $('#flow_list_all .fInfoList:eq(' + i + ') .num').html(i + 1);
+                        }
+                    } else {
+                        $('.havaMeetFlow').hide();
+                        $('.unHave').show();
+                    }
+
+                    $(".delShadeCon").attr('data-id','');
+                    $(".delShadeCon").attr('data-index','');
+                    $(".delShade").hide();
+                } else if (res.error == 5) {
+                    alert(res.msg);
+                    ReqToken();
+                    Token = sessionStorage.getItem('token');
+                } else {
+                    alert(res.msg);
+                }
+            }
+        })
+    });
+
+    $('#editSave').click(function () {
+        var EditFlowId = $(this).attr('data-id');
+        if ($('#editFlowSTime').html() == '请选择' || $('#editFlowETime').html() == '请选择' || $('#editFlowTxt').val() == '') {
+            alert('信息填写有误，请确认');
+        } else {
+            var EFlowSTime = GetMeetTime(editFlowSTime);
+            var EFlowETime = GetMeetTime(editFlowETime);
+            if (TimeScor(EFlowSTime, EFlowETime)) {
+                $.ajax({
+                    type: 'post',
+                    url: Urlstr + 'confsFlow_web/updata_flow.do',
+                    data: {
+                        bhstart: EFlowSTime,
+                        bhend: EFlowETime,
+                        flowid: EditFlowId,
+                        fname: $('#editFlowTxt').val(),
+                        token: Token
+                    },
+                    dataType: 'json',
+                    success: function (res) {
+                        if (res.error == 0) {
+                            alert(res.msg);
+                            QueryFlow();
+                            $('.editFlow').hide();
+                            $('.havaMeetFlow').show();
+                        } else if (res.error == 5) {
+                            alert(res.msg);
+                            ReqToken();
+                            Token = sessionStorage.getItem('token');
+                        } else {
+                            alert(res.msg);
+                        }
+                    }
+                })
+            } else {
+                alert('信息填写有误，请确认');
+            }
+        }
+    });
+
+    //删除嘉宾
+    $('.haveGuest .guestInfo').on('click','.guestDel',function () {
+        $('.gueDelShade').show();
+        $('#gueSure').attr('data-id',$(this).attr('data-id'));
+        $('#gueSure').attr('data-index',$(this).parents('.gInfoList').index());
+    })
+    $('#gueSure').click(function () {
+        $.ajax({
+            type:'post',
+            url:Urlstr + 'confsGuest_web/delete_guest.do',
+            data:{
+                token:Token,
+                guestid:$(this).attr('data-id')
+            },
+            dataType:'json',
+            success:function (res){
+            var index = $('#gueSure').attr('data-index');
+                if(res.error == 0){
+                    $('.haveGuest .guestInfo .gInfoList:eq(' + index + ')').remove();
+                    //alert(res.msg);
+                    if ($('.haveGuest .guestInfo .gInfoList').length > 0) {
+                        for (var i = 0; i < $('.haveGuest .guestInfo .gInfoList').length; i++) {
+                            $('.haveGuest .guestInfo .gInfoList:eq(' + i + ') .guestNum').html(i + 1);
+                        }
+                    } else {
+                        $('.haveGuest').hide();
+                        $('.unHaveGuest').show();
+                    }
+                    $(this).attr('data-id','');
+                    $('.gueDelShade').hide();
+                }else if (res.error == 5) {
+                    alert(res.msg);
+                    $('.gueDelShade').hide();
+                    ReqToken();
+                    Token = sessionStorage.getItem('token');
+                } else {
+                    alert(res.msg);
+                    $('.gueDelShade').hide();
+                }
+            }
+        })
+    })
+    $('#gueCel').click(function () {
+        $('.gueDelShade').hide();
+    })
+    //修改嘉宾信息
+    $('.haveGuest .guestInfo').on('click','.guestEdit',function () {
+        var gindex = $(this).parents('.gInfoList').index();
+        var EditName = $('.haveGuest .guestInfo .gInfoList:eq('+gindex+') .guestNameInfo').html();
+        var EditHonor = $('.haveGuest .guestInfo .gInfoList:eq('+gindex+') .guestHonorInfo').html();
+        var EditImg = $('.haveGuest .guestInfo .gInfoList:eq('+gindex+') .perImg img').attr('src');
+        var EditImgName = $('.haveGuest .guestInfo .gInfoList:eq('+gindex+') .perImg img').attr('data-img');
+        var EditIntroduce = $('.haveGuest .guestInfo .gInfoList:eq('+gindex+') .introduce p').html();
+        $('.editGuest .guestNum').html(gindex+1);
+        $('#guestName').val(EditName);
+        $('#guestHonor').val(EditHonor);
+        $('.editGuest .perImgHead').attr('src',EditImg).attr('data-img',EditImgName).attr('data-state',1);
+        $('.editGuest .guestDesTxt').val(EditIntroduce);
+        $('#editGuestSave').attr('data-id',$(this).attr('data-id'));
+        $('.haveGuest').hide();
+        $('.editGuest').show();
+    })
+    $('#editGuestSave').click(function () {
+        var G_name = $('#guestName').val(),
+            G_honor = $('#guestHonor').val(),
+            G_img = $('#EperImgHead').attr('data-state'),
+            G_miaoshu = $('#guestDesTxt').val();
+        if( G_name !='' && G_honor != '' && G_img == 1) {
+            $.ajax({
+                type: 'post',
+                url: Urlstr + 'confsGuest_web/updata_guest.do',
+                data: {
+                    brief: $('.editGuest .guestDesTxt').val(),
+                    gimg: $('#EperImgHead').attr('data-img'),
+                    gname: $('#guestName').val(),
+                    guestid: $(this).attr('data-id'),
+                    rank: $('#guestHonor').val(),
+                    token: Token
+                },
+                dataType: 'json',
+                success: function (res) {
+                    if(res.error == 0){
+                        alert(res.msg);
+                        $('.editGuest').hide();
+                        $('.haveGuest').show();
+                        mGuest()
+                    }else if(res.error == 5){
+                        alert(res.msg);
+                        ReqToken();
+                        Token = sessionStorage.getItem('token');
+                    }else{
+                        alert(res.msg)
+                    }
+                }
+            })
+        }else{
+            alert('嘉宾信息填写有误，请确认');
+        }
+    })
+    // 报名填写
+    $('.defind').on('click','button',function () {
+        $('.infoContent ul').append($(this).parent('li'));
+    })
+    $('.infoContent').on('click','button',function () {
+        $('.defind ul').append($(this).parent('li'));
+    })
+    $('#bmback').click(function(){
+        $('#pubMeet').show();
+        $('#addName').hide();
+    })
+
+    /******地图*****/
+    // $("#pubMap").click(function(){
+    //     var iframe = document.getElementById('pubMap').contentWindow;
+    //         document.getElementById('pubMap').onload = function(){
+    //           iframe.postMessage('hello','https://m.amap.com/picker/');
+    //         };
+    //         window.addEventListener("message", function(e){
+    //           alert('您选择了:' + e.data.name + ',' + e.data.location);
+    //         }, false);
+
+
+    //     var mock = {
+    //         log: function(result) {
+    //             window.parent.setIFrameResult('log', result);
+    //         }
+    //     }
+    //     console = mock;
+    //     window.Konsole = {
+    //         exec: function(code) {
+    //             code = code || '';
+    //             try {
+    //                 var result = window.eval(code);
+    //                 window.parent.setIFrameResult('result', result);
+    //             } catch (e) {
+    //                 window.parent.setIFrameResult('error', e);
+    //             }
+    //         }
+    //     }   
+
+
+    // });
+})
+
+
+
+/************************* 下期预告**********************/
+function mNext(){
+    // $('#pubMeet').hide();
+    // $('#meetNext').show();
+    if (JudgeInfo()) {
+        $('#pubMeet').hide();
+        $('#meetNext').show();
+    } else {
+        alert('请先填写会议基本信息的必填项');
+    }
+}
+//下期预告返回
+function meetNext_back() {
+    var desD_content = $('#nextdetail').val();
+    if (desD_content != '') {
+        $('#meetNext').hide();
+        $('#pubMeet').show();
+        $('#mNext p').html('已填写 <s></s>');
+        $('#mNext p').addClass('heise');
+
+    } else {
+        $('#meetNext').hide();
+        $('#pubMeet').show();
+        $('#mNext p').html('请填写会议描述 <s></s>')
+    }
+}
+//下期预告保存
+function meetNextSave() {
+    var imgstr = '';
+    var desD_content = $('#content4').html();
+    var l = $("#meetNext #content4>div").length;
+
+    if (l == 1){
+        $("#meetNext").hide();
+        $("#pubMeet").show();
+    }else {
+        $.ajax({
+            type: 'post',
+            url: Urlstr + 'trailer_web/addAdvance.do',
+            data: {
+                confid: NumAll.id,
+                introd: desD_content,
+                imgs: imgstr == '' ? '' : imgstr.slice(0, -1),
+                token: Token
+            },
+            dataType: 'json',
+            success: function (res) {
+                if (res.error == 0) {
+                    alert('保存成功');
+                    $('#meetNext').hide();
+                    $('#pubMeet').show();
+                    $('#mNext p').html('已填写<s></s>')
+                    $('#mNext p').addClass('heise')
+                } else if (res.error == 5) {
+                    alert(res.msg);
+                    ReqToken();
+                } else {
+                    alert(res.msg);
+                }
+            }
+        })
+    } 
+}
+/************************* 报名设置 start**********************/
+function mAddName() {
+    // $('#pubMeet').hide();
+    // $('#addName').show();
+    if (JudgeInfo()) {
+        $('#pubMeet').hide();
+        $('#addName').show();
+    } else {
+        alert('请先填写会议基本信息的必填项');
+    }
+}
+
+function BMsave() {
+    if($('#nameStartTime').html() == '请选择' && $('#nameEndTime').html() == '请选择'){
+        $("#addName").hide();
+        $("#pubMeet").show();
+    }else if ($('#nameStartTime').html() == '请选择' || $('#nameEndTime').html() == '请选择') {
+        alert('时间填写有误，请确认');
+    } else {
+        var BMSTime = GetMeetTime(nameStartTime);
+        var BMETime = GetMeetTime(nameEndTime);
+        //console.log(BMSTime,BMSTime);
+        if (TimeScor(BMSTime, BMETime)) {
+            var list = $('.infoContent li');
+            for(var i=0,enlist='';i<list.length;i++){
+                enlist += $('.infoContent ul li:eq('+i+') span').attr('data-id') + ',';
+            }
+            $.ajax({
+                type:'post',
+                url:Urlstr + 'confs_web/confsSystem.do',
+                data:{
+                    enlist:enlist.slice(0,-1),
+                    id:NumAll.id,
+                    shend:BMETime,
+                    shstart:BMSTime
+                },
+                dataType:'json',
+                success:function (res) {
+                    if(res.error == 0){
+                        alert(res.msg);
+                        $('#pubMeet').show();
+                        $('#addName').hide();
+                    }else if (res.error == 5) {
+                        alert(res.msg);
+                        ReqToken();
+                        Token = sessionStorage.getItem('token');
+                    } else {
+                        alert(res.msg);
+                    }
+                }
+            })
+        }else{
+            alert('时间填写有误，请确认');
+        }
+    }
+}
+/************************* 会议嘉宾增删改 start**********************/
+//会议嘉宾列表查询
+function mGuest() {
+    if (JudgeInfo()) {
+        $('#pubMeet').hide();
+        $('#meetGuest').show();
+        $.ajax({
+            type:'post',
+            url:Urlstr + 'confsGuest_web/listpage.do',
+            data:{
+                confsid:NumAll.id,
+                token:Token
+            },
+            dataType:'json',
+            success:function (res) {
+                if(res.error == 0){
+                    console.log(res);
+                    if(res.row.length>0){
+                        $('.haveGuest').show();
+                        $('.unHaveGuest').hide();
+                        var htmlstr = '';
+                        for(var i =0;i<res.row.length;i++){
+                            htmlstr +=`<div class="gInfoList">
+                                    <ul>
+                                     <li class="guest">
+                                        <span class="gueInfo">
+                                            嘉宾
+                                            <span class="guestNum">${i+1}</span>
+                                            <span class="guestEdit" data-id="${res.row[i].id}"></span>
+                                            <span class="guestDel" data-id="${res.row[i].id}"></span>
+                                        </span>
+                                     </li>
+                                     <li class="guestName">
+                                         <span>嘉宾名称<b>*</b></span>
+                                         <span class="guestNameInfo">${res.row[i].gname}</span>
+                                     </li>
+                                     <li class="guestHonor">
+                                         <span>嘉宾头衔<b>*</b></span>
+                                         <span class="guestHonorInfo">${res.row[i].rank}</span>
+                                     </li>
+                                     <li id="personImg" class="guePhoto">
+                                         <span>嘉宾照片<b>*</b></span>
+                                         <div id="perImg" class="perImg G_img">
+                                             <img src="${Urlstr}upload/${res.row[i].gimg}" class="perImgHead" data-img="${res.row[i].gimg}">
+                                         </div>
+                                     </li>
+                                     <li class="introduce">
+                                         <span>嘉宾简介</span>
+                                         <p>${res.row[i].brief}</p>
+                                     </li>
+                                   </ul>
+                                  </div>`;
+                        }
+                        $('.haveGuest .guestInfo').html(htmlstr);
+                    }else {
+                        $('.unHaveGuest').show();
+                        $('.haveGuest').hide();
+                    }
+                }else if (res.error == 5) {
+                    alert(res.msg);
+                    ReqToken();
+                    Token = sessionStorage.getItem('token');
+                } else {
+                    alert(res.msg);
+                }
+            }
+        })
+    } else {
+        alert('请先填写会议基本信息的必填项');
+    }
+}
+
+//会议嘉宾列表返回
+function GuestBack() {
+    $('#meetGuest').hide();
+    $('#pubMeet').show();
+    if($('.haveGuest .guestInfo .gInfoList').length>0){
+        $('#mGuest p').html('已填写 <s></s>');
+        $('#mGuest p').addClass('heise');
+    }else{
+        $('#mGuest p').html('请填写会议嘉宾  <s></s>');
+    }
+}
+
+//会议嘉宾添加
+function AddGuest() {
+    $('.guestList').hide();
+    $('.addGuestInfo').show();
+    var num = $('.haveGuest .guestInfo .gInfoList').length;
+    $('#gueInfonum').html(num+1);
+}
+
+//会议嘉宾添加取消
+function guestReturn() {
+    $('.addGuestInfo').hide();
+    $('.guestList').show();
+}
+
+//会议嘉宾添加保存
+function AddGuestSave() {
+    var G_name = $('#addguestName').val(),
+        G_honor = $('#addguestHonor').val(),
+        G_img = $('#perImgHead').attr('data-state'),
+        G_miaoshu = $('#addguestDesTxt').val();
+    if( G_name !='' && G_honor != '' && G_img == 1){
+        $.ajax({
+            type:'post',
+            url:Urlstr + 'confsGuest_web/add_guest.do',
+            data:{
+                brief:G_miaoshu,
+                confsid:NumAll.id,
+                gimg:$('#perImgHead').attr('data-img'),
+                gname:G_name,
+                rank:G_honor,
+                token:Token
+            },
+            dataType:'json',
+            success:function (res) {
+                if(res.error == 0){
+                    // console.log(res);
+                    mGuest();
+                    $('.addGuestInfo').hide();
+                    $('.guestList').show();
+                    $('#addguestName').val('');
+                    $('#addguestHonor').val('');
+                    $('#addguestDesTxt').val('');
+                    $('#addperImg').append('<p class="guePhotoUp">请上传</p>')
+                    $('#addperImg img').attr('src','img/tm.png');
+
+                }else if (res.error == 5) {
+                    alert(res.msg);
+                    ReqToken();
+                    Token = sessionStorage.getItem('token');
+                } else {
+                    alert(res.msg);
+                }
+            }
+
+
+        })
+    }else{
+        alert('嘉宾信息填写有误，请确认');
+    }
+}
+
+// 会议嘉宾修改返回
+function editReturn() {
+    $('.editGuest').hide();
+    $('.haveGuest').show();
+}
+
+/************************* 会议流程增删改 start**********************/
+//会议流程添加
+function mFlow() {
+    // $('#meetFlow').show();
+    // $('#pubMeet').hide();
+    QueryFlow();
+    if (JudgeInfo()) {
+        $('#meetFlow').show();
+        $('#pubMeet').hide();
+    } else {
+        alert('请先填写会议基本信息的必填项');
+    }
+}
+
+// 会议流程返回
+function addflow_back() {
+    $('#meetFlow').hide();
+    $('#pubMeet').show();
+    if ($('.havaMeetFlow .flowInfo .fInfoList').length > 0) {
+        $('#mFlow p').html('已填写<s></s>');
+        $('#mFlow p').addClass('heise');
+    } else {
+        $('#mFlow p').html('请填写会议流程 <s></s>');
+    }
+}
+
+// 添加会议流程中的返回
+function clearFlow() {
+    $('.addFlowInfo').hide();
+    if ($('.havaMeetFlow .flowInfo .fInfoList').length > 0) {
+        $('.havaMeetFlow').show();
+    } else {
+        $('.unHave').show();
+    }
+
+}
+
+//添加会议流程
+function AddFlow() {
+    $('.unHave').hide();
+    $('.havaMeetFlow').hide();
+    var flow_num = $('.havaMeetFlow .flowInfo .fInfoList').length;
+    $('#Addflowlist span').html('流程' + (flow_num + 1));
+    $('.addFlowInfo').show();
+}
+
+//保存会议流程
+function AddFlowList() {
+    if ($('#flowStartTime').html() == '请选择' || $('#flowEndTime').html() == '请选择' || $('#flowDesTxt').val() == '') {
+        alert('信息填写有误，请确认');
+    } else {
+        var FlowSTime = GetMeetTime(flowStartTime);
+        var FlowETime = GetMeetTime(flowEndTime);
+        var add_flow_num = $('.havaMeetFlow .flowInfo .fInfoList').length + 1;
+        if (TimeScor(FlowSTime, FlowETime)) {
+            $.ajax({
+                type: 'post',
+                url: Urlstr + 'confsFlow_web/add_flow.do',
+                data: {
+                    bhstart: FlowSTime,
+                    bhend: FlowETime,
+                    confsid: NumAll.id,
+                    fname: $('#flowDesTxt').val(),
+                    token: Token
+                },
+                dataType: 'json',
+                success: function (res) {
+                    if (res.error == 0) {
+                        console.log(res);
+                        $('.unHave').hide();
+                        $('.havaMeetFlow').show();
+                        $('.addFlowInfo').hide();
+                        QueryFlow();
+                        // var htmlstr = `
+                        //         <div class="fInfoList">
+                        //           <ul>
+                        //              <li class="flow" id="flow" style="height: 0.68rem;line-height: 0.68rem;">
+                        //                  <span>
+                        //                      流程
+                        //                      <span class="num">${add_flow_num}</span>
+                        //                      <span class="flowEdit" data-id="${res.row}"></span>
+                        //                      <span class="flowDelete" data-id="${res.row}"></span>
+                        //                  </span>
+                        //              </li>
+                        //              <li class="fStartTime">
+                        //                  <span>开始时间<b>*</b></span>
+                        //                  <span class="flowStartTime">${$('#flowStartTime').html()}</span>
+                        //              </li>
+                        //              <li class="fEndTime">
+                        //                  <span>结束时间<b>*</b></span>
+                        //                  <span class="flowEndTime">${$('#flowEndTime').html()}</span>
+                        //              </li>
+                        //              <li class="flowDes" style="height: 2.67rem">
+                        //                  <span>流程描述<b>*</b></span>
+                        //                  <p class="flowDesP">${$('#flowDesTxt').val()}</p>
+                        //              </li>
+                        //           </ul>
+                        //         </div>`;
+                        // $('#flow_list_all').append(htmlstr);
+                        $('#flowStartTime').html('请选择');
+                        $('#flowEndTime').html('请选择');
+                        $('#flowDesTxt').val('');
+                    } else if (res.error == 5) {
+                        alert(res.msg);
+                        ReqToken();
+                        Token = sessionStorage.getItem('token');
+                    } else {
+                        alert(res.msg);
+                    }
+
+                }
+            })
+        } else {
+            alert('信息填写有误，请确认');
+        }
+    }
+}
+
+//查询会议流程
+function QueryFlow() {
+    $.ajax({
+        type: 'post',
+        url: Urlstr + 'confsFlow_web/listpage.do',
+        data: {
+            confsid: NumAll.id,
+            token: Token
+        },
+        dataType: 'json',
+        success: function (res) {
+            if (res.error == 0) {
+                //console.log(res.row);
+                if (res.row.length > 0) {
+                    $('.unHave').hide();
+                    $('.havaMeetFlow').show();
+                    var htmlstr = '';
+                    for (var i = 0; i < res.row.length; i++) {
+                        var Stime = ZHDate(new Date(res.row[i].bhstart));
+                        var Etime = ZHDate(new Date(res.row[i].bhend));
+                        var Stimehour = ZHhour(new Date(res.row[i].bhstart));
+                        var Stimeminute = ZHminute(new Date(res.row[i].bhstart));
+                        var Etimehour = ZHhour(new Date(res.row[i].bhend));
+                        var Etimeminute = ZHminute(new Date(res.row[i].bhend));
+                        //console.log(Stime,Etime);
+                        htmlstr += `
+                                 <div class="fInfoList">
+                                   <ul>
+                                      <li class="flow" id="flow" style="height: 0.68rem;line-height: 0.68rem;">
+                                          <span>
+                                              流程
+                                              <span class="num">${i + 1}</span>
+                                              <span class="flowEdit" data-id="${res.row[i].id}"></span>
+                                              <span class="flowDelete" data-id="${res.row[i].id}"></span>
+                                          </span>
+                                      </li>
+                                      <li class="fStartTime">
+                                          <span>开始时间<b>*</b></span>
+                                          <span class="flowStartTime" data-hour="${Stimehour}" data-minute="${Stimeminute}">${Stime}</span>
+                                      </li>
+                                      <li class="fEndTime">
+                                          <span>结束时间<b>*</b></span>
+                                          <span class="flowEndTime" data-hour="${Etimehour}" data-minute="${Etimeminute}">${Etime}</span>
+                                      </li>
+                                      <li class="flowDes" style="max-height: 2.67rem;padding-bottom: 0.2rem;border: 0;">
+                                          <span>流程描述<b>*</b></span>
+                                          <p class="flowDesP">${res.row[i].fname}</p>
+                                      </li>
+                                   </ul>
+                                 </div>`;
+                        $('#flow_list_all').html(htmlstr);
+                    }
+                } else {
+                    $('.unHave').show();
+                    $('.havaMeetFlow').hide();
+                }
+            } else if (res.error == 5) {
+                alert(res.msg);
+                ReqToken();
+                Token = sessionStorage.getItem('token');
+            } else {
+                alert(res.msg);
+            }
+        }
+    })
+}
+
+function liuchengback() {
+    $('.editFlow').hide();
+    $('.havaMeetFlow').show();
+}
+/************************* 会议描述增删改 start**********************/
+//会议描述添加
+function mdes() {
+    // $('#meetDes').show();
+    // $('#pubMeet').hide();
+    if (JudgeInfo()) {
+        $('#meetDes').show();
+        $('#pubMeet').hide();
+    } else {
+        alert('请先填写会议基本信息的必填项');
+    }
+}
+
+//保存会议描述
+function meetDes() {
+    var imgstr = '';
+    var desD_content = $('#content3').html();
+    var p_content = $("#content3>div").html();
+    var inpVal = $(".descript #target").val();
+
+    if(inpVal == ''){
+        $("#meetDes").hide();
+        $("#pubMeet").show();
+    }else{
+        $.ajax({
+            type: 'post',
+            url: Urlstr + 'confs_web/addIntrod.do',
+            data: {
+                id: NumAll.id,
+                introd: desD_content,
+                imgs: imgstr == '' ? '' : imgstr.slice(0, -1),
+                token: Token
+            },
+            dataType: 'json',
+            success: function (res) {
+                if (res.error == 0) {
+                    alert('保存成功');
+                    $('#meetDes').hide();
+                    $('#pubMeet').show();
+                    $('#mDes p').html('已填写<s></s>');
+                    $("#mDes p").addClass('heise');
+                } else if (res.error == 5) {
+                    alert(res.msg);
+                    ReqToken();
+                } else {
+                    alert(res.msg);
+                }
+            }
+        })
+    }
+
+        
+    
+
+}
+
+//会议描述返回
+function meetDes_back() {
+    var desD_content = $('#detail').val();
+    if (desD_content != '') {
+        $('#meetDes').hide();
+        $('#pubMeet').show();
+        $('#mDes p').html('已填写 <s></s>')
+        $('#mDes p').addClass('heise')
+    } else {
+        $('#meetDes').hide();
+        $('#pubMeet').show();
+        $('#mDes p').html('请填写会议描述 <s></s>')
+    }
+}
+
+/************************* 会议基本信息 验证及提交**********************/
+
+// 提交会议基本信息
+function PostMeet() {
+    var val = $("iframe").attr('data-loca').split(".");
+    var lat = val[0];
+    var lng = val[1];
+
+    if (JudgeInfo()) {
+        $.ajax({
+            type: 'POST',
+            url: Urlstr + 'confs_web/addConfsInfo.do',
+            data: {
+                addr: $.trim($("#Maddr").val()),
+                bhend: GetMeetTime('#mEndTime'),
+                bhstart: GetMeetTime('#mStartTime'),
+                brief: $.trim($("#Mzbf").val()),
+                cimg: $('#headimg').attr('data-src'),
+                cname: $.trim($("#Mname").val()),
+                id: NumAll.id,
+                latitude:lat,
+                longitude:lng,
+                position:$("iframe").attr('data-name'),
+                touch: $.trim($("#Mphone").val()),
+                type: $('#typeId').attr('data-id'),
+                token: Token
+            },
+            dataType: 'json',
+            success: function (res) {
+                if (res.error == 0) {
+                    console.log(res);
+                    alert(res.msg);
+                    window.location.href = 'mmmm.html?confsid=' + res.row;
+                } else if (res.error == 5) {
+                    alert(res.msg);
+                    ReqToken();
+
+                } else {
+                    alert(res.msg);
+                }
+            }
+        });
+    } 
+}
+
+//判断基本信息是否正确
+function JudgeInfo() {
+    var Meimg = Mimg(),
+        Metype = Mtype(),
+        Mename = Mname(),
+        Metime = Mtime(),
+        Meaddr = Maddr(),
+        Memap = Mmap(),
+        Mezbf = Mzbf(),
+        Mephone = PhoneCheck();
+    if (Meimg && Metype && Mename && Metime && Mezbf && Meaddr && Mephone && Memap) {
+        return true;
+    } else if(!Meimg){
+        alert('您的图片有误，请确认!');
+        return false;
+    } else if(!Metype){
+        alert('您的会议类型有误，请确认!');
+        return false;
+    } else if(!Mename){
+        alert('您的名称有误，请确认!');
+        return false;
+    } else if(!Metime){
+        alert('您的时间有误，请确认!');
+        return false;
+    } else if(!Memap){
+        alert('您的地图信息有误，请确认!');
+        return false;
+    }else if(!Meaddr){
+        alert('您的地址信息有误，请确认!');
+        return false;
+    }else if(!Mezbf){
+        alert('您的身份证信息有误，请确认!');
+        return false;
+    } else if(!Mephone){
+        alert('您的手机号有误，请确认!');
+        return false;
+    }
+}
+
+//验证地图
+function Mmap(){
+    var mapName = $("iframe").attr('data-name');
+    var mapPos = $("iframe").attr('data-loca');
+    if(!mapName && !mapPos){
+        return  false;
+    }else{
+        return true;
+    }
+}
+
+//验证会议封面
+function Mimg() {
+    var img_state = $('#headimg').attr('data-state');
+    if (img_state != '') {
+        return true
+    } else {
+        return false
+    }
+}
+
+//验证会议类型
+function Mtype() {
+    var meetType = $('.typeId').html();
+    if (meetType == '请选择') {
+        return false
+    } else {
+        return true
+    }
+}
+
+//验证会议名称
+function Mname() {
+    var Mname = $.trim($("#Mname").val());
+    if (!Mname) {
+        return false;
+    } else {
+        return true;
+    }
+}
+
+//验证开始时间和结束时间
+function Mtime() {
+    //console.log($('#mStartTime').html(), $('#mEndTime').html());
+    if ($('#mStartTime').html() == '请选择' || $('#mEndTime').html() == '请选择') {
+        return false
+    }
+    var Stime = GetMeetTime('#mStartTime');
+    var Etime = GetMeetTime('#mEndTime');
+    var Scor = TimeScor(Stime, Etime);
+    return Scor
+}
+
+//验证会议地点
+function Maddr() {
+    var Maddr = $.trim($("#Maddr").val());
+    if (!Maddr) {
+        return false;
+    } else {
+        return true;
+    }
+}
+
+//验证主办方
+function Mzbf() {
+    var Mzbf = $.trim($("#Mzbf").val());
+    if (!Mzbf) {
+        return false;
+    } else {
+        return true;
+    }
+}
+
+//验证手机号
+function PhoneCheck() {
+    var Mphone = $.trim($("#Mphone").val());
+    if (!Mphone) {
+        return false;
+    }else if(!(/^1[345789]\d{9}$/.test(Mphone))){
+        return false;
+    } else {
+        return true;
+    }
+}
+
+
+// 会议类型选择
+function MeetTitle() {
+    $.ajax({
+        type: 'post',
+        url: Urlstr + 'confsType_web/listpage.do',
+        data: {
+            token: Token
+        },
+        dataType: 'json',
+        success: function (res) {
+            //console.log(res);
+            if (res.error == 0) {
+                var data = [];
+                for (var i = 0; i < res.row.length; i++) {
+                    var obj = {'id': res.row[i].id, 'value': res.row[i].tname};
+                    data.push(obj);
+                }
+                //console.log(data);
+                var meetType = document.querySelector('#meetType');
+                var meetTypeId = document.querySelector('#typeId');
+                meetType.addEventListener('click', function () {
+                    var bankId = meetType.dataset['id'];
+                    var bankName = meetType.dataset['value'];
+
+                    var bankSelect = new IosSelect(1,
+                        [data],
+                        {
+                            container: '.container',
+                            title: '会议类型',
+                            itemHeight: 50,
+                            itemShowCount: 3,
+                            oneLevelId: bankId,
+                            callback: function (selectOneObj) {
+                                meetTypeId.innerHTML = selectOneObj.value;
+                                $('#typeId').attr('data-id', selectOneObj.id);
+                                $('#typeId').addClass('heise');
+                            }
+                        });
+                });
+            } else if (res.error == 5) {
+                alert(res.msg);
+                ReqToken();
+
+            } else {
+                alert(res.msg);
+            }
+        }
+    })
+    // var data = [
+    //     {'id': '10001', 'value': '年会'},
+    //     {'id': '10002', 'value': '论坛'},
+    //     {'id': '10003', 'value': '峰会'},
+    //     {'id': '10004', 'value': '培训会'},
+    //     {'id': '10005', 'value': '行业会'},
+    //     {'id': '10006', 'value': '发布会'},
+    //     {'id': '10007', 'value': '品牌会议'},
+    //     {'id': '10008', 'value': '经销商会'},
+    //     {'id': '10009', 'value': '其他'}
+    // ];
+    //
+    // var meetType = document.querySelector('#meetType');
+    // var meetTypeId = document.querySelector('#typeId');
+    // meetType.addEventListener('click', function () {
+    //     var bankId = meetType.dataset['id'];
+    //     var bankName = meetType.dataset['value'];
+    //
+    //     var bankSelect = new IosSelect(1,
+    //         [data],
+    //         {
+    //             container: '.container',
+    //             title: '请选择',
+    //             itemHeight: 50,
+    //             itemShowCount: 3,
+    //             oneLevelId: bankId,
+    //             callback: function (selectOneObj) {
+    //                 meetTypeId.innerHTML = selectOneObj.value;
+    //             }
+    //         });
+    // });
+}
+
+/************************* 公共函数**********************/
+
+//获取时间
+function GetMeetTime(timeid) {
+    var time_y = $(timeid).attr('data-year'),
+        time_m = $(timeid).attr('data-month'),
+        time_d = $(timeid).attr('data-date'),
+        time_h = $(timeid).attr('data-hour') < 10 ? '0' + $(timeid).attr('data-hour') : $(timeid).attr('data-hour'),
+        time_mi = $(timeid).attr('data-minute') < 10 ? '0' + $(timeid).attr('data-minute') : $(timeid).attr('data-minute');
+    var time = time_y + '-' + time_m + '-' + time_d + ' ' + time_h + ':' + time_mi;
+    return time;
+}
+
+// 时间对比
+function TimeScor(Stime, Etime) {
+    // var time1 = Date.parse(Stime)/1000;
+    var time1 = new Date(Stime.replace(/-/g, '/')).getTime();
+    // var time2 = Date.parse(Etime)/1000;
+    var time2 = new Date(Etime.replace(/-/g, '/')).getTime();
+    if (time1 < time2) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+//Token 过期 重新请求
+function ReqToken() {
+    $('#reqtoken').load("login3.html", function () {
+        $('#reqtoken').show();
+    });
+}
+
+// 时间戳转时间
+function ZHDate(now) {
+    var year = now.getYear();
+    var month = now.getMonth() + 1;
+    var date = now.getDate();
+    var hour = now.getHours();
+    var minute = now.getMinutes();
+    var second = now.getSeconds();
+    return "20" + year.toString().slice(1, 3) + "年" + month + "月" + date + "日 " + hour + "时" + minute + "分";
+}
+
+// 获取小时
+function ZHhour(now) {
+    var hour = now.getHours();
+    return hour;
+}
+
+// 获取分钟
+function ZHminute(now) {
+    var minute = now.getMinutes();
+    return minute;
+}

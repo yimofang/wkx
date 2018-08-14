@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+	<title>会议嘉宾</title>
+	<script src="js/jquery-2.1.4.min.js"></script>
+    <script src="js/removeHeader.js"></script>
+	<script src="js/rem.js"></script>
+    <!--上传头像-->
+    <script src="js/exif.js"></script>
+    <script src="js/uploadImg.js"></script>
+
+    <script src="jscript/meetGuest.js"></script>
+	<link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" type="text/css" href="css/meetChoice.css">
+</head>
+<body>
+    <!--嘉宾列表-->
+    <div class="guestList deleteHeader">
+        <!--未添加-->
+        <div class="unHaveGuest" style="display: none">
+            <img src="img/survey.png">
+            <p>您还没有添加嘉宾</p>
+        </div>
+        <!--已添加-->
+        <div class="haveGuest" style="display: none">
+            <div class="guestInfo">
+            </div>
+        </div>
+        <!--遮罩-->
+        <div class="gueDelShade" style="display: none">
+            <div class="gueDelCon">
+                <div class="top">温馨提示</div>
+                <div class="txt">确定删除此项会议嘉宾吗？</div>
+                <div class="gBtn">
+                    <span class="gueCel" id="gueCel">取消</span>
+                    <span class="gueSure" id="gueSure">确定</span>
+                </div>
+            </div>
+        </div>
+        <div class="guestBtn">
+            <span class="addGuest" id="addGuest" onclick="AddGuest()">添加会议嘉宾</span>
+            <span class="returnGuest" id="returnGuest" onclick="GuestBack()">完成</span>
+        </div>
+    </div>
+    <!--添加嘉宾-->
+    <div class="addGuestInfo deleteHeader" style="display: none">
+        <div class="guestInfo">
+            <div class="gInfoList">
+                <ul>
+                    <li class="guest" id="addguestlist">
+                        <span class="gueInfo">嘉宾<span id="gueInfonum"></span></span>
+                    </li>
+                    <li>
+                        <span>嘉宾名称<b>*</b></span>
+                        <input id="addguestName" type="text" placeholder="请填写嘉宾名称">
+                    </li>
+                    <li>
+                        <span>嘉宾头衔<b>*</b></span>
+                        <input id="addguestHonor" type="text" placeholder="请填写嘉宾头衔">
+                    </li>
+                    <li class="guePhoto">
+                        <span>嘉宾照片<b>*</b></span>
+                        <input class="guestPhoto" id="addprePersonImg" type="file" onchange="guestImage(this)">
+                        <div id="addperImg" class="perImg ">
+                            <p class="guePhotoUp">请上传</p>
+                            <img src="img/tm.png" id="perImgHead" class="perImgHead"
+                                onclick="$('#prePersonImg').click();">
+                        </div>
+                    </li>
+                    <li class="introduce">
+                        <span>嘉宾简介</span>
+                        <textarea placeholder="选填" class="guestDesTxt" id="addguestDesTxt" maxlength="200"></textarea>
+                        <span class="fontNum"><i class="number">0</i>/200</span> 
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!--submit-->
+        <div class="save" id="addGuestSave" onclick="AddGuestSave()" style="width:100%">保存</div>
+    </div>
+    <!--编辑嘉宾-->
+    <div class="editGuest deleteHeader" style="display: none">
+
+        <div class="guestInfo">
+            <div class="gInfoList">
+                <ul>
+                    <li class="guest" id="guest">
+                        <span class="gueInfo">嘉宾<span class="guestNum"></span></span>
+                    </li>
+                    <li>
+                        <span>嘉宾名称<b>*</b></span>
+                        <input id="guestName" type="text" placeholder="请填写嘉宾名称">
+                    </li>
+                    <li>
+                        <span>嘉宾头衔<b>*</b></span>
+                        <input id="guestHonor" type="text" placeholder="请填写嘉宾头衔">
+                    </li>
+                    <li class="guePhoto">
+                        <span>嘉宾照片<b>*</b></span>
+                        <input class="guestPhoto" id="EprePersonImg" type="file" onchange="EguestImage(this)">
+                        <div id="EaddperImg" class="perImg">
+                            <img src="img/tm.png" id="EperImgHead" class="perImgHead" onclick="$('#EprePersonImg').click();">
+                        </div>
+                    </li>
+                    <li class="introduce">
+                        <span>嘉宾简介</span>
+                        <textarea placeholder="选填" class="guestDesTxt" id="saveEditGue" maxlength="200"></textarea>
+                        <span class="fontNum" style="display: none">
+                            <i class="number">0</i>/200
+                        </span> 
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!--submit-->
+        <div class="gEditBtn">
+            <span class="geSave">保存编辑信息</span>
+            <span class="geCancel" onclick="editReturn()">取消</span>
+        </div>
+    </div>
+    <div id="reqtoken" class="reqtoken"></div>
+
+</body>
+</html>

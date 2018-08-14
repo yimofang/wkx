@@ -1,0 +1,197 @@
+package net.emof.building.admin.service;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import net.emof.building.dao.MenusMapper;
+import net.emof.building.model.Menus;
+import net.emof.building.model.Users;
+ 
+
+/**
+ * 菜单表管理
+ * 
+ * @author baikun
+ * @creation 2017年2月25日
+ */
+@Service
+public class MenusService extends SqlToolseService {
+
+	@Autowired
+	private MenusMapper mm;
+
+	/**
+	 * 逻辑删除
+	 * 
+	 * @author baikun
+	 * @creation 2017年2月21日
+	 * @param id
+	 * @param state
+	 * @return
+	 */
+	public int isDelete(Integer id) {
+		return mm.isDelete(id);
+	}
+
+	/**
+	 * 修改用户实体
+	 * 
+	 * @author baikun
+	 * @creation 2017年2月21日
+	 * @param id
+	 * @param record
+	 * @return
+	 */
+	public int update_obj(Menus record) {
+		return mm.updateByPrimaryKeySelective(record);
+	}
+
+	/**
+	 * 添加用户实体
+	 * 
+	 * @author baikun
+	 * @creation 2017年2月21日
+	 * @param record
+	 * @return
+	 */
+	public int add_obj(Menus record) {
+		return mm.insertSelective(record);
+	}
+
+	/**
+	 * 返回指定 查询条件下 的数据数量
+	 * 
+	 * @author baikun
+	 * @creation 2017年2月23日
+	 * @param fildname
+	 * @param fildvalue
+	 * @return
+	 */
+	public Integer count_nub(String fildname, String fildvalue) {
+		String tableName = " menus as obj "; // 表名
+		String find = " count(*) as  iscount "; // 显示字段
+		String where = fildname + "=\'" + fildvalue + "\' and isdelete=1 ";
+		Map<String, Object> countMap = this.selectMap(tableName, find, where);
+		return countMap != null ? Integer.parseInt(countMap.get("iscount").toString()) : 0;
+	}
+
+	/**
+	 * 根据id查询实体
+	 * 
+	 * @author baikun
+	 * @creation 2017年8月1日
+	 * @param id
+	 * @return
+	 */
+	public Map<String, Object> idByInfo(Integer id) {
+		String tableName = " menus as obj "; // 表名
+		String find = null; // 显示字段
+		String where = " obj.id=" + id;
+		List count_list = this.selectAll(tableName, find, where, null);
+		return (Map<String, Object>) ((count_list != null) && (count_list.size() > 0) ? count_list.get(0) : null);
+	}
+
+	/**
+	 * 根据id返回 map实体对象
+	 * 
+	 * @author baikun
+	 * @creation 2017年2月21日
+	 * @param id
+	 * @return
+	 */
+	public Map<String, Object> get_info(Integer id, Users sessiconAdmin) {
+		String tableName = " menus as m "; // 表名
+		String find = null; // 显示字段
+		String where = " isdelete=1  and m.id=" + id;
+		List<Map<String, Object>> list = this.selectAll(tableName, find, where, null);
+		list = junior(list);
+		return list.get(0);
+	}
+
+	/**
+	 * bootstrap_table 分页查询、排序 方法
+	 * 
+	 * @author baikun
+	 * @creation 2017年2月24日
+	 * @param page
+	 *            页数
+	 * @param display
+	 *            每页显示数
+	 * @param select
+	 *            模糊查询
+	 * @param sort
+	 *            排序列名
+	 * @param sortOrder
+	 *            排序规则
+	 * @return
+	 */
+	public Map<String, Object> bootstrap_table(Integer page, Integer display, String select, String sort,
+			String sortOrder) {
+
+		String tableName = "menus as m "; // 表名
+		String find = null; // 显示字段
+		String where = " 1=1 and isdelete=1  and   grade=0"; // 条件
+		String order = null; // 排序
+
+		if (select != null && select.trim() != "") {
+			where = where + " and  name like '%" + select + "%' ";
+		}
+
+		// sort 排序 字段 sortOrder 排序规则 asc desc
+		if (sort != null && sortOrder != null) {
+			order = " order by " + sort + " " + sortOrder;
+		} else {
+			order = " order by id desc";
+		}
+
+		order = " order by m.id asc";
+
+		Map<String, Object> map_res = this.selectAllPage(tableName, find, where, order, page, display);
+		List<Map<String, Object>> list = junior((List<Map<String, Object>>) map_res.get("row"));
+		map_res.remove("row");
+		map_res.put("row", list);
+		return map_res;
+	}
+
+	/**
+	 * 返回主菜单list
+	 * 
+	 * @author baikun
+	 * @creation 2017年2月27日
+	 * @return
+	 */
+	public List<Map<String, Object>> get_list() {
+		String tableName = " menus as obj "; // 表名
+		String find = null; // 显示字段
+		String where = "grade=0 and isdelete=1";
+		List<Map<String, Object>> list = this.selectAll(tableName, find, where, null);
+		return list;
+	}
+
+	/**
+	 * 填充子菜单
+	 * 
+	 * @author baikun
+	 * @creation 2017年2月25日
+	 * @param ls
+	 * @return
+	 */
+	private List<Map<String, Object>> junior(List<Map<String, Object>> ls) {
+		String tableName = " menus as obj "; // 表名
+		String find = null; // 显示字段
+		String where = " isdelete=1 ";
+		List<Map<String, Object>> jun = new ArrayList<Map<String, Object>>();
+		for (int i = 0; i < ls.size(); i++) {
+			Map<String, Object> mp = ls.get(i);
+			mp.put("junior", this.selectAll(tableName, find, where + " and  grade=" + mp.get("id"), null));
+			jun.add(mp);
+		}
+		ls = jun;
+		return ls;
+	}
+}

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+    <title>发布会议</title>
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/publishMeet.css">
+    <link rel="stylesheet" href="css/meet.css">
+    <link rel="stylesheet" href="css/iosSelect.css">
+    <link media="all" rel="stylesheet" href="css/simditor.css" />
+    
+</head>
+<body>
+    <div id="pubMeet">
+        <!--header-->
+        <div class="Header">
+            <a href="javascript:history.go(-1);"></a>发布会议
+        </div>
+        <!--content-->
+        <div class="Content Release MarginTop deleteHeaderPM">
+            <!--上传图片-->
+            <div class="UploadImg" >
+                <div id="preview">
+                    <img id="imghead" border="none" src="img/bgmeet.png" width="90" height="90" onclick="$('#previewImg').click();">
+                </div>
+                <input type="file" onchange="previewImage(this)" style="display: none;" id="previewImg">
+                <input type="text" name="token" id="token">
+            </div>
+
+            <div class="Submit" id="tijiao">提交</div>
+        </div>
+    </div>
+    </div>
+
+    <script src="js/jquery-2.1.4.min.js"></script>
+    <script src="js/rem.js"></script>
+    <script src="js/zepto.js"></script>
+    <script src="js/iosSelect.js"></script>
+    <script src="js/publishMeet.js"></script>
+    <script src="js/meetChoice.js"></script>
+    <script src="js/time.js"></script>
+    <script src="js/uploadImg.js"></script>
+    <script src="js/removeHeader.js"></script> 
+    <script src="js/module.js"></script>
+    <script src="js/hotkeys.js"></script>
+    <script src="js/uploader.js"></script>
+    <script src="js/simditor.js"></script>
+    <script type="text/javascript">
+    	$('#tijiao').click(function(){
+    		var imgsrc = $('#imghead').attr('src');
+    		console.log(imgsrc);
+    		$.ajax({
+    			type:'post',
+    			url:'http://192.168.2.209:8080/conf/imgbase.do',
+    			data:{
+    				imgStr:imgsrc ,
+    				token:$("#token").val(),
+    			},
+    			success:function(res){
+    				console.log(res);
+    			}
+    		})
+    	})
+    </script>
+</body>
+</html>

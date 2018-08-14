@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+    <title>账号登录</title>
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/login.css">
+
+</head>
+
+<body style="background: #fff;">
+    <div class="user_info">
+        <h2 class=login_tit>登录微会议</h2>
+        <ul>
+            <li>
+                <span class="user_name"></span>
+                <input type="text" id="user_name" placeholder="请输入账号">
+            </li>
+            <li>
+                <span class="user_pwd"></span>
+                <input type="password" id="user_pwd" placeholder="请输入密码">
+            </li>
+        </ul>
+        <div id="login" class="login">登录</div>
+    </div>
+    <script>
+        $('#login').click(function() {
+            $(this).css('pointer-events', 'none');
+            var user_name = $('#user_name').val(),
+                user_pwd = $('#user_pwd').val();
+            $.ajax({
+                type: 'post',
+                url: Urlstr + 'login_web.do',
+                data: {
+                    name: user_name,
+                    pass: user_pwd
+                },
+                dataType: 'json',
+                success: function(res) {
+                    console.log(res);
+                    if (res.error == 0) {
+                        sessionStorage.setItem('token', res.token);
+                        $('#reqtoken').hide();
+                        Token = sessionStorage.getItem('token');
+                    } else {
+                        alert(res.msg);
+                        $('#login').css('pointer-events', 'auto');
+                    }
+                }
+            })
+        })
+    </script>
+</body>
+
+</html>

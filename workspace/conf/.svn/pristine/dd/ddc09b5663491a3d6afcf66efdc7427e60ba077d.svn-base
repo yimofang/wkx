@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>微会议</title>
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/meetSurvey.css">
+</head>
+
+<body>
+<div class="topLine"></div>
+<div class="header"></div>
+
+<div class="left_nav">
+    <ul class="nav_one">
+        <li class="nav_manage active">
+            <a href="meetList.html">
+                <b class="active"></b>
+                <span>会议管理</span>
+            </a>
+        </li>
+        <li class="nav_release">
+            <a href="meetPublish.html">
+                <b></b>
+                <span>发布会议</span>
+            </a>
+        </li>
+        <li class="nav_pwd">
+            <a href="password.html">
+                <b></b>
+                <span>修改密码</span>
+            </a>
+        </li>
+    </ul>
+    <ul class="nav_two" style="display: block;">
+        <li>
+            <a href="javascript:void(0)" data-url="meetModify.html">会议修改</a>
+        </li>
+        <li>
+            <a href="javascript:void(0)" data-url="meetCode.html">二维码 </a>
+        </li>
+        <li>
+            <a href="javascript:void(0)" data-url="meetName.html">名单管理 </a>
+        </li>
+        <li>
+            <a href="javascript:void(0)" data-url="meetData.html">资料管理 </a>
+        </li>
+        <li>
+            <a href="javascript:void(0)" data-url="meetCount.html">会议统计 </a>
+        </li>
+        <li class="on">
+            <a href="javascript:void(0)" data-url="meetSurvey.html">调研问卷 </a>
+        </li>
+        <li>
+            <a href="javascript:void(0)" data-url="meetBriefing.html">简报管理 </a>
+        </li>
+        <li>
+            <a href="javascript:void(0)" data-url="meetSign.html">上传签到表 </a>
+        </li>
+    </ul>
+</div>
+<div class="right_wrapper">
+    <div class="top">
+        <span>会议管理 / 调研问卷</span>
+        <div class="survey_btn">
+            <button class="survey_save" onclick="saveSurvey(2)">保存</button>
+            <button class="survey_release" onclick="saveSurvey(1)">发布</button>
+        </div>
+    </div>
+    <div class="wrapper">
+        <div class="survey_box">
+            <div class="survey_all">
+                <div class="survey_tit">
+                    <ul>
+                        <li>
+                            <span class="left_tit"><b>*</b>问卷调查</span>
+                            <input type="text" class="survey_title">
+                        </li>
+                        <li>
+                            <span class="left_tit">问卷说明</span>
+                            <div class="survey_jj">
+                                <textarea class="guestDesTxt" maxlength="50" ></textarea>
+                                <p class="font_num"><span class="number">0</span>/<span>50</span></p>
+                            </div>
+
+                        </li>
+                    </ul>
+                </div>
+                <div class="survey_tiankong">
+                    <ul>
+
+                    </ul>
+                </div>
+                <div class="survey_radio">
+                    <ul>
+
+                    </ul>
+                </div>
+                <div class="survey_checkbox">
+                    <ul>
+
+                    </ul>
+                </div>
+            </div>
+            <div class="survey_type">
+                <p class="type_tit">添加问卷问题</p>
+                <ul class="type_list">
+                    <li onclick="addTK()">填空题</li>
+                    <li onclick="addDX()">单选题</li>
+                    <li onclick="addDXS()">多选题</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="footer">
+</div>
+<div class="shade"></div>
+<script src="javascript/jquery-2.1.4.min.js"></script>
+<script src="javascript/common.js"></script>
+<script src="js/meetSurvey.js"></script>
+</body>
+
+</html>

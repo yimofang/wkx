@@ -1,0 +1,791 @@
+// Urlstr = 'http://192.168.2.238:8080/conf/',
+//    NumAll = GetRequest(),
+//    Token = sessionStorage.getItem('token'),
+var ListState = [true, true, true, true],
+    question_info = '';
+
+$(function () {
+    Getinfo();
+    Getdescribe();
+    Getguest();
+    Getflow();
+    pdbaoming();
+    GetNext();
+
+
+    // 会议四项切换
+    $('#PreConTitle ').on('click', 'li', function () {
+        $(this).addClass('active').siblings().removeClass('active');
+        var index = $(this).index();
+        if (index == 0) {
+            $('#PreConTitle li span').css('border', '0');
+            $('#PreConTitle li:eq(2) span').css('border-left', '1px solid #e1e1e1').css('border-right', '1px solid #e1e1e1');
+        }
+        if (index == 1) {
+            $('#PreConTitle li span').css('border', '0');
+            $('#PreConTitle li:eq(3) span').css('border-left', '1px solid #e1e1e1');
+            if (ListState[index]) {
+                Getdatum();
+            }
+        }
+        if (index == 2) {
+            $('#PreConTitle li span').css('border', '0');
+            $('#PreConTitle li:eq(1) span').css('border-left', '1px solid #e1e1e1');
+            if (ListState[index]) {
+                Getquestion();
+            }
+        }
+        if (index == 3) {
+            $('#PreConTitle li span').css('border', '0');
+            $('#PreConTitle li:eq(1) span').css('border-left', '1px solid #e1e1e1').css('border-right', '1px solid #e1e1e1');
+            if (ListState[index]) {
+                GetNext();
+            }
+        }
+        $('.PreContainerALL>div:eq(' + index + ')').addClass('block').siblings('div').removeClass('block');
+    });
+
+
+    $('#close_phone').click(function () {
+        $('.hostBg').hide();
+    });
+    $('.hostBg').click(function () {
+        $('.hostBg').hide();
+    });
+    //报名
+
+
+    /*报名验证*/
+    $("#name").blur(NameCheck);
+    $("#phone").blur(PhoneCheck);
+    $("#mobileNum").blur(PhoneCheck);
+    $("#mail").blur(EmailCheck);
+    $("#job").blur(JobCheck);
+    $('#company').blur(CompanyCheck);
+    // 确认报名
+    $('.succ_btn').click(function () {
+        var Uname = NameCheck(),
+            Uphone = PhoneCheck(),
+            Uemail = EmailCheck(),
+            Ujob = JobCheck(),
+            Ucompany = CompanyCheck();
+        if (Uname && Uphone && Uemail && Ujob && Ucompany) {
+            $.ajax({
+                type: 'POST',
+                url: Urlstr + 'confsSubuser_web/addinfo.do',
+                data: {
+                    confsid: NumAll.confsid,
+                    token: Token,
+                    phone: $("#phone").val(),
+                    realname: $("#name").val(),
+                    email: $("#mail").val(),
+                    job: $("#job").val(),
+                    units: $("#company").val(),
+                },
+                dataType: 'json',
+                success: function (res) {
+                    if (res.error == 0) {
+                        console.log(res);
+                        alert(res.msg);
+                        $('.meetPreview').show();
+                        $('.PhoneAndName').show();
+                        $('#addName').hide();
+                    } else if (res.error == 5) {
+                        alert(res.msg);
+                        ReqToken();
+                    } else {
+                        alert(res.msg);
+                    }
+                }
+            });
+        } else {
+            alert('信息填写有误，请确认');
+        }
+    });
+
+    //打开问卷电话弹框
+    $("#pShow").click(function(){
+        question_info = quslistpd();
+        if(question_info != false && question_info !=''){
+          $(".phoneBg").show();
+        }
+    });
+
+    //关闭问卷电话弹框
+    $("#pClose").click(function(){
+        $(".phoneBg").hide();
+         question_info = '';
+    });
+
+
+    // 地图
+    $(".PreviewTitle").on('click','.preMap',function(){
+        $(".meetPreview").hide();
+        $(".PhoneAndName").hide();
+        $("#container").show();
+        $(".position").show();
+        $(".Header").hide();
+        showMap();
+    });
+
+    //隐藏地图
+    $(".position>p").click(function(){
+        $("#container").hide();
+        $(".position").hide();
+        $(".meetPreview").show();
+        $(".PhoneAndName").show();
+        $(".Header").show();
+    });
+
+});
+
+
+//地图
+function showMap(){
+    var lat = $('.preMap').attr('data-lat');
+    var lng = $('.preMap').attr('data-lng');
+    var map = new AMap.Map('container',{
+        resizeEnable: true,
+        center: [lat, lng],
+        zoom:16
+    });
+
+    //插件加载
+    AMap.plugin(['AMap.ToolBar','AMap.PlaceSearch','AMap.Autocomplete'],
+    function(){
+        map.addControl(new AMap.ToolBar());
+        map.addControl(new AMap.PlaceSearch()); 
+        map.addControl(new AMap.Autocomplete()); 
+    });
+
+     //输入提示  
+    var autoOptions = {  
+        input: "mapSearch"  
+    };  
+    var auto = new AMap.Autocomplete(autoOptions);  
+    var placeSearch = new AMap.PlaceSearch({  
+        map: map  
+    });  //构造地点查询类  
+    AMap.event.addListener(auto, "select", select);//注册监听，当选中某条记录时会触发  
+    function select(e) {  
+        placeSearch.setCity(e.poi.adcode);  
+        placeSearch.search(e.poi.name);  //关键字查询查询 
+        console.log(e.poi);//经纬度 
+        
+    } 
+
+    //点标记
+
+    var marker = new AMap.Marker({
+        icon: "http://webapi.amap.com/theme/v1.3/markers/n/mark_b.png",
+        position: [lat,lng]
+    });
+    marker.setMap(map);
+}
+
+function pdbaoming() {
+    $.ajax({
+        type: 'post',
+        url: Urlstr + 'confs_web/getEnlist.do',
+        data: {
+            id: NumAll.confsid,
+            token: Token
+        },
+        dataType: 'json',
+        success: function (res) {
+            var timestamp=new Date().getTime();
+            // console.log(timestamp);
+            // console.log(res);
+            if(timestamp>res.row.shend){
+                $('.Name').html('报名结束');
+                $('.Name').attr('onclick','');
+            }else if(timestamp<res.row.shstart){
+                $('.Name').html('未开始报名');
+                $('.Name').attr('onclick','');
+            }
+        }
+    })
+}
+// 报名
+function baoming() {
+    $('.meetPreview').hide();
+    $('.PhoneAndName').hide();
+    $('#addName').show();
+    $.ajax({
+        type: 'post',
+        url: Urlstr + 'confs_web/getEnlist.do',
+        data: {
+            id: NumAll.confsid,
+            token: Token
+        },
+        dataType: 'json',
+        success: function (res) {
+            if (res.error == 0) {
+                console.log(res);
+                for (var i = 0, did = 0; i < res.row.enlists.length; i++) {
+                    did = res.row.enlists[i].id - 1;
+                    $('#AddNameList>div:eq(' + did + ')').show();
+                }
+            } else if (res.error == 5) {
+                alert(res.msg);
+                ReqToken();
+            } else {
+                alert(res.msg);
+            }
+        }
+    });
+}
+
+
+function goback() {
+    $('.meetPreview').show();
+    $('.PhoneAndName').show();
+    $('#addName').hide();
+}
+// 验证姓名
+function NameCheck() {
+    var name = $.trim($("#name").val());
+    if (!name) {
+        return false;
+    } else {
+        return true;
+    }
+}
+
+// 验证电话
+function PhoneCheck() {
+    var phone = $.trim($("#phone").val());
+    // var mobile = $.trim($("#mobileNum").val());
+    if (!phone) {
+        return false;
+    } else if (!(/^1[345789]\d{9}$/.test(phone))) {
+        return false;
+    } else {
+        return true;
+    }
+}
+
+// 验证邮箱
+function EmailCheck() {
+    if ($('.email').css('display') == 'block') {
+        var mail = $.trim($("#mail").val());
+        if (!mail) {
+            return false;
+        } else if (!(/^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((\.[a-zA-Z0-9_-]{2,3}){1,2})$/.test(mail))) {
+            return false;
+        } else {
+            return true;
+        }
+    } else {
+        return true;
+    }
+}
+
+// 验证职位
+function JobCheck() {
+    if ($('.job').css('display') == 'block') {
+        var job = $.trim($("#job").val());
+        if (!job) {
+            return false;
+        } else {
+            return true;
+        }
+    } else {
+        return true;
+    }
+}
+
+// 验证公司
+function CompanyCheck() {
+    if ($('.company').css('display') == 'block') {
+        var company = $.trim($("#company").val());
+        if (!company) {
+            return false;
+        } else {
+            return true;
+        }
+    } else {
+        return true;
+    }
+}
+
+// 请求基本信息
+function Getinfo() {
+    $.ajax({
+        type: 'POST',
+        url: Urlstr + 'confs_web/confDetails.do',
+        data: {
+            conftoken: NumAll.confsid,
+            token: Token,
+        },
+        dataType: 'json',
+        success: function (res) {
+            if (res.error == 0) {
+                //console.log(res);
+                $('#meetbanner').attr('src', Urlstr + 'upload/' + res.row.cimg);
+                var htmlstr = `<h2>${res.row.cname}</h2>
+                            <p class='preMap' data-lat='${res.row.latitude}' data-lng='${res.row.longitude}'><i class="Icon Icon1"></i><span>${res.row.position}${res.row.addr}</span></p>
+                            <p><i class="Icon Icon2"></i><span>${res.row.days} ${res.row.statime} ${res.row.statime.slice(0, 2) <= 12 ? 'AM' : 'PM'}</span></p>
+                            <p><i class="Icon Icon3"></i><span>${res.row.brief}</span></p>
+                            <p id="telNum" style="display:none">${res.row.touch}</p>`;
+                $('.PreviewTitle').html(htmlstr);
+                
+                var htmlTel = '';
+                htmlTel = `<a href="tel:${res.row.touch}">联系主办方</a>` ;
+                $(".Phone").html(htmlTel);
+
+
+            } else if (res.error == 5) {
+                alert(res.msg);
+                ReqToken();
+            } else {
+                alert(res.msg);
+            }
+        }
+    });
+}
+
+//请求会议描述
+function Getdescribe() {
+    $.ajax({
+        type: 'POST',
+        url: Urlstr + 'confs_web/confRim.do',
+        data: {
+            conftoken: NumAll.confsid,
+            token: Token,
+            type: 1
+        },
+        dataType: 'json',
+        success: function (res) {
+            if(res.error == 0){
+                console.log(res);
+                ListState[0] = false;
+                if(res.row.introd != ''){
+                    $('.miaoshu').html(res.row.introd);
+                }
+
+
+                if (res.row.imgs.length > 0) {
+                    var imgAll = res.row.imgs.split(",");
+                    var html2 = '';
+                    for (var i = 0; i < imgAll.length; i++) {
+                        html2 += `<img class="miaoshuImg" src="${Urlstr}upload/${imgAll[i]}" alt="">`;
+                    }
+                    $('#imgAll').html(html2);
+                }
+            }else if(res.error == 5){
+                alert(res.msg);
+                ReqToken();
+            }else{
+                alert(res.msg);
+            }
+        }
+    });
+}
+
+//请求会议嘉宾
+function Getguest() {
+    $.ajax({
+        type: 'POST',
+        url: Urlstr + 'confsGuest_web/listpage.do',
+        data: {
+            confsid: NumAll.confsid,
+            token: Token,
+        },
+        dataType: 'json',
+        success: function (res) {
+            //console.log(res);
+            if (res.row.length > 0) {
+                var html3 = '';
+                for (var i = 0; i < res.row.length; i++) {
+                    var rank = res.row[i].rank.split(",");
+                    html3 += `<li>
+                              <div class="GuestInfo">
+                                 <img src="${Urlstr}upload/${res.row[i].gimg}" alt="">
+                                 <h2 class="Ove">${res.row[i].gname}</h2>`;
+                    for (var j = 0; j < rank.length; j++) {
+                        html3 += `<p class="Ove">${rank[j]}</p>`;
+                    }
+                    html3 += `</div>
+                                    <p class="InfoCon">
+                                       ${res.row[i].brief == undefined ? '' : res.row[i].brief}
+                                    </p>
+                                </li>`;
+                }
+                $('.GuestList ul').html(html3);
+            } else {
+                $('.GuestList').hide();
+            }
+        }
+    });
+}
+
+//请求会议流程
+function Getflow() {
+    $.ajax({
+        type: 'POST',
+        url: Urlstr + 'confs_web/confRim.do',
+        data: {
+            conftoken: NumAll.confsid,
+            token: Token,
+            type: 2
+        },
+        dataType: 'json',
+        success: function (res) {
+            //console.log(res);
+            if (res.error == 0) {
+                var flow = res.row;
+                if (flow.length > 0) {
+                    var html4 = '';
+                    for (var i = 0; i < flow.length; i++) {
+                        var bhstart = formatDate(new Date(flow[i].bhstart));
+                        html4 += `<div class="PreConList">
+                            <!--指示标-->
+                            <i class="Instructions"></i>
+                            <b class="IndicatorLine"></b>
+                            <div class="PreConListTime">
+                                <span class="left">【流程<span>${i + 1}</span>】</span>
+                                <span class="right">${bhstart}</span>
+                            </div>
+                            <p class="PreConListCon">
+                                ${flow[i].fname}
+                            </p>
+                        </div>`;
+                    }
+                    $('.PreProcess').html(html4);
+                    $('.PreConList:eq(0) i.Instructions').addClass('Active');
+                }else{
+                    $('.GuestListTitle').hide();
+                }
+            } else if (res.error == 5) {
+                alert(res.msg);
+                ReqToken();
+            } else {
+                alert(res.msg);
+            }
+        }
+    });
+}
+
+//请求会议资料
+function Getdatum() {
+    $.ajax({
+        type: 'POST',
+        url: Urlstr + 'confs_web/confRim.do',
+        data: {
+            conftoken: NumAll.confsid,
+            token: Token,
+            type: 3
+        },
+        dataType: 'json',
+        success: function (res) {
+            if (res.error == 0) {
+                //console.log(res);
+                var fileall = res.row;
+                if (fileall.length > 0) {
+                    var html5 = '';
+                    for (var i = 0; i < fileall.length; i++) {
+                        var index1 = fileall[i].file.lastIndexOf(".");
+                        var index2 = fileall[i].file.length;
+                        var file_img = fileall[i].file.substring(index1 + 1, index2);
+                        var file_img_src = '';
+                        switch (file_img) {
+                            case 'doc':
+                            case 'docx':
+                                file_img_src = 'word.jpg';
+                                break;
+                            case 'xls':
+                            case 'xlsx':
+                                file_img_src = 'excel.jpg';
+                                break;
+                            case 'ppt':
+                            case 'pps':
+                                file_img_src = 'ppt.jpg';
+                                break;
+                            case 'pdf':
+                                file_img_src = 'pdf.jpg';
+                                break;
+                            default:
+                                file_img_src = 'qita.jpg';
+                                break;
+                        }
+                        html5 += `<li>
+                                    <a href="dataDetail.html?id=${fileall[i].id}">
+                                        <img src="${Urlstr}upload/${file_img_src}" alt="">
+                                        <div class="DataInfo">
+                                            <p class="DataTitle Ove" >${fileall[i].dname}</p>
+                                            <p class="DataNum Ove">
+                                                <span class="DataLook"></span>
+                                                <span>129</span>
+                                                <span class="DataShare"></span>
+                                                <span>47</span>
+                                            </p>
+                                        </div>
+                                    </a>
+                                </li>`;
+                    }
+                    $('.PreData ul').html(html5);
+                }
+                ListState[1] = false;
+            } else if (res.error == 5) {
+                alert(res.msg);
+                ReqToken();
+            } else {
+                alert(res.msg);
+            }
+        }
+    });
+}
+
+//请求问卷调查
+function Getquestion() {
+    $.ajax({
+        type: 'POST',
+        url: Urlstr + 'confs_web/confRim.do',
+        data: {
+            conftoken: NumAll.confsid,
+            token: Token,
+            type: 4
+        },
+        dataType: 'json',
+        success: function (res) {
+            console.log(res);
+            ListState[2] = false;
+            if (res.error == 0) {
+                console.log(res.row);
+                if(res.row == null){
+                    $("#pShow").hide();
+                }else if(res.row != null){
+                    $("#pShow").show();
+                    var html7 = '';
+                    var wenjuanlist = res.row.titles;
+                    for(var i = 0;i<wenjuanlist.length;i++){
+                        if(wenjuanlist[i].tstate ==1){//单选
+                            html7+=`<li data-id="${wenjuanlist[i].id}" data-state="${wenjuanlist[i].tstate}"><p>${i+1}.${wenjuanlist[i].fname}</p>`;
+                            for(var j = 0;j<wenjuanlist[i].options.length;j++){
+                                html7+=`<p><input type="radio" name="${(i+1)}" data-id="${wenjuanlist[i].options[j].id}">${wenjuanlist[i].options[j].fname}</p>`;
+                                }
+                            html7+=`</li>`;
+                        }
+                        if(wenjuanlist[i].tstate ==2){//多选
+                            html7+=`<li data-id="${wenjuanlist[i].id}" data-state="${wenjuanlist[i].tstate}" data-more="${wenjuanlist[i].qnrmax}" data-less="${wenjuanlist[i].qnrmin}"><p>${i+1}.${wenjuanlist[i].fname}<span style="color:#bd0f10">[多选题${wenjuanlist[i].qnrmin}-${wenjuanlist[i].qnrmax}项]</span></p>`;
+                            for(var j = 0;j<wenjuanlist[i].options.length;j++){
+                                html7+=`<p><input type="checkbox" name="check${i}" data-id="${wenjuanlist[i].options[j].id}">${wenjuanlist[i].options[j].fname}</p>`;
+                            }
+                            html7+=`</li>`;
+                        }
+                        if(wenjuanlist[i].tstate ==3){//填空
+                            if(wenjuanlist[i].isitem == 1){ //必答
+                                html7+=`<li data-id="${wenjuanlist[i].id}" data-state="${wenjuanlist[i].tstate}" data-must="${wenjuanlist[i].isitem}">
+                                        <p class="must">${i+1}.${wenjuanlist[i].fname} <i>*</i></p>
+                                        <input type="text" class="comName" placeholder="请输入" id="test${i}">
+                                    </li>`;
+                                }else if(wenjuanlist[i].isitem == 2){ //选答
+                                    html7+=`<li data-id="${wenjuanlist[i].id}" data-state="${wenjuanlist[i].tstate}" data-must="${wenjuanlist[i].isitem}">
+                                        <p>${i+1}.${wenjuanlist[i].fname}</p>
+                                        <input type="text" class="comName" placeholder="请输入" id="test${i}">
+                                    </li>`;
+                                }  
+                        }
+                    }
+                    $('.previewContent ul').html(html7);
+                    $(".previewContent").attr("data-surid",res.row.id);
+                }
+            } else if (res.error == 5) {
+                alert(res.msg);
+                ReqToken();
+            } else {
+                alert(res.msg);
+            }
+        }
+    });
+}
+
+//获取问卷提交题目
+function quslistpd(){
+    var quesList = $(".previewContent ul li");//获取问卷列表
+    var quesnum =quesList.length;
+    var datas = {"rejoins":[]}; 
+    var pd = '';
+    for(var i = 0;i<quesnum;i++){
+        var state = $(".previewContent ul li:eq("+i+")").attr('data-state');
+        if(state == 3){ //判断填空
+            var info = TKCheck(i);
+            if(info != false && info !=undefined){
+                datas.rejoins.push(info);
+            }else if(info ==undefined){
+                console.log(111);
+            }
+            else{
+                alert('第'+(i+1)+'题没有答');
+                pd = false;
+                return pd;
+            }
+        }else if(state == 2){ //多选
+             var info2 = DXCheck(i);
+             if(info2 != false && info2 !=undefined){
+                datas.rejoins.push(info2);
+            }else{
+                console.log(222);
+               
+            }
+        }else if(state == 1){ //单选
+            var info3 = DACheck(i);
+            if(info3 != false && info3 != undefined){
+                datas.rejoins.push(info3);
+            }else{
+                console.log(333);
+            }
+        }
+    }
+    return datas;
+}
+
+//提交问卷调查
+function surSubmit(){
+    var datas = {
+        rejoins:question_info.rejoins,
+        confid:NumAll.confsid,
+        qnrid:$(".previewContent").attr("data-surid"),
+        phone:$("#mobileNum").val()
+    };
+    console.log(datas);
+    $.ajax({
+        type:'post',
+        url:Urlstr + 'rejoin_web/submitAnswers.do',
+        contentType:"application/json;charset=utf-8",
+        data:JSON.stringify(datas),
+        success : function(data) {
+            if(data.error == 0){
+                alert(data.msg);
+                question_info = '';
+                $('.phoneBg').hide();
+            }else if(data.error == 5){
+                alert(data.msg);
+                ReqToken();
+                Token = sessionStorage.getItem('token');
+            }else{
+                alert(data.msg);
+            }
+        }
+    });
+}
+
+//请求下期预告
+function GetNext() {
+    $.ajax({
+        type: 'POST',
+        url: Urlstr + 'trailer_web/getAdvance.do',
+        data: {
+            confid: NumAll.confsid,
+            token: Token
+        },
+        dataType: 'json',
+        success: function (res) {
+            if (res.error == 0) {
+                console.log(res);
+                if(res.row != null){
+                    $('.nextmeetinfo').html(res.row.introd);
+                    if (res.row.imgs.length > 0) {
+                        var imgALl = res.row.imgs.split(",");
+                        var html6 = '';
+                        for (var i = 0; i < imgALl.length; i++) {
+                            html6 += `<img class="nextimglist" src="${Urlstr}upload/${imgALl[i]}" alt="">`;
+                        }
+                        $('.nextmeetimg').html(html6);
+                    }
+                    ListState[3] = false;
+                }
+                
+            } else if (res.error == 5) {
+                alert(res.msg);
+                ReqToken();
+            } else {
+                alert(res.msg);
+            }
+        }
+    });
+}
+
+// 时间戳转时间
+function formatDate(now) {
+    var year = now.getYear();
+    var month = now.getMonth() + 1;
+    var date = now.getDate();
+    var hour = now.getHours();
+    var minute = now.getMinutes();
+    var second = now.getSeconds();
+    return "20" + year.toString().slice(1,3) + "-" + month + "-" + date + " " + hour + ":" + minute;
+}
+
+//Token 过期 重新请求
+function ReqToken() {
+    $('#reqtoken').load("login2.html", function () {
+        $('#reqtoken').show();
+    });
+}
+
+//填空
+function TKCheck(index){
+    var qusid = $(".previewContent ul li:eq("+index+")").attr('data-id');
+    var qusval = $.trim($(".previewContent ul li:eq("+index+") input").val());
+    var must = $(".previewContent ul li:eq("+index+")").attr('data-must');
+    var json ={"titleid":'',"answer":''};
+    if(must == 1 && qusval!=''){
+        json.titleid = qusid;
+        json.answer = qusval;
+        return json;
+    }else if(must == 2 && qusval!=''){
+        json.titleid = qusid;
+        json.answer = qusval;
+        return json;
+    }else if(must == 1 && qusval ==''){
+        return false;
+    }
+}
+
+//多选
+function DXCheck(index){
+    var qusid = $(".previewContent ul li:eq("+index+")").attr('data-id');
+    var qusval =$("input[name='check"+index+"']:checked");
+    var moreVal = $(".previewContent ul li:eq("+index+")").attr('data-more');
+    var lessVal = $(".previewContent ul li:eq("+index+")").attr('data-less');
+    var json ={"titleid":'',"optionid":''};
+
+    //判断选项个数
+    if(qusval.length == 0){
+        return false;
+    }else if(qusval.length<lessVal){
+        alert('第'+(index+1)+'题最少选'+lessVal+'项');
+        return false;
+    }else if(qusval.length>moreVal){
+        alert('第'+(index+1)+'题最多选'+moreVal+'项');
+        return false;
+    }else{
+        var str ='';
+        for(var i = 0;i<qusval.length;i++){
+            str += qusval[i].getAttribute('data-id') + ',';
+        }
+        json.titleid = qusid;
+        json.optionid = str.slice(0,-1);
+        return json;
+    }
+    
+}
+
+//单选
+function DACheck(index){
+    var qusid = $(".previewContent ul li:eq("+index+")").attr('data-id');
+    var qusval =$("input[name='check"+index+"']:checked");
+    var json ={"titleid":'',"optionid":''};
+
+    if(qusval.length == 0){
+        return false;
+    }else{
+        var str = qusval[i].getAttribute('data-id');
+        json.titleid = qusid;
+        json.optionid = str;
+        return json;
+    }
+
+}

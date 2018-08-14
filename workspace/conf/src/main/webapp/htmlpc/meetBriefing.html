@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>微会议</title>
+    <link rel="stylesheet" href="css/common.css">
+    <!--page start-->
+    <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="css/myPage.css"/>
+    <!--page end-->
+    <link rel="stylesheet" href="css/meetBriefing.css">
+</head>
+
+<body>
+<div class="topLine"></div>
+<div class="header"></div>
+
+<div class="left_nav">
+    <ul class="nav_one">
+        <li class="nav_manage active">
+            <a href="meetList.html">
+                <b class="active"></b>
+                <span>会议管理</span>
+            </a>
+        </li>
+        <li class="nav_release">
+            <a href="meetPublish.html">
+                <b ></b>
+                <span>发布会议</span>
+            </a>
+        </li>
+        <li class="nav_pwd">
+            <a href="password.html">
+                <b></b>
+                <span>修改密码</span>
+            </a>
+        </li>
+    </ul>
+    <ul class="nav_two" style="display: block;">
+        <li>
+            <a href="javascript:void(0)" data-url="meetModify.html">会议修改</a>
+        </li>
+        <li>
+            <a href="javascript:void(0)" data-url="meetCode.html">二维码 </a>
+        </li>
+        <li >
+            <a href="javascript:void(0)" data-url="meetName.html">名单管理 </a>
+        </li>
+        <li>
+            <a href="javascript:void(0)" data-url="meetData.html">资料管理 </a>
+        </li>
+        <li>
+            <a href="javascript:void(0)" data-url="meetCount.html">会议统计 </a>
+        </li>
+        <li>
+            <a href="javascript:void(0)" data-url="meetSurvey.html">调研问卷 </a>
+        </li>
+        <li class="on">
+            <a href="javascript:void(0)" data-url="meetBriefing.html">简报管理 </a>
+        </li>
+        <li>
+            <a href="javascript:void(0)" data-url="meetSign.html">上传签到表 </a>
+        </li>
+    </ul>
+</div>
+
+<div class="right_wrapper">
+    <div class="top">
+        <a href="#">会议修改/简报管理</a>
+        <span class="creatBrief">创建简报</span>
+    </div>
+    <div class="wrapper">
+        <div class="main">
+            <div class="title">
+                <span class="span1 active" data-state="1">未推广</span>
+                <span class="span2" data-state="2">已推广</span>
+                <span class="span3" data-state="3">媒体推广</span>
+            </div>
+            <!--简报列表-->
+            <div class="mainCont">
+                <div class="contList" >
+                    <p class="tgTop" style="display: none">选择您需要推广的文章，可多选</p>
+                    <ul>
+
+                    </ul>
+
+                    <div class="noData">
+                        <img src="img/nodata.png">
+                        <p>暂无数据</p>
+                    </div>
+                    <form id="form1" runat="server" style="display:none;">
+                        <div>
+                            <ul class="pagination" id="pagination">
+                            </ul>
+                            <input type="hidden" id="PageCount" runat="server" />
+                            <input type="hidden" id="PageSize" runat="server" value="10" />
+                            <input type="hidden" id="countindex" runat="server" value="10"/>
+                            <!--设置最多显示的页码数 可以手动设置 默认为7-->
+                            <input type="hidden" id="visiblePages" runat="server" value="4" />
+                        </div>
+                    </form>
+                    <span class="next" onclick="articleNext()" style="display: none">下一步</span>
+                </div>
+            </div >
+            <!--选择媒体-->
+            <div class="mediaChoice" style="display: none">
+                <p class="medTop">选择您要推广的媒体，可多选</p>
+                <div class="medList">
+
+                </div>
+                <p class="haveTop">您已选择推广的媒体</p>
+                <div class="haveList">
+
+                </div>
+                <div class="mBtn">
+                    <span class="btnUp" onclick="mediaBack()">上一步</span>
+                    <span class="btnNext" onclick="mediaNext()">立即推广</span>
+                </div>
+            </div>
+            <!--已经选择的媒体和文章-->
+            <div class="haveMedia" style="display: none;">
+                <div class="haveArt">您已选择推广的文章
+                    <u onclick="mediaBack()">返回选择</u>
+                </div>
+                <ul class="sure_act">
+
+                </ul>
+                <div class="haveMed">您已选择推广的媒体
+                    <u onclick="haveBack()">返回选择</u>
+                </div>
+                <ul class="sure_media">
+
+                </ul>
+                <div class="mBtn">
+                    <span class="btnUp" onclick="haveBack()">上一步</span>
+                    <span class="btnNext" onclick="haveNext()">确认推广</span>
+                </div>
+            </div>
+
+            <!--page-->
+
+        </div>
+    </div>
+</div>
+<!--创建简报-->
+<div class="creBrief" id="brCreate" style="display:none;">
+    <div class="cb_cont">
+        <div class="creTop">
+            <span class="span1">创建简报</span>
+            <span class="span2">
+                            <span class="top_cancel">取消</span>
+                            <span class="top_save" onclick="saveBrief()">保存</span>
+                        </span>
+        </div>
+        <div class="creMain">
+            <div class="main_tit">
+                             <span class="tit">
+                                    <i>*</i>简报标题：
+                             </span>
+                <input type="text" class="creTitle" placeholder="请填写简报标题">
+            </div>
+            <div class="main_des">
+                            <span class="tit">
+                                <i>*</i>简报描述：
+                            </span>
+                <div id="editor" class="editor"> </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--预览简报-->
+<div class="preBrief" style="display:none;">
+    <div class="pbCont">
+        <div class="pre_top">
+            <span class="span1">预览简报</span>
+            <span class="span2">
+                            <!--<span class="pre_edit">编辑</span>-->
+                            <span class="pre_del"></span>
+                        </span>
+        </div>
+        <div class="briefCont">
+            <span class="b_tit"></span>
+            <span class="b_time"></span>
+            <div class="b_list"></div>
+            <p class="media_listtit">已推广媒体</p>
+            <ul class="media_list">
+
+            </ul>
+        </div>
+    </div>
+</div>
+<!--编辑简报-->
+<div class="creBrief" id="brEdit" style="display:none;">
+    <div class="cb_cont">
+        <div class="creTop">
+            <span class="span1">编辑简报</span>
+            <span class="span2">
+                            <span class="top_cancel">取消</span>
+                            <span class="top_save" onclick="saveEditBrief()">保存</span>
+                        </span>
+        </div>
+        <div class="creMain">
+            <div class="main_tit">
+                             <span class="tit">
+                                    <i>*</i>简报标题：
+                             </span>
+                <input type="text" class="creTitle" placeholder="请填写简报标题">
+            </div>
+            <div class="main_des">
+                            <span class="tit">
+                                <i>*</i>简报描述：
+                            </span>
+                <div id="editor2" class="editor"> </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="footer"></div>
+<div class="mask">
+    <div class="maskInfo">
+        <h3>温馨提示</h3>
+        <p class="message">您确定要删除此条简报吗？</p>
+        <p class="btns">
+            <span class="no_btn" onclick="goback()">取消</span>
+            <span class="yes_btn" onclick="deletemeet(this)" data-id="">确定</span>
+        </p>
+    </div>
+</div>
+<div class="shade"></div>
+<div class="mask2">
+    <div class="maskInfo">
+        <h3>媒体推广</h3>
+        <div class="media_tel">
+            <input type="text" placeholder="请输入您的手机号">
+        </div>
+        <div class="media_yzm">
+            <span>验证码：</span>
+            <input type="text" placeholder="请输入验证码">
+            <button id="getCode">获取验证码</button>
+        </div>
+        <p class="btns">
+            <span class="no_btn" onclick="goback2()">取消</span>
+            <span class="yes_btn" onclick="submits()">确定</span>
+        </p>
+    </div>
+</div>
+<script src="javascript/jquery-2.1.4.min.js"></script>
+<script src="javascript/common.js"></script>
+<script src="javascript/jqPaginator.min.js"></script><!--页码-->
+<script src="javascript/wangEditor.min.js"></script><!--如文混排-->
+<script src="js/meetBriefing.js"></script>
+
+<script>
+    $(function(){
+        var E = window.wangEditor;
+        var editor = new E('#editor');
+        editor.customConfig.uploadImgShowBase64 = true;
+        editor.create();
+
+        var E = window.wangEditor;
+        var editor = new E('#editor2');
+        editor.customConfig.uploadImgShowBase64 = true;
+        editor.create();
+
+    })
+</script>
+</body>
+
+</html>

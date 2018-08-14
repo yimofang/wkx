@@ -1,0 +1,21 @@
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, font, img, ins, kbd, q, s, samp, small, strike,input,
+strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, 
+tfoot, thead, tr, th, td ,textarea { margin:0; padding:0;  }
+address,cite,dfn,em,var, i {font-style:normal;}
+body {font-size: 16px; line-height: 1.5; font-family:'微软雅黑';}
+table { border-collapse:collapse; border-spacing:0; }
+h1, h2, h3, h4, h5, h6, th { font-size: 100%; font-weight: normal; }
+button,input,select,textarea{font-size:100%;}
+fieldset,img{border:0;}
+a { text-decoration: none; color: #666; background: none }
+ul, ol { list-style: none; }
+.overflow{overflow: hidden}
+/***********************header***********************************/
+/*.Header{padding: 0.24rem 0;background: #da0e00;color: #fff;position: fixed;top: 0;left: 0;width: 100%;    z-index: 9999;}
+.Header .Goback{float: left;width: 0.22rem;height: 0.4rem;margin-left:0.24rem;background: url(../img/goback.png) no-repeat;background-size: cover;}
+.Header p{text-align: center;font-size: 0.36rem;line-height: 0.4rem;}
+*/
+
+.Header{background: #da0e00;color: #fff;position: fixed;top: 0;left: 0;width: 100%;    z-index: 9999;}
+.Header .Goback{float: left;width: 0.22rem;height: 0.4rem;margin-left:0.24rem;background: url(../img/goback.png) no-repeat;background-size: cover;}
+.Header p{text-align: center;font-size: 0.36rem;line-height: 0.4rem;}

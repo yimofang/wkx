@@ -1,0 +1,206 @@
+package net.emof.building.web.controller;
+
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import net.emof.building.admin.customEXC.EhCacheSessiconException;
+import net.emof.building.ehcache.EhCacheManager;
+import net.emof.building.ehcache.EhSessicon;
+import net.emof.building.model.Users;
+import net.emof.building.util.DataMap;
+import net.emof.building.util.SMS.IndustrySMS;
+import net.emof.building.web.service.BriefMedia_web_Service;
+
+/**
+ * 推广简报
+ * 
+ * @author baikun
+ * @creation 2017年12月20日
+ */
+@Controller
+@RequestMapping("briefmedia_web")
+public class BriefMedia_web_Controller {
+
+	@Autowired
+	private BriefMedia_web_Service srv;
+	//同一个手机号限制发送短信验证码次数
+	public static  final int phoneLimitNum=3; 
+	//同一个IP地址限制发送短信验证码次数
+	public static  final int ipLimitNum=6; 
+	/**
+	 * 添加
+	 * 
+	 * @author baikun
+	 * @creation 2017年12月20日
+	 * @param briefs
+	 * @param medias
+	 * @param name
+	 * @param phone
+	 * @param phoneCode  验证码
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("")
+	public Map<String, Object> add_info(@RequestParam(value = "briefs", required = false) String briefs,
+			@RequestParam(value = "medias", required = false) String medias,
+			@RequestParam(value = "phone", required = false) String phone,
+			@RequestParam(value = "phoneCode", required = false) String phoneCode) {
+		String regex =  "^(1[0-9])\\d{9}$";   
+		if(!phone.matches(regex)) {
+			return new DataMap(null,5,"手机号不合法！").data;
+		}
+		String sessionCode = null;
+//		try {
+//			 sessionCode = EhCacheManager.get(phone);
+//		} catch (EhCacheSessiconException e) {
+//			e.printStackTrace();
+//			return new DataMap(null,5,"验证码过期！").data;
+//		}
+	//	if(sessionCode.equals(phoneCode)) {
+			Map<String, Object> map =srv.add_info(briefs, medias,  phone);
+			return new DataMap(null,0).data;
+//		}else {
+//			return new DataMap(null,0,"验证码不正确！").data;
+//		}
+	}
+	
+	/**
+	 * 发送验证码
+	 * @author YLS
+	 * @creation 2018年5月26日
+	 * @param phone 手机号
+	 * @param token 
+	 * @return
+	 * @throws EhCacheSessiconException 
+	 */
+	@ResponseBody
+	@RequestMapping("queryCode")
+	public Map<String,Object> queryPhoneCode(HttpServletRequest request,HttpServletResponse response,
+			@RequestParam(value = "phone", required = false) String phone,
+			@RequestParam(value = "token", required = false) String token)
+					throws EhCacheSessiconException{
+			String regex =  "^(1[0-9])\\d{9}$"; 
+			if(!phone.matches(regex)) {
+				return new DataMap(null,6,"手机号不合法！").data;
+			}
+			if(isPhoneAttack(phone+"sign")) {
+				return new DataMap(null,6,"同一手机号在24小时内只能发送3次验证码！").data;
+			}
+		    String ip=getIpAddress(request);
+		    if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {  
+		    	return new DataMap(null,6,"无法获取到客户端IP").data;
+	        } 
+		    if(isIPAttack(ip)) {
+		    	return new DataMap(null,6,"同一IP在24小时内只能发送6次验证码！").data;
+		    }
+			Users users = new Users();
+	        if (token == null || token.trim().equals("")) {
+	        	return new DataMap(null,6,"未找到识别标识！").data;
+	        }
+	        users = EhSessicon.getTokenInfo(token);
+	        if (users == null) {
+	        	return new DataMap(null,5,"登录超时，请重新登录").data;
+	        }
+			int nub = (int) ((Math.random() * 9 + 1) * 100000);
+			try {
+				EhCacheManager.put(phone,String.valueOf(nub),1800);
+				String smsContent="【微会议】您的验证码为"+nub+"，请于30分钟内正确输入，如非本人操作，请忽略此短信。";
+				IndustrySMS.sendPhoneCode(phone, smsContent);
+			} catch (EhCacheSessiconException e) {
+				e.printStackTrace();
+			}		
+			return new DataMap(null,0).data;			
+	} 
+	
+	/** 
+     * 获取用户真实IP地址，不使用request.getRemoteAddr();的原因是有可能用户使用了代理软件方式避免真实IP地址,  
+     * 可是，如果通过了多级反向代理的话，X-Forwarded-For的值并不止一个，而是一串IP值，究竟哪个才是真正的用户端的真实IP呢？ 
+     * 答案是取X-Forwarded-For中第一个非unknown的有效IP字符串。 
+     *  
+     * 如：X-Forwarded-For：192.168.1.110, 192.168.1.120, 192.168.1.130, 
+     * 192.168.1.100 
+     *  
+     * 用户真实IP为： 192.168.1.110 
+     *  
+     * @param request 
+     * @return 
+     */  
+    private String getIpAddress(HttpServletRequest request) {  
+        String ip = request.getHeader("x-forwarded-for");  
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {  
+            ip = request.getHeader("Proxy-Client-IP");  
+        }  
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {  
+            ip = request.getHeader("WL-Proxy-Client-IP");  
+        }  
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {  
+            ip = request.getHeader("HTTP_CLIENT_IP");  
+        }  
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {  
+            ip = request.getHeader("HTTP_X_FORWARDED_FOR");  
+        }  
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {  
+            ip = request.getRemoteAddr();  
+        }  
+        return ip;  
+    }  
+    
+    /**
+     * 判断是否同一IP攻击  true为攻击
+     * @author YLS
+     * @creation 2018年5月28日
+     * @param ip
+     * @return
+     * @throws EhCacheSessiconException 
+     */
+    private  boolean isIPAttack(String ip) throws EhCacheSessiconException {
+    	Integer ipNum=EhCacheManager.get(ip);
+    	if(ipNum!=null) {
+    		if(ipNum>ipLimitNum) {
+    			return true;
+    		}
+    		EhCacheManager.put(ip,++ipNum);
+    	}else {
+    		EhCacheManager.put(ip,1,3600*24);
+    	}  
+    	return false;
+    }
+    
+    /**
+     * 判断是否同一手机号攻击  true为攻击
+     * @author YLS
+     * @creation 2018年5月28日
+     * @param phoneSign
+     * @return
+     * @throws EhCacheSessiconException 
+     */
+    private  boolean isPhoneAttack(String phoneSign) throws EhCacheSessiconException {
+    	Integer phoneNum=EhCacheManager.get(phoneSign);
+    	if(phoneNum!=null) {
+    		if(phoneNum>phoneLimitNum) {
+    			return true;
+    		}
+    		EhCacheManager.put(phoneSign,++phoneNum);
+    	}else {
+    		EhCacheManager.put(phoneSign,1,3600*24);
+    	}  
+    	return false;
+    }
+}
+
+
+
+
+
+
+
+
+

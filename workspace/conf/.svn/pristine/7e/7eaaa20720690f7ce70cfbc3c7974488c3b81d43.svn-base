@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+    <title>微会议</title>
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="css/my.css">
+    <script src="js/jquery-2.1.4.min.js"></script>
+    <script src="js/rem.js"></script>
+    <script src="js/removeHeader.js"></script>
+    <script src="jscript/my.js"></script>
+    <script src="js/exif.js"></script>
+    <script src="js/uploadImg.js"></script>
+</head>
+<body>
+	<!--header-->
+	<div class="Header">
+    	<a href="javascript:history.go(-1);"></a>我的
+	</div>
+	<!--content-->
+	<div class="myHead" data-id="">
+		<!-- <span class="myPhoto"><img class="myselfImg" src=""></span> -->
+
+		<!--上传图片-->
+        <div class="UploadImg">
+            <div id="myPic" class="myPhoto">
+                <img id="myhead"  class="myselfImg" data-img="" src="" width="90" height="90" onclick="$('#myPictor').click();">
+            </div>
+            <input type="file" onchange="modifyPic(this)" style="display: none;" id="myPictor">
+        </div>
+
+		<span class="myName" style="display: block"></span>
+		<select class="selName" onchange="selected()" style="display: none">
+			<!-- <option>测试机</option>
+			<option>果然够果然够</option>
+			<option>风光</option> -->
+		</select>
+		<!-- <input type="text" onblur="modify()" class="myName myInput" style="display: none"> -->
+	</div>
+	<div class="myInfo">
+		<ul>
+			<li class="my_list1">
+				<!-- <a href="lostmeet.html"> -->
+					<span class="meetRecord">会议记录</span>
+					<span class="reMore"></span>
+				<!-- </a> -->
+
+			</li>
+			<li class="my_list2">
+				<!-- <a href="msgCenter.html"> -->
+					<span class="infoCenter">消息中心</span>
+					<span class="infoMore"></span>
+				<!-- </a> -->
+
+			</li>
+			<li class="my_list3">
+				<!-- <a href="modifyPW.html"> -->
+					<span class="modifyPW">修改密码</span>
+					<span class="moMore"></span>
+				<!-- </a> -->
+			</li>
+			<li class="my_list4">
+				<!-- <a href="login.html"> -->
+					<span class="exit">退出登录</span>
+					<span class="moMore"></span>
+				<!-- </a>--> 
+			</li>
+		</ul>
+	</div>
+	
+	<div id="reqtoken" class="reqtoken"></div>
+
+	<!-- <script>
+		var ua = navigator.userAgent.toLowerCase();
+	　　var isWeixin = ua.indexOf('micromessenger') != -1;
+	　　if (isWeixin) {
+	        //我的
+	        $(".myHead").css('margin-top','0');
+	   　　 return true;
+	　　}else{
+	   　　 return false;      
+	　　}
+	</script> -->
+
+	<script>
+		$(function(){
+			//跳转到会议记录
+			$(".my_list1").click(function(){
+				window.location.href = 'lostmeet.html';
+	        	
+			});
+			//消息中心
+			$(".my_list2").click(function(){
+				window.location.href = 'msgCenter.html';
+	        	
+			});
+			//修改密码
+			$(".my_list3").click(function(){
+				window.location.href = 'modifyPW.html';
+	        	
+			});
+			//退出
+			$(".my_list4").click(function(){
+				window.location.href = 'login.html';
+	        	
+			});
+			
+		});
+	</script>
+</body>
+</html>

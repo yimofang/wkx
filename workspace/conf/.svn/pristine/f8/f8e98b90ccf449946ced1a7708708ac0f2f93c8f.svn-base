@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+    <title>微会议</title>
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/index.css">
+    <script src="js/jquery-2.1.4.min.js"></script>
+    <script src="js/rem.js"></script>
+    <script src="js/removeHeader.js"></script>
+    <script src="jscript/index.js"></script>
+
+</head>
+<body>
+<!--header-->
+<div class="Header">微会议</div>
+<!--search&&nav-->
+<div class="Nav deleteHeader deleteHeader">
+    <a href="indexSearch.html"><div class="Search"><p>搜索</p></div></a>
+    <ul class="NavList">
+        <li class="navAll" data-state="0">
+            <span class="active">全部</span>
+        </li>
+        <li class="navIng" data-state="1">
+            <span>进行中</span>
+        </li>
+        <!--<li class="navHad" data-state="2">-->
+            <!--<span>已过期</span>-->
+        <!--</li>-->
+    </ul>
+</div>
+<!--content-->
+<div class="Content IndexContent">
+    <ul class="MeetingList">
+        <!--<li>-->
+            <!--<a href="mmmm.html">-->
+                <!--<img src="img/indexbanner.jpg" alt="">-->
+                <!--<div class="MeetingAddress">-->
+                    <!--<h2>2017中国(河北)国际环境保护产业论坛会1-1</h2>-->
+                    <!--<p class="Address">北京中关村A3楼3层报告厅</p>-->
+                    <!--<p class="Time">2017-08-25 10:00AM</p>-->
+                <!--</div>-->
+            <!--</a>-->
+        <!--</li>-->
+    </ul>
+</div>
+
+<!--footer-->
+<div class="Footer">
+    <ul>
+        <li>
+            <i class="Icon1"></i>
+            <p class="active">首页</p>
+        </li>
+        <li onclick="GetMeetid()">
+            <i class="Icon2"></i>
+            <p>发布</p>
+        </li>
+        <li onclick="Getinfo()">
+            <i class="Icon3"></i>
+            <p>我的</p>
+        </li>
+    </ul>
+</div>
+
+</body>
+</html>

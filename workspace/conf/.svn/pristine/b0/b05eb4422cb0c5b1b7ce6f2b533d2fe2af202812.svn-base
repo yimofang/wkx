@@ -1,0 +1,137 @@
+
+    $(document).ready(function(){
+      // Full featured editor
+      $('#editor1,#editor2,#editor3').each(function(index, element)
+      {
+          $(element).wysiwyg({
+              classes: 'some-more-classes',
+              position: index == 0 ? 'top-selection' : (index == 1 ? 'bottom' : 'selection'),
+              buttons: {
+                  // Dummy-HTML-Plugin
+                  dummybutton1: index != 1 ? false : {
+                      html: $('<input id="submit" type="button" value="bold" />').click(function(){
+                          // We simply make 'bold'
+                          if( $(element).wysiwyg('selected-html') )
+                              $(element).wysiwyg('bold');
+                          else
+                              alert( 'Please selection some text' );
+                      }),
+                      //showstatic: true,    // wanted on the toolbar
+                      showselection: false    // wanted on selection
+                  },
+                  // Dummy-Button-Plugin
+                  
+                  fontsize: index == 1 ? false : {
+                      title: 'Size',
+                      image: '', // <img src="path/to/image.png" width="16" height="16" alt="" />
+                      popup: function( $popup, $button, $editor ) {
+                          var list_fontsizes = {
+                              // Name : Size
+                              'H1'  : 5,
+                              'H2'  : 4,
+                              // '标题3'  : 5,
+                              // '标题4'  : 4,size
+                              '文本'   : 3
+                          };
+
+                          var $list = $('<div/>').addClass('wysiwyg-toolbar-list').attr('unselectable','on');
+                          $.each( list_fontsizes, function( name, size ){
+                              var $link = $('<a/>').attr('href','#').css( 'font-size', (8 + (size * 3)) + 'px' ).html( name ).click(function(event){
+                                    $(element).wysiwyg('fontsize',size);
+                                    $(element).wysiwyg('close-popup');
+                                    // prevent link-href-#
+                                    event.stopPropagation();
+                                    event.preventDefault();
+                                    return false;
+                                });
+                                  $list.append( $link );
+                              });
+                              $popup.append( $list );
+                             }
+                  },
+                  bold: {
+                      title: 'Bold (Ctrl+B)',
+                      image: '', // <img src="path/to/image.png" width="16" height="16" alt="" />
+                      hotkey: 'b'
+                  },
+                  dummybutton2: index != 1 ? false : {
+                      title: 'Dummy',
+                      image: '',
+                      click: function( $button ) {
+                              alert('Do something');
+                             },
+                      //showstatic: true,    // wanted on the toolbar
+                      showselection: false    // wanted on selection
+                  },
+                  insertimage: {
+                      title: 'Insert image',
+                      image: '', // <img src="path/to/image.png" width="16" height="16" alt="" />
+                      //showstatic: true,    // wanted on the toolbar
+                      showselection: false    // wanted on selection
+                  },
+              },
+              // Submit-Button
+              submit: {
+                  title: 'Submit',
+                  image: '' // <img src="path/to/image.png" width="16" height="16" alt="" />
+              },
+              // Other properties
+              dropfileclick: '点击添加图片',
+              placeholderUrl: 'www.example.com',
+              maxImageSize: [600,200]
+          })
+          .change(function(){
+              if( typeof console != 'undefined' )
+                  console.log( 'change' );
+          })
+          .focus(function(){
+              if( typeof console != 'undefined' )
+                  console.log( 'focus' );
+          })
+          .blur(function(){
+              if( typeof console != 'undefined' )
+                  console.log( 'blur' );
+          });
+      });
+      // Demo-Buttons
+      $('#editor3-bold').click(function(){
+          $('#editor3').wysiwyg('bold');
+          return false;
+      });
+      $('#editor3-red').click(function(){
+          $('#editor3').wysiwyg('highlight','#ff0000');
+          return false;
+      });
+      $('#editor3-sethtml').click(function(){
+          $('#editor3').wysiwyg('html', 'This is a the html text');
+          return false;
+      });
+      $('#editor3-inserthtml').click(function(){
+          $('#editor3').wysiwyg('inserthtml', 'This is some text');
+          return false;
+      });
+      // Raw editor
+      var option = {
+          element: $('#editor0').get(0),
+          onkeypress: function( code, character, shiftKey, altKey, ctrlKey, metaKey ) {
+              if( typeof console != 'undefined' )
+                  console.log( 'RAW: '+character+' key pressed' );
+          },
+          onselection: function( collapsed, rect, nodes, rightclick ) {
+              if( typeof console != 'undefined' && rect )
+                  console.log( 'RAW: selection rect('+rect.left+','+rect.top+','+rect.width+','+rect.height+'), '+nodes.length+' nodes' );
+          },
+          onplaceholder: function( visible ) {
+              if( typeof console != 'undefined' )
+                  console.log( 'RAW: placeholder ' + (visible ? 'visible' : 'hidden') );
+          }
+      };
+      // var wysiwygeditor = wysiwyg( option );
+  });
+  
+
+   function shangchuan() {
+          console.log($('.wysiwyg-editor').html());
+          var xxx = $('.wysiwyg-editor').html();
+          $('#neirong').html(xxx);
+      }
