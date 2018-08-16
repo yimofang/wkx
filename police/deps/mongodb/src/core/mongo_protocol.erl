@@ -1,6 +1,6 @@
 -module(mongo_protocol).
 -export([
-	dbcoll/2,
+	dbcoll/22222222222222222222222222222222222222222,
 	put_message/3,
 	get_reply/1
 ]).
